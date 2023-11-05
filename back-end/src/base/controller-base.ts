@@ -1,7 +1,7 @@
 import { Model } from "mongoose";
 import express, { Request, Response } from "express";
 export abstract class ControllerBase<T> {
-  private model: Model<T>;
+  protected model: Model<T>;
   constructor(model: Model<T>) {
     this.model = model;
   }

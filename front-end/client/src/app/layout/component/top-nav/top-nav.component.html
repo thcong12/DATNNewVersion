@@ -1,0 +1,43 @@
+<div class="topBar">
+    <div class="topBar__logo" style="width: 15%;">
+        <a routerLink="/">
+            <img src="https://themepixer.com/demo/html/halda/halda/assets/img/logo/logo.png" width="70%" />
+        </a>
+    </div>
+
+    <div class="topBar__link" style="width: 70%;">
+        <a *ngFor="let item of pageMenu" [routerLink]="item.href" routerLinkActive="active">{{ item.name }}</a
+    >
+  </div>
+  <div class="topBar__search"  style="width: 5%;">
+    <button class="bi bi-search" (click)="searchPageToggle()"></button>
+  </div>
+  <div class=""  style="width: 10%;">
+    <div class="d-flex justify-content-center align-items-center topBar__auth ">
+      <a
+        *ngIf="!(isLogin$ | async) as Boolean"
+        class="button fancy-button"
+        routerLink="/auth/login"
+      >
+        Login<i class="bi bi-person-circle"></i>
+      </a>
+        <div class="topBar__auth__isLogin" *ngIf="isLogin$ | async as Boolean">
+            <img style="border-radius: 50%" [src]="
+            userInfo.value.avatar ||
+            'https://bangxephang.com/wp-content/uploads/2021/03/anh-dai-dien-doi-dep_104205664.jpg'
+          " height="35px" width="35px" />
+            <button #dropbtn style="color: white; background-color: rgba(255, 255, 255, 0)" (click)="check()" class="bi bi-chevron-down"></button>
+
+            <div style="margin-top: 5px" [ngClass]="isDropdown ? 'dropdownshow' : 'dropdownhide'">
+                <button class="dropdown-item" routerLink="user/profile">
+            Your profile
+          </button>
+                <button class="dropdown-item" routerLink="user/wishlist">
+            Your wishlist
+          </button>
+                <button class="dropdown-item" (click)="logout()">Log out</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

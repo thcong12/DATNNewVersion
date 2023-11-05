@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BaseRouter } from "../../base/router-base";
-import { CategloryController } from "../../controller/dashboard/CategoryController";
+import { CategloryController } from "../../controller/dashboard/category-controller";
 import { ICateglory } from "../../model/product/CategloryModel";
 
 export class CategoryRouter extends BaseRouter {
