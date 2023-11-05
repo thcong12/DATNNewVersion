@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BaseRouter } from "../../base/router-base";
-import { DeveloperController } from "../../controller/dashboard/DeveloperController";
+import { DeveloperController } from "../../controller/dashboard/developer-controller";
 import { IDeveloper } from "../../model/product/DeveloperModel";
 
 export class DeveloperRouter extends BaseRouter {

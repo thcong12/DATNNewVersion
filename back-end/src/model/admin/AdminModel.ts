@@ -1,21 +1,23 @@
-import { Schema, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 import bcryptjs from "bcryptjs";
 import { CONSTANT } from "../../constant";
 import { ModelBase } from "../../base/model-base";
+import { IAuthBase } from "../base/auth";
 
-export interface IAdmin {
-  _id: Schema.Types.ObjectId;
-  userName: string;
+export interface IAdmin extends IAuthBase {
   fullName?: string;
-  password: string;
-  email?: string;
   phoneNumber?: string;
   role: string;
-  refreshToken?: string;
-  isActive: boolean;
 }
 
-const adminSchema = new Schema<IAdmin>(
+export interface IAdminrMethods {
+  matchPassword(password: string): string;
+}
+
+// Create a new Model type that knows about IUserMethods...
+type AdminModel = Model<IAdmin, {}, IAdminrMethods>;
+
+const adminSchema = new Schema<IAdmin, AdminModel, IAdminrMethods>(
   {
     userName: {
       type: String,
@@ -43,7 +45,7 @@ const adminSchema = new Schema<IAdmin>(
       require: true,
       default: process.env.TYPE_ADMIN_2ST,
     },
-    refreshToken: {
+    section: {
       type: String,
       require: true,
     },
@@ -54,11 +56,6 @@ const adminSchema = new Schema<IAdmin>(
   },
   {
     timestamps: true,
-    methods: {
-      matchPassword(enterPassword: string) {
-        return bcryptjs.compareSync(enterPassword, this.password);
-      },
-    },
   }
 );
 adminSchema.pre("save", async function (next) {
@@ -71,7 +68,14 @@ adminSchema.pre("save", async function (next) {
   }
 });
 
-export const AdminModel: Model<IAdmin> = new Model(
+adminSchema.method(
+  "matchPassword",
+  function matchPassword(enterPassword: string) {
+    return bcryptjs.compareSync(enterPassword, this.password);
+  }
+);
+
+export const AdminModel: AdminModel = mongoose.model<IAdmin, AdminModel>(
   CONSTANT.MODEL_NAME.admin,
   adminSchema
 );

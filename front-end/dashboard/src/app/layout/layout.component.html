@@ -1,0 +1,12 @@
+<div class="layout-wrapper" [ngClass]="containerClass">
+    <app-topnav></app-topnav>
+    <div class="layout-sidebar">
+        <app-sidenav></app-sidenav>
+    </div>
+    <div class="layout-main-container">
+        <div class="layout-main">
+            <ng-content></ng-content>
+        </div>
+        <div></div>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+.cc {
+    animation-name: cc;
+    animation-duration: 1s;
+}
+
+* {
+    color: #ffffffff;
+}
+
+@keyframes cc {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

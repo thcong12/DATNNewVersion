@@ -2,7 +2,7 @@ import express ,{Router} from "express";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
 import {ROLES_LIST} from "../../../config/role_list.js";
-import Admin from "../../../model/Admin/Admin.js";
+import Admin from "../../../modelzzzz/Admin.js";
 import {
   generateAccessToken,
   generateRefreshToken

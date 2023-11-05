@@ -1,8 +1,9 @@
-import { Router } from "express";
+import express from "express";
+import { CONSTANT } from "../constant";
 
 export abstract class BaseRouter {
-  public router: Router;
+  public router: express.Router;
   constructor() {
-    this.router = Router();
+    this.router = express.Router();
   }
 }
