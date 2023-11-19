@@ -1,0 +1,48 @@
+<div class="flex flex-column justify-content-center align-items-center" style="
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    margin-top: -4rem;
+    padding: 4rem 0;
+    background: left / 100% 100% no-repeat
+      url(https://store.cloudflare.steamstatic.com/public/shared/images/joinsteam/new_login_bg_strong_mask.jpg);
+      height: 100vh;
+  ">
+    <div class="relative container" [class]="isLoginPage ? 'right-panel-active' : ''">
+        <div class="blurBg"></div>
+        <app-signin></app-signin>
+        <app-login (displayModal)="displayModal = $event"></app-login>
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <h1>Welcome Back!</h1>
+                    <p>To keep connected with us please login with your personal info</p>
+                    <button class="ghost" (click)="swicthPage()">Sign In</button>
+                </div>
+                <div class="overlay-panel overlay-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Enter your personal details and start journey with us</p>
+                    <button class="ghost" (click)="swicthPage()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<p-dialog [(visible)]="displayModal" header="Confirm" [modal]="true" [style]="{ width: '500px','background-color':'#1414153' }">
+    <ng-template pTemplate="header">
+        <h5 class="text-color">
+            Forgot the password
+        </h5>
+    </ng-template>
+    <ng-template pTemplate="content">
+        <form [formGroup]="formChangePassword" class="flex align-items-center justify-content-center">
+            <p class="text-color text-center">Please fill in the email and user name that you used to register. You will be sent an email with instructions on how to reset your password.</p>
+            <input [formControlName]="controlChangePassword.userName" placeholder="User Name" type="text">
+            <input [formControlName]="controlChangePassword.email" placeholder="Email" type="text">
+        </form>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button (click)="displayModal = false">Cancel</button>
+        <button (click)="changePasswordSubmit()">Send email</button>
+    </ng-template>
+</p-dialog>

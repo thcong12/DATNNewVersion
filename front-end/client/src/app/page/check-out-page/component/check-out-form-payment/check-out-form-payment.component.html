@@ -1,0 +1,23 @@
+<form class="p-3  gap-2" [formGroup]="checkOutForm" #data style="color: #eeeeee;">
+    <div class="flex flex-column justify-content-end gap-2">
+        <h2 class="form-label" for="address">Payment Method</h2>
+        <div class="w-full grid justify-content-around mt-2">
+            <div class="flex flex-column align-items-center relative" *ngFor="let item of paymentMethod" (click)="optionPayment(item.value)">
+                <input name="paymentMethod" [value]="item.value" type="radio" class="absolute hide " [formControlName]="controlName.paymentMethod">
+                <img [src]="item.img" width="50px" height="50px" />
+                <label class="form-check-label" [for]="item.value">{{item.name}}</label>
+            </div>
+        </div>
+        <div class="">
+            <label></label>
+            <h2><b>Total: </b>{{totalprice?.value | currency:'USD'}}</h2>
+        </div>
+    </div>
+    <div class="w-full" *ngIf="paymentOption == 'paypal'">
+        <checkoutPaypal [userCart]="userCart" [order]="checkOutForm"></checkoutPaypal>
+    </div>
+
+    <div class="w-full" *ngIf="paymentOption == 'momo'">
+        <!-- <checkOutMomo [userCart]="userCart" [order]="checkOutForm"></checkOutMomo> -->
+    </div>
+</form>

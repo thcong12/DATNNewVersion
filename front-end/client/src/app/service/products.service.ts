@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
+import { Product } from '../model/products.model';
 import { BaseService } from './base.service';
-import { Product } from '../shared/model/products.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,9 +16,9 @@ export class ProductsService extends BaseService {
     const url = `/products`;
     return me.get(url);
   }
-  public getProductDetail(id: String): Observable<Product.Detail> {
+  public getProductDetail(id: String): Observable<any> {
     const me = this;
-    const url = `/products/detail/${id}`;
+    const url = `/product/${id}`;
     return me.get(url);
   }
   public getProduct(id: String): Observable<Product.Product> {

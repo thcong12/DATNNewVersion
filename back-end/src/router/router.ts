@@ -1,19 +1,20 @@
 import express, { Router, Application } from "express";
 import { DashboardRouter } from "./dashboard/dashboard-router";
 import { BaseRouter } from "../base/router-base";
+import { ClientRouter } from "./client/client-router";
 
 export class RouterClass extends BaseRouter {
   private dashboardRouter: DashboardRouter = new DashboardRouter();
-  private dlientRouter: any;
+  private clientRouter: ClientRouter = new ClientRouter();
   constructor() {
     super();
     this.routerDasboard();
+    this.routerClient();
   }
   routerDasboard() {
     this.router.use("/admin", this.dashboardRouter.router);
   }
+  routerClient() {
+    this.router.use("/client", this.clientRouter.router);
+  }
 }
-
-// routerClient() {
-//   this.router.use("/client", this.dlientRouter);
-// }

@@ -1,0 +1,8 @@
+.list-box{
+    border-radius: 10px;
+    overflow-y: auto;
+    backdrop-filter: blur(20px);
+    background-color: rgba(0, 0, 0, 0.3);
+    bottom: calc( -8rem + 1rem);
+
+}

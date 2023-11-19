@@ -1,0 +1,37 @@
+<div class=" ">
+  <div class="col-12 mx-2 p-2">
+    <h1 style="color: #eeeeee">YOUR SHOPPING CART</h1>
+  </div>
+  <div class="w-full grid pr-3   page-background">
+    <div style="color: #eeeeee" class="col-9 ">
+      <div class="w-full tab-style">
+        <div class="flex flex-column gap-4">
+          <div
+            class="grid px-3 item-style"
+            *ngFor="let product of userCart[0].cartDetail; let i = index"
+          >
+            <img
+              class="col-3"
+              [src]="product.imgY.url + '?h=140&resize=1&w=80'"
+            />
+            <div
+              class="col-7 flex flex-column justify-content-between"
+              style="width: 60%"
+            >
+              <h5 style="color: #eeeeee">
+                {{ product.productName }}
+              </h5>
+              <button class="w-4 buttonCustom">Detail</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-2" routerLink="/product">
+        <button class="buttonCustom" type="button">Continue Shopping</button>
+      </div>
+    </div>
+    <div class="col-3  item-style" style="height: 590px;margin-top: 1rem;">
+      <app-check-out-form-payment [userCart]="[]"> </app-check-out-form-payment>
+    </div>
+  </div>
+</div>

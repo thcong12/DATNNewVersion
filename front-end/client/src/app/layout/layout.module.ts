@@ -1,25 +1,41 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MenuModule } from 'primeng/menu';
-import { PanelMenuModule } from 'primeng/panelmenu';
-
 import { LayoutComponent } from './layout.component';
-import { TopNavComponent } from './component/top-nav/top-nav.component';
-import { SideNavComponent } from './component/side-nav/side-nav.component';
-import { CartNavComponent } from './component/cart-nav/cart-nav.component';
-import { BottomNavComponent } from './component/bottom-nav/bottom-nav.component';
-
+import { TopNavComponent } from './top-nav/top-nav.component';
+import { SideNavComponent } from './side-nav/side-nav.component';
+import { MenuModule } from 'primeng/menu';
+import { InputTextModule } from 'primeng/inputtext';
+import { PanelMenuModule } from 'primeng/panelmenu';
+import { CommonModule } from '@angular/common';
+import { SidebarModule } from 'primeng/sidebar';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { ButtonModule } from 'primeng/button';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { DropdownModule } from 'primeng/dropdown';
+import { ListboxModule } from 'primeng/listbox';
+import { LoaderComponent } from './loader/loader.component';
 const declarations: any[] = [
   LayoutComponent,
   TopNavComponent,
   SideNavComponent,
-  CartNavComponent,
-  BottomNavComponent,
+  LoaderComponent,
 ];
-const imports = [CommonModule, MenuModule, PanelMenuModule];
+const imports: any[] = [
+  CommonModule,
+  MenuModule,
+  PanelMenuModule,
+  SidebarModule,
+  RadioButtonModule,
+  ButtonModule,
+  InputSwitchModule,
+  InputTextModule,
+  OverlayPanelModule,
+  DropdownModule,
+  ListboxModule,
+];
 @NgModule({
   declarations: [...declarations],
-  exports: [...declarations, ...imports],
   imports: [...imports],
+  exports: [...declarations, ...imports],
 })
 export class LayoutModule {}

@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BaseRouter } from "../../base/router-base";
-import { DeveloperController } from "../../controller/dashboard/developer-controller";
+
 import { IDeveloper } from "../../model/product/DeveloperModel";
+import { DeveloperController } from "../../controller/developer-controller";
 
 export class DeveloperRouter extends BaseRouter {
   private Controller: DeveloperController = new DeveloperController();

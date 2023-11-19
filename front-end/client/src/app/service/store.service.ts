@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { BaseService } from './base.service';
-import { Store } from '../shared/model/products.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +11,9 @@ export class StoreService extends BaseService {
   constructor(http: HttpClient) {
     super(http);
   }
-  public getProductsSlider(): Observable<Store.Slider[]> {
+  public getProductsSlider(): Observable<any> {
     const me = this;
-    const url = `/tool/getProductSlide`;
+    const url = `/product/slide`;
     return me.get(url);
   }
   public search(keyword: string): Observable<any> {
@@ -26,9 +26,9 @@ export class StoreService extends BaseService {
     const url = `/tool/sameproduct/${cate}`;
     return me.get(url);
   }
-  public getBestSeller(): Observable<Store.BestSeller[]> {
+  public getBestSeller(): Observable<any> {
     const me = this;
-    const url = `/tool/bestseller`;
+    const url = `/product/bestseller`;
     return me.get(url);
   }
   public getSaleProduct(): Observable<any> {

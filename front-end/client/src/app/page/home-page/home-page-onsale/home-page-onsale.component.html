@@ -1,0 +1,131 @@
+<div class="grid pb-3" *ngIf="idPage === 1">
+    <div class="col-4 relative" *ngFor="let item of data.slice(0, 3); let i = index">
+        <img width="100%" style="border-radius: 15px;" [src]="item.imgX.url" />
+        <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+            <h5>{{ item.productName }}</h5>
+            <div class="grid justify-content-start">
+                <span class="col-6 text-lg">Developer name</span>
+                <div class="col-6 grid  py-2 align-items-stretch ">
+                    <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                    <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="grid pb-3" *ngIf="idPage === 2">
+    <div class="col-4 relative" *ngFor="let item of data.slice(0, 2); let i = index">
+        <img width="100% " style="border-radius: 15px;" [src]="item.imgX.url" />
+        <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+            <h5>{{ item.productName }}</h5>
+            <div class="grid justify-content-start">
+
+                <span class="col-6 text-lg">Developer name</span>
+
+                <div class="col-6 grid  py-2 align-items-stretch ">
+                    <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                    <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-4 grid align-items-stretch">
+        <div class="col-12 relative" *ngFor="let item of data.slice(0, 2); let i = index">
+            <img width="100% " style="border-radius: 15px;" [src]="item.imgY.url" />
+            <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+                <h5>{{ item.productName }}</h5>
+                <div class="grid justify-content-start">
+
+                    <span class="col-6 text-lg">Developer name</span>
+
+                    <div class="col-6 grid  py-2 align-items-stretch ">
+                        <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                        <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid pb-3" *ngIf="idPage === 3">
+    <div class="col-4 relative">
+        <img width="100% " style="border-radius: 15px;" [src]="data[0].imgX.url" />
+        <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+            <h5>{{ data[0].productName }}</h5>
+            <div class="grid justify-content-start">
+
+                <span class="col-6 text-lg">Developer name</span>
+
+                <div class="col-6 grid  py-2 align-items-stretch ">
+                    <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                    <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-8 grid">
+        <div class="col-6 relative" *ngFor="let item of data.slice(0, 4); let i = index">
+            <img width="100% " style="border-radius: 15px;" [src]="item.imgY.url" />
+            <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+                <h5>{{ item.productName }}</h5>
+                <div class="grid justify-content-start">
+
+                    <span class="col-6 text-lg">Developer name</span>
+
+                    <div class="col-6 grid  py-2 align-items-stretch ">
+                        <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                        <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="grid pb-3" *ngIf="idPage === 4">
+    <div class="col-8 grid">
+        <div class="col-6 relative" *ngFor="let item of data.slice(0, 4); let i = index">
+            <img width="100% " style="border-radius: 15px;" [src]="item.imgY.url" />
+            <div class="absolute p-3 left-auto " style="width:calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+                <h5>{{ item.productName }}</h5>
+                <div class="grid justify-content-start">
+
+                    <span class="col-6 text-lg">Developer name</span>
+
+                    <div class="col-6 grid  py-2 align-items-stretch ">
+                        <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                        <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-4 relative">
+        <img width="100% " style="border-radius: 15px;" [src]="data[0].imgX.url" />
+        <div class="absolute p-3 left-auto " style="width:calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
+            <h5>{{ data[0].productName }}</h5>
+            <div class="grid justify-content-start">
+
+                <span class="col-6 text-lg">Developer name</span>
+
+                <div class="col-6 grid  py-2 align-items-stretch ">
+                    <span class="col-7 bg-yellow-900 text-2xl">-80%</span>
+                    <span class="col-5 bg-primary flex flex-column text-xs"><del>1000$</del><b>900$</b></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="pt-3 flex justify-content-center gap-2">
+    <button class="bg-light" *ngFor="let item of [1, 2, 3, 4]; let i = index" style="height: 8px; width: 25px; border: none; border-radius: 10px" (click)="setIdPage(item)"></button>
+</div>

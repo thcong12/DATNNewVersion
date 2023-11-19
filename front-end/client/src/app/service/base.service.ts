@@ -32,9 +32,7 @@ export interface OptionsRequest {
 }
 
 export abstract class BaseService {
-  constructor(
-    public httpClient: HttpClient,
-  ) {}
+  constructor(public httpClient: HttpClient) {}
 
   /**
    * Request server with method get
@@ -122,9 +120,8 @@ export abstract class BaseService {
     return queries.length > 0 ? queries.join('&') : '';
   }
 
-
   private getUrl(uri: string): string {
-    return environment.api + '/api/store' + uri;
+    return environment.api + '/client' + uri;
   }
 
   protected handleError<T>(operation = 'operation', result?: T) {
@@ -138,5 +135,4 @@ export abstract class BaseService {
       return of(result as T);
     };
   }
-
 }

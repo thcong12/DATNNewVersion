@@ -1,11 +1,11 @@
 import mongoose, { Schema, Model, Types } from "mongoose";
 import { CONSTANT } from "../../constant";
+import { type } from "os";
 
 interface ISale {
   salePersent: Number;
   startDay: string;
   endDay: string;
-  require: boolean;
 }
 interface IImage {
   title: string;
@@ -22,17 +22,13 @@ interface ISystemRequiment {
 }
 interface IReview {
   title: string;
-  require: true;
+  require: boolean;
   rating: Number;
   comment: string;
   user: Types.ObjectId;
 }
 
 export interface IProduct {
-  devLinkSocialMedia: any;
-  devAvatar: any;
-  devName: any;
-  description: any;
   _id: Types.ObjectId;
   productName: string;
   shortDescription: string;
@@ -47,7 +43,7 @@ export interface IProductDetail {
   productId: Types.ObjectId;
   developer: Types.ObjectId;
   description: string;
-  categlory: Types.DocumentArray<Types.ObjectId>;
+  categlory: Types.ObjectId[];
   rating: Number;
   systemrequiment: Types.DocumentArray<ISystemRequiment>;
   reviews: Types.DocumentArray<IReview>;
@@ -73,6 +69,7 @@ const productSchema = new Schema<IProduct>(
     sale: {
       salePersent: {
         type: Number,
+        default: 0.0,
       },
       startDay: {
         type: String,
@@ -80,7 +77,6 @@ const productSchema = new Schema<IProduct>(
       endDay: {
         type: String,
       },
-      require: false,
     },
     horizontalImg: {
       title: {
@@ -125,7 +121,7 @@ const productDetailSchema = new Schema<IProductDetail>(
     },
     developer: {
       type: Schema.Types.ObjectId,
-      require: false,
+      require: true,
       ref: "Developer",
     },
     description: {
@@ -197,11 +193,11 @@ const productDetailSchema = new Schema<IProductDetail>(
   },
   { _id: false, timestamps: true }
 );
-export const ProductDetailModel: Model<IProductDetail> = new Model(
+export const ProductDetailModel: Model<IProductDetail> = mongoose.model(
   CONSTANT.MODEL_NAME.productDetail,
   productDetailSchema
 );
-export const ProductModel: Model<IProduct> = new Model(
+export const ProductModel: Model<IProduct> = mongoose.model(
   CONSTANT.MODEL_NAME.product,
   productSchema
 );

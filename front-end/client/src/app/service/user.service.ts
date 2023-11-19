@@ -1,51 +1,59 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, shareReplay, Subject, tap } from 'rxjs';
-
+import { User } from '../model/account.model';
 import { BaseService } from './base.service';
-import { User } from '../shared/model/account.model';
+import { GlobalVariable } from '../base/global-variable';
+import { Router } from '@angular/router';
+import { ViewModelService } from '../base/viewModel.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService extends BaseService {
+  private globalVariable: GlobalVariable;
   public cartList = new BehaviorSubject<any[]>([]);
   public userLibrary = new BehaviorSubject<any[]>([]);
   public total = new BehaviorSubject<number>(0);
-  constructor(http: HttpClient) {
+  constructor(
+    http: HttpClient,
+    private router: Router,
+    private vms: ViewModelService
+  ) {
     super(http);
+    this.globalVariable = this.vms.globalVariable;
   }
   public getCart(): Observable<User.Cart> {
     const me = this;
     const url = `/cart`;
     return me.get(url).pipe(
       tap((res: any) => {
-        me.cartList.next(res[0].cartDetail);
+        console.log(res);
+        this.vms.globalVariable.setUserCart(res);
       })
     );
   }
   public addToCart(product: User.CartDetail) {
     const me = this;
     const url = `/cart`;
+
     return me.post(url, product);
   }
   public removeFromCart(id: string) {
     const me = this;
     const url = `/cart/removeproduct/${id}`;
+
     return me.get(url);
   }
-  public postComment(
-    id: string,
-    comment: User.Comment
-  ): Observable<User.Comment> {
-    const me = this;
-    const url = `/products/newcomment/${id}`;
-    return me.put(url, comment);
-  }
-  public userDetail(id: string): Observable<User.Detail> {
+
+  public userDetail(id: string) {
     const me = this;
     const url = `/user/userDetail/${id}`;
-    return me.get(url);
+    return me.get<any>(url).pipe(
+      tap((_res) => {
+        this.vms.globalVariable.setUserProfile(_res);
+      })
+    );
   }
   public getOrderUser() {
     const me = this;
@@ -65,7 +73,11 @@ export class UserService extends BaseService {
   public getLibraries(): Observable<any> {
     const me = this;
     const url = `/profile/library`;
-    return me.get(url);
+    return me.get(url).pipe(
+      tap((_res) => {
+        this.vms.globalVariable.setUserLiblary(_res);
+      })
+    );
   }
   public changeProfile(): Observable<any> {
     const me = this;
@@ -75,16 +87,34 @@ export class UserService extends BaseService {
   public getReCommendProduct() {
     const me = this;
     const url = `/recommend/data`;
-    return me.get(url);
+    return me.get(url).pipe(
+      tap((res) => {
+        if (res) {
+          this.vms.globalVariable.setRecommendProduct(res);
+        }
+      })
+    );
   }
   public getWishlist() {
     const me = this;
     const url = `/profile/wishlist`;
-    return me.get(url);
+    return me.get(url).pipe(
+      tap((_res) => {
+        this.vms.globalVariable.setUserWishList(_res);
+      })
+    );
   }
   public addToWishList(id: string) {
     const me = this;
     const url = `/profile/wishlist`;
     return me.post(url, id);
+  }
+  public postComment(
+    id: string,
+    comment: User.Comment
+  ): Observable<User.Comment> {
+    const me = this;
+    const url = `/products/newcomment/${id}`;
+    return me.put(url, comment);
   }
 }

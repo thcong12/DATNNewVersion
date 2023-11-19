@@ -1,35 +1,40 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 
+import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
+import { AuthModule } from '../model/auth.model';
 import { BaseService } from './base.service';
-import { AuthModule } from '../shared/model/auth.model';
+import { GlobalVariable } from '../base/global-variable';
+import { ViewModelService } from '../base/viewModel.service';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService extends BaseService {
-  constructor(http: HttpClient, private router: Router) {
-    super(http);
+export class AuthService {
+  authError: boolean = false;
+  private globalVariable: GlobalVariable;
+  constructor(
+    private httpClient: HttpClient,
+    private router: Router,
+    private vms: ViewModelService
+  ) {
+    this.globalVariable = this.vms.globalVariable;
     this.updateAuth();
   }
   public redirectUrl: string | null = null;
 
   public isLogin = new BehaviorSubject<boolean>(this.isAuth());
-  private setSession(
-    accessToken: string,
-    refreshToken: string,
-    userInfo: string
+  private async setSession(
+    accessToken?: string,
+    refreshToken?: string,
+    userInfo?: string
   ) {
-    localStorage.setItem('x-access-token', accessToken);
-    localStorage.setItem('x-refresh-token', refreshToken);
-    localStorage.setItem('userDetail', userInfo);
+    this.globalVariable.setAccessToken(accessToken);
+    this.globalVariable.setRefreshToken(refreshToken);
+    this.globalVariable.setUserProfile(userInfo);
   }
   private removeSession() {
-    localStorage.removeItem('x-access-token');
-    localStorage.removeItem('x-refresh-token');
-    localStorage.removeItem('recommendProduct');
-    localStorage.removeItem('userDetail');
+    this.globalVariable.removeSession();
   }
   public isAuth(): boolean {
     return this.getRefreshToken() !== null;
@@ -45,28 +50,29 @@ export class AuthService extends BaseService {
     const url = `http://localhost:5000/api/store/user/login`;
     return me.httpClient.post(url, login, { observe: 'response' }).pipe(
       shareReplay<any>(),
-      tap((res: HttpResponse<any>) => {
+      tap(async (res: HttpResponse<any>) => {
         if (res.status === 200) {
-          me.setSession(
-            String(res.headers.get('x-access-token')),
-            String(res.headers.get('x-refresh-token')),
-            String(JSON.stringify(res.body?.userDetail))
+          this.globalVariable.setLoginStage(String(true));
+          const isLogin = this.globalVariable.getLoginStage;
+          await this.setSession(
+            res.headers?.get('x-access-token') || '',
+            res.headers?.get('x-refresh-token') || '',
+            res.body?.userDetail
           );
-
-          return this.isLogin.next(true);
-          // we have logged in successfull
-        }
-        if (res.status === 403) {
-          alert('please check your email');
+          if (isLogin) {
+            this.router.navigateByUrl('/home');
+          }
+        } else {
+          this.authError = true;
         }
       })
     );
   }
   public getRefreshToken() {
-    return localStorage.getItem('x-refresh-token');
+    return localStorage.getItem('REFRESH_TOKEN');
   }
   public getAccessToken() {
-    return localStorage.getItem('x-access-token');
+    return localStorage.getItem('ACCESS_TOKEN');
   }
   public logout(): Observable<HttpResponse<any>> {
     const me = this;
@@ -81,8 +87,6 @@ export class AuthService extends BaseService {
         tap((res: HttpResponse<any>) => {
           alert('Logout successful');
           me.removeSession();
-          localStorage.setItem('userDetail', '');
-          return this.isLogin.next(false);
         })
       );
   }
@@ -128,9 +132,8 @@ export class AuthService extends BaseService {
     token: string,
     password: any
   ): Observable<HttpResponse<any>> {
-    const me = this;
     const url = `http://localhost:5000/api/store/user/changepassword/${token}`;
-    return me.httpClient.post(url, password, { observe: 'response' }).pipe(
+    return this.httpClient.post(url, password, { observe: 'response' }).pipe(
       shareReplay<any>(),
       tap((res: HttpResponse<any>) => {})
     );
@@ -139,7 +142,6 @@ export class AuthService extends BaseService {
     localStorage.setItem('x-access-token', accessToken);
   }
   getNewAccessToken() {
-    const me = this;
     const url = `http://localhost:5000/api/store/user/refresh`;
     return this.httpClient
       .get(url, {
@@ -148,7 +150,7 @@ export class AuthService extends BaseService {
       })
       .pipe(
         tap((res: HttpResponse<any>) => {
-          me.setAccessToken(String(res.headers.get('x-access-token')));
+          this.globalVariable.setAccessToken(res.headers.get('x-access-token'));
         })
       );
   }

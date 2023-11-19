@@ -1,0 +1,92 @@
+<div class="layout-topbar">
+  <a class="layout-topbar-logo" routerLink="/home">
+    <span style="color: #ffffffff">Steam</span>
+  </a>
+  <span class="p-input-icon-left w-full">
+    <i class="pi pi-search"></i>
+    <input
+      class="w-6"
+      style="background-color: #29292c; border: none"
+      type="text"
+      placeholder="Search Something"
+      pInputText
+    />
+  </span>
+  <div
+    #topbarmenu
+    class="layout-topbar-menu"
+    [ngClass]="{
+      'layout-topbar-menu-mobile-active':
+        layoutService.state.profileSidebarVisible
+    }"
+  >
+
+    <button class="p-link layout-topbar-button" (click)="cart.toggle($event)">
+      <i class="pi pi-shopping-cart"></i>
+      <span>Profile</span>
+    </button>
+    <p-overlayPanel [style]="{ width: '350px' }" #cart>
+      <ng-container *ngIf="userStageLogin">
+        <div style="height: 300px; overflow-x: hidden; overflow-y: auto">
+          <div
+            class="grid align-items-center gap-2"
+            *ngFor="let item of userCart[0].cartDetail"
+            routerLink="/home"
+          >
+            <img
+              class="col-4"
+              [src]="
+                item.imgY.url ||
+                '../../../assets/layout/images/user-default.png'
+              "
+            />
+            <h5 class="col-7">{{ item.productName }}</h5>
+          </div>
+        </div>
+
+        <div class="flex justify-content-end">
+          <button routerLink="/checkout" class="buttonCustom">Check Out</button>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!userStageLogin">
+        <div class="flex justify-content-center">
+          <p-button routerLink="/login" label="Sign In"></p-button>
+        </div>
+      </ng-container>
+    </p-overlayPanel>
+    <div
+      *ngIf="userStageLogin"
+      class="flex align-items-center justify-content-between gap-2 relative"
+      style="height: 3rem; width: 10rem; border-radius: 2rem; margin-left: 1rem"
+      (click)="showClick()"
+    >
+      <img
+        style="border-radius: 50%"
+        src="../../../assets/layout/images/user-default.png"
+        height="100%"
+      />
+      <h4 class="mb-4" style="color: #eeeeee">{{ userDetail.fullName }}</h4>
+      <span
+        [class]="!showListBox ? 'pi pi-angle-down' : 'pi pi-angle-left'"
+      ></span>
+
+      <!-- <p-listbox optionLabel="name" [style]="{'width':'100%'}" ></p-listbox> -->
+      <div
+        *ngIf="showListBox"
+        class="w-full absolute flex flex-column list-box py-2"
+      >
+        <span
+          class="w-full px-3 py-2"
+          style="color: #eeeeee; font-size: 1.25rem"
+          *ngFor="let item of listBox"
+          (click)="item.eventClick()"
+          >{{ item.label }}</span
+        >
+      </div>
+    </div>
+    <button *ngIf="!userStageLogin" routerLink="/login" class="p-link layout-topbar-button">
+      <i class="pi pi-user"></i>
+      <span>Profile</span>
+    </button>
+  </div>
+</div>

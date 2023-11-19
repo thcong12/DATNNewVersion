@@ -28,7 +28,12 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              {
+                "input": "node_modules/primeng/resources/themes/saga-orange/theme.css",
+                "inject": true,
+                "bundleName": "primeng.theme.min"
+            }
             ],
             "scripts": []
           },

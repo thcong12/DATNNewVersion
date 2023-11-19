@@ -1,1 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
+$gutter: 1rem;
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100&display=swap');
+@import "assets/layout/styles/layout/layout.scss";
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+@import "../node_modules/animate.css/animate.css";

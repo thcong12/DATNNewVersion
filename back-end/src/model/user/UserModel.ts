@@ -1,21 +1,22 @@
 import mongoose, { Schema, Model, Types } from "mongoose";
 import bcryptjs from "bcryptjs";
 import { CONSTANT } from "../../constant";
+import { IAuthBase } from "../base/auth";
 
-export interface IUser {
-  _id: Schema.Types.ObjectId;
-  userName: string;
+export interface IUser extends IAuthBase {
   firstName?: string;
   lastName: string;
-  password: string;
-  email?: string;
   phoneNumber?: string;
-  role: string;
-  section?: Types.DocumentArray<string>;
-  isActive: boolean;
 }
 
-const userSchema = new Schema<IUser>(
+export interface IUserMethods {
+  matchPassword(password: string): string;
+}
+
+// Create a new Model type that knows about IUserMethods...
+type IUserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema = new Schema<IUser, IUserModel, IUserMethods>(
   {
     userName: {
       type: String,
@@ -50,17 +51,10 @@ const userSchema = new Schema<IUser>(
       default: false,
     },
   },
-
   {
     timestamps: true,
-    methods: {
-      matchPassword(enterPassword: string) {
-        return bcryptjs.compareSync(enterPassword, this.password);
-      },
-    },
   }
 );
-
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
@@ -71,4 +65,14 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-export const UserModel = new Model(CONSTANT.MODEL_NAME.user, userSchema);
+userSchema.method(
+  "matchPassword",
+  function matchPassword(enterPassword: string) {
+    return bcryptjs.compareSync(enterPassword, this.password);
+  }
+);
+
+export const UserModel: IUserModel = mongoose.model<IUser, IUserModel>(
+  CONSTANT.MODEL_NAME.user,
+  userSchema
+);

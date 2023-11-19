@@ -1,0 +1,15 @@
+:host ::ng-deep {
+    .p-dataview,
+    .p-dataview-header,
+    .p-dataview-content,
+    .p-paginator-bottom {
+        background: none;
+        border: none;
+    }
+    .p-dropdown {
+        background-color: #29292c;
+        outline: none;
+        border: none;
+        font-weight: normal;
+    }
+}

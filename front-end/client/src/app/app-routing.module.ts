@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { LoginGuard } from './shared/guard/login.guard';
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
@@ -8,6 +8,27 @@ const routes: Routes = [
     loadChildren: () =>
       import('./page/home-page/home-page.module').then((m) => m.HomePageModule),
   },
+  {
+    path: 'product',
+    loadChildren: () =>
+      import('./page/product-page/product-page.module').then(
+        (m) => m.ProductPageModule
+      ),
+  },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./page/auth-page/auth-page.module').then((m) => m.AuthPageModule),
+  },
+  {
+    path: 'profile',
+
+    loadChildren: () =>
+      import('./page/user-profile-page/user-profile-page.module').then(
+        (m) => m.UserProfilePageModule
+      ),
+  },
+
   // {
   //   path: 'products',
   //   loadChildren: () =>
@@ -21,14 +42,14 @@ const routes: Routes = [
   //   loadChildren: () =>
   //     import('./page/auth-page/auth-page.module').then((m) => m.AuthPageModule),
   // },
-  // {
-  //   path: 'checkout',
+  {
+    path: 'checkout',
 
-  //   loadChildren: () =>
-  //     import('./page/payment-page/payment-page.module').then(
-  //       (m) => m.PaymentPageModule
-  //     ),
-  // },
+    loadChildren: () =>
+      import('./page/check-out-page/check-out-page.module').then(
+        (m) => m.CheckOutPageModule
+      ),
+  },
   // {
   //   path: 'user',
 
@@ -43,9 +64,7 @@ const routes: Routes = [
   // {
   //   path: 'categlory',
   //   loadChildren: () =>
-  //     import('./page/categlory-page/categlory-page.module').then(
-  //       (m) => m.CategloryPageModule
-  //     ),
+  //     import('./page/categlory-page/categlory-page.module').then((m) => m.CategloryPageModule),
   // },
 ];
 

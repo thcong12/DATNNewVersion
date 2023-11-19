@@ -72,8 +72,6 @@ export class RequestInterceptor implements HttpInterceptor {
                 return next.handle(request);
               }),
               catchError((err: any) => {
-                console.log(err);
-                alert('something wrong');
                 return empty();
               })
             );

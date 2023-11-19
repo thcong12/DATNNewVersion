@@ -1,0 +1,21 @@
+:host ::ng-deep .p-panelmenu {
+    .p-component {
+        padding: 0.1rem;
+    }
+    .p-panelmenu-header-link {
+        border-radius: 10px;
+        background-color: #141415;
+        color: #ffffffff;
+        border: none;
+    }
+    .p-panelmenu .p-panelmenu-header .p-highlight>a {}
+}
+
+.routerActive {
+    color: #ff6b27;
+    .activeIcon {
+        width: 10px;
+        height: 100%;
+        box-shadow: 0 0 1px #ff6b27, 0 0 0px #ff6b27, 0 0 0px #ff6b27, 0 0 0px #ff6b27, 0 0 2px #ff6b27, 0 0 10px #ff6b27, 0 0 10px #ff6b27;
+    }
+}

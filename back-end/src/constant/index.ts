@@ -76,5 +76,7 @@ export const CONSTANT = {
     order: "Order",
     orderDetail: "OrderDetail",
     cart: "Cart",
+    libraly: "Libraries",
+    homeSlide: "Sliders",
   },
 };

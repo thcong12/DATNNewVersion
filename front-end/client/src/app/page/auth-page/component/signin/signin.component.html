@@ -1,0 +1,52 @@
+<form [formGroup]="registerForm" (submit)="registerSubmit()">
+  <h1 class="mb-2">Create Account</h1>
+  <span *ngIf="error" style="color: Red"
+    >User name already have please try another</span
+  >
+  <div class="flex gap-1">
+    <input
+      style="color: black"
+      [formControlName]="controlRegister.userName"
+      type="text"
+      placeholder="User Name"
+    />
+    <input
+      style="color: black"
+      [formControlName]="controlRegister.fullName"
+      type="text"
+      placeholder="Full name"
+    />
+
+  </div>
+  <input
+  style="color: black"
+  [formControlName]="controlRegister.email"
+  type="email"
+  placeholder="Email"
+/>
+<input
+style="color: black"
+[formControlName]="controlRegister.phoneNumber"
+type="text"
+placeholder="Phone Number"
+/>
+  <div class="flex gap-1">
+
+
+  </div>
+  <div class="flex gap-1">
+    <input
+      style="color: black"
+      [formControlName]="controlRegister.password"
+      type="password"
+      placeholder="Password"
+    />
+    <input
+      style="color: black"
+      type="password"
+      placeholder="Re-enter Password"
+    />
+  </div>
+
+  <button type="submit">Sign Up</button>
+</form>

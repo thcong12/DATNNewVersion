@@ -1,0 +1,18 @@
+<form [formGroup]="formLogin" (submit)="loginSubmit()">
+    <h1>Sign in</h1>
+    <span *ngIf="isCorrectUser" style="color: red;">Wrong user name or password</span>
+    <input style="color: black" [formControlName]="controlLogin.userName" type="text" placeholder="Email" />
+    <input style="color: black" [formControlName]="controlLogin.password" type="password" placeholder="Password" />
+    <div class="flex justify-content-between w-full ">
+        <span class="flex align-items-center gap-2">
+  <input class="text-base" type="checkbox" />
+  <label class=" text-base" for="">Rememberme</label>
+</span>
+
+        <a (click)="openDialog(true)" style="cursor: pointer;" class="text-white ">
+          Forgot the password
+        </a>
+    </div>
+
+    <button type="submit">Sign In</button>
+</form>

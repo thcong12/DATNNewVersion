@@ -20,8 +20,15 @@ import { ToastModule } from 'primeng/toast';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PasswordModule } from 'primeng/password';
 import { ChartModule } from 'primeng/chart';
-import { TabViewModule } from 'primeng/tabview';
+import { ChipModule } from 'primeng/chip';
+import { DataViewModule, DataViewLayoutOptions } from 'primeng/dataview';
+import { DropdownModule } from 'primeng/dropdown';
+import { RatingModule } from 'primeng/rating';
+import { SliderModule } from 'primeng/slider';
 import { TableModule } from 'primeng/table';
+import { GalleriaModule } from 'primeng/galleria';
+import { TabViewModule } from 'primeng/tabview';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 const declarations: any[] = [
   // BaseComponent,
   // InputMsgDirective,
@@ -31,7 +38,13 @@ const declarations: any[] = [
 ];
 const primengModule: any[] = [
   DialogModule,
+  RatingModule,
+  SliderModule,
+  GalleriaModule,
+  InputTextareaModule,
+  DataViewModule,
   ConfirmDialogModule,
+  DropdownModule,
   ButtonModule,
   MessagesModule,
   TieredMenuModule,
@@ -50,6 +63,7 @@ const primengModule: any[] = [
   ChartModule,
   TabViewModule,
   TableModule,
+  ChipModule,
 ];
 const imports = [
   CommonModule,

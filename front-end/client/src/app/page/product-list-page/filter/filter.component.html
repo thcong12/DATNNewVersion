@@ -1,0 +1,67 @@
+<form [formGroup]="filterForm" (submit)="submitForm()">
+
+  <div class="pb-2 productPage__filter__price">
+    <h4>PRICE</h4>
+    <h5 class="">
+      Price:
+      {{
+        "$ " +
+          valuePrice.controls[0].value +
+          " - $ " +
+          valuePrice.controls[1].value
+      }}
+    </h5>
+    <p-slider
+      [formControlName]="controlName.value"
+      [range]="true"
+      [style]="{ margin: '0 1rem' }"
+    ></p-slider>
+  </div>
+  <div class="py-2 productPage__filter__categlory">
+    <h4>Tag</h4>
+    <p-dropdown
+      [options]="listCateglory"
+      optionLabel="cateName "
+      [filter]="true"
+      filterBy="cateName"
+      [showClear]="true"
+      placeholder="Select a Categlory "
+    >
+      <ng-template let-cate pTemplate="item ">
+        <div class="">
+          <div (click)="addCateglory(cate)">{{ cate.cateName }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+    <div class="pl-3 mt-3 grid gap-1">
+      <p-chip
+        *ngFor="let item of categloryList?.controls; let i = index"
+        [label]="item.value.cateName"
+        (onRemove)="removeCateglory(i)"
+        [removable]="true"
+        [style]="{ 'border-radius': '10px' }"
+      ></p-chip>
+    </div>
+  </div>
+  <div class="py-2 productPage__filter__categlory">
+    <h4>Developer</h4>
+    <p-dropdown
+      [options]="listDeveloper"
+      [formControlName]="controlName.developer"
+      optionLabel="devName"
+      [filter]="true"
+      filterBy="devName"
+      [showClear]="true"
+      placeholder="Select a developer"
+    >
+      <ng-template let-item pTemplate="item">
+        <div class="">
+          <div class="hover:text-700">{{ item.devName }}</div>
+        </div>
+      </ng-template>
+    </p-dropdown>
+  </div>
+  <button class="buttonCustom" type="submit ">
+    Search
+  </button>
+</form>

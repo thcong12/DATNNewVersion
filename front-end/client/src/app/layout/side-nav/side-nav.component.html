@@ -1,0 +1,8 @@
+<ul class="layout-menu">
+    <ul *ngFor="let item of model">
+        <li class="pl-5 py-2 mb-2 text-xl" [routerLink]="item.routerLink" routerLinkActive="routerActive">
+            <span class="activeIcon"></span>
+            <span ><i [class]="item.icon"></i> {{ item.label }}</span> 
+        </li>
+    </ul>
+</ul>

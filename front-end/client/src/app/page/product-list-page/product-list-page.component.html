@@ -1,0 +1,24 @@
+<div class="grid productPage">
+  <app-list  [listProduct]="dataInput.listProduct"></app-list>
+  <div class="col-3">
+    <div class="productPage__filter__search">
+      <h4 class="mb-5">SEARCH</h4>
+      <span class="p-float-label mt-3">
+        <input
+          class="p-2 text-base"
+          style="border-radius: 5px; border: none"
+          pInputText
+          id="username"
+         #input
+        />
+        <label htmlFor="Key word">Key word</label>
+      </span>
+    </div>
+    <app-filter
+    (dataFilter)="submitForm($event)"
+    [listCateglory]="dataInput.listCateglory"
+    [listDeveloper]="dataInput.listDeveloper"
+  ></app-filter>
+  </div>
+
+</div>

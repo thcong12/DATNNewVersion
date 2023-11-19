@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BaseRouter } from "../../base/router-base";
-import { DeveloperController } from "../../controller/dashboard/developer-controller";
-import { IDeveloper } from "../../model/product/DeveloperModel";
 
-export class DeveloperRouter extends BaseRouter {
-  private Controller: DeveloperController = new DeveloperController();
+import { IDeveloper } from "../../model/product/DeveloperModel";
+import { DeveloperController } from "../../controller/developer-controller";
+import { ProductController } from "../../controller/product-controller";
+import { IProduct } from "../../model/product/ProductModel";
+
+export class ProductRouter extends BaseRouter {
+  private product: ProductController = new ProductController();
   constructor() {
     super();
     this.getDetail();
@@ -15,10 +18,10 @@ export class DeveloperRouter extends BaseRouter {
   }
   getAll() {
     this.router.get(
-      "/",
+      "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.Controller.getAllData();
+          const data = await this.product.getAllproduct();
           res.json(data);
         }
       )
@@ -29,8 +32,8 @@ export class DeveloperRouter extends BaseRouter {
       "/:id",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const cateId = req.params.id;
-          const data = await this.Controller.getDetailById(cateId);
+          const id = req.params.id;
+          const data = await this.product.getProductDetail(id);
           res.json(data);
         }
       )
@@ -41,9 +44,8 @@ export class DeveloperRouter extends BaseRouter {
       "/:id",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const dataReq: IDeveloper = req.body;
           const cateId = req.params.id;
-          const data = await this.Controller.putData(cateId, dataReq);
+          const data = await this.product.modifyProduct(cateId, req);
           res.json(data);
         }
       )
@@ -54,9 +56,7 @@ export class DeveloperRouter extends BaseRouter {
       "/",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const dataReq: IDeveloper = req.body;
-          const key: keyof IDeveloper = "devName";
-          const data = await this.Controller.postData(dataReq, key);
+          const data = await this.product.createProudct(req);
           res.json(data);
         }
       )
