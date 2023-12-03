@@ -34,8 +34,8 @@ export interface IProduct {
   shortDescription: string;
   price: Number;
   sale: ISale;
-  horizontalImg: IImage;
-  verticalImg: IImage;
+  imgY: IImage;
+  imgX: IImage;
   isActive: boolean;
 }
 
@@ -78,7 +78,7 @@ const productSchema = new Schema<IProduct>(
         type: String,
       },
     },
-    horizontalImg: {
+    imgY: {
       title: {
         type: String,
         require: true,
@@ -90,7 +90,7 @@ const productSchema = new Schema<IProduct>(
         default: "",
       },
     },
-    verticalImg: {
+    imgX: {
       title: {
         type: String,
         require: true,

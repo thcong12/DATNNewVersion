@@ -31,6 +31,11 @@ export class StoreService extends BaseService {
     const url = `/product/bestseller`;
     return me.get(url);
   }
+  public getNewRelease(): Observable<any> {
+    const me = this;
+    const url = `/product/newrelease`;
+    return me.get(url);
+  }
   public getSaleProduct(): Observable<any> {
     const me = this;
     const url = `/tool/getProductSale`;

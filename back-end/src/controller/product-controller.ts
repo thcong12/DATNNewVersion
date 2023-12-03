@@ -12,8 +12,8 @@ export class ProductController {
   public product: Model<IProduct> = ProductModel;
   public detail: Model<IProductDetail> = ProductDetailModel;
   constructor() {}
-  async getAllproduct(): Promise<IProduct[]> {
-    const data = await this.product.find();
+  async getAllproduct(number: number): Promise<IProduct[]> {
+    const data = await this.product.find({ isActive: true }).limit(number);
     if (data) {
       return data;
     } else {

@@ -1,4 +1,4 @@
-export const localStoreConst = {
+export const LocalStoreConst = {
   USER_PROFILE: 'USER_PROFILE',
   REFRESH_TOKEN: 'REFRESH_TOKEN',
   LOGIN_STAGE: 'LOGIN_STAGE',

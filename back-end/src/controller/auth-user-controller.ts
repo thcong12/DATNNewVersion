@@ -1,14 +1,15 @@
 import { AuthBaseController } from "../base/auth-controller-base";
 import { CONSTANT } from "../constant";
 import { AdminModel, IAdmin, IAdminrMethods } from "../model/admin/AdminModel";
+import { IUser, IUserMethods, UserModel } from "../model/user/UserModel";
 import { checkUser } from "../ultils/genareate_token";
 import { NextFunction, Request, Response } from "express";
-export class DashboardAuthController extends AuthBaseController<
-  IAdmin,
-  IAdminrMethods
+export class ClientAuthController extends AuthBaseController<
+  IUser,
+  IUserMethods
 > {
   constructor() {
-    super(AdminModel);
+    super(UserModel);
   }
 
   // async login(req: Request, res: Response) {

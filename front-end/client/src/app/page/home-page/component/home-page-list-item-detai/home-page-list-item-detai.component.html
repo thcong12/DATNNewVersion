@@ -1,0 +1,50 @@
+<div *ngIf="productItem" class="m-0 p-4">
+    <h2>{{ productItem.productName }}</h2>
+    <div class="relative">
+      <div
+        class=""
+        *ngFor="let item of productImg; let i = index"
+      >
+        <img
+          class="cc"
+          width="100%"
+          height="100%"
+          *ngIf="i === count"
+          [src]="item.url + '?h=270&resize=1&w=480'"
+        />
+      </div>
+      <div
+        *ngIf="productImg"
+        class="flex justify-content-between align-items-center absolute top-0 left-0"
+        style="width: 100%; height: 100%"
+      >
+        <button
+          class="btnSlide pi pi-chevron-left"
+          (click)="onPrevious()"
+          [disabled]="count === 0"
+        ></button>
+
+        <button
+          (click)="onNext(productImg)"
+          [disabled]="count == productImgLength - 1 "
+          class="btnSlide pi pi-chevron-right"
+        ></button>
+      </div>
+    </div>
+    <br />
+    <div class="flex gap-1 flex-wrap">
+      <a *ngFor="let item of productCateGlory; let i = index"
+        >{{ item.cateName }}
+      </a>
+    </div>
+
+    <div class="my-3 flex justify-content-between">
+      <span class="mb-2 fs-6"><b> Developer : </b></span>
+
+      <span class="mb-2 fs-6">{{
+        productItem.detail?.developer?.devName
+      }}</span>
+    </div>
+
+    <p>{{ productItem.shortDescription }}</p>
+  </div>

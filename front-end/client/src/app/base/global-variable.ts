@@ -1,40 +1,45 @@
+import { HttpResponse } from '@angular/common/http';
+import { LocalStoreConst } from '../shared/constant/local-const';
+import { header } from '../shared/constant/router-const';
+
 export class GlobalVariable {
   constructor() {}
   public removeSession() {
     localStorage.clear();
   }
-
-  //handle login stage
   setLoginStage(value: string) {
-    localStorage.setItem('LOGIN_STAGE', value);
+    localStorage.setItem(LocalStoreConst.LOGIN_STAGE, value);
+  }
+  setAccessToken(res?: HttpResponse<any>) {
+    const value = res?.headers.get(header.accessTK);
+    localStorage.setItem(LocalStoreConst.ACCESS_TOKEN, String(value));
+  }
+  //handle  user profile
+  setUserProfile(res: HttpResponse<any>) {
+    const value = res.body?.userDetail;
+    localStorage.setItem(LocalStoreConst.USER_PROFILE, JSON.stringify(value));
+  }
+  setRefreshToken(res: HttpResponse<any>) {
+    const value = res?.headers.get(header.refreshTK);
+    localStorage.setItem(LocalStoreConst.REFRESH_TOKEN, String(value));
   }
   get getLoginStage() {
-    return localStorage.getItem('LOGIN_STAGE');
+    return localStorage.getItem(LocalStoreConst.LOGIN_STAGE);
   }
 
   //handle refresh token
-  setRefreshToken(value: any) {
-    localStorage.setItem('REFRESH_TOKEN', String(value));
-  }
+
   get getRefreshToken() {
-    return localStorage.getItem('REFRESH_TOKEN');
+    return localStorage.getItem(LocalStoreConst.REFRESH_TOKEN);
   }
 
   //handle access token
   get getAccessToken() {
-    return localStorage.getItem('ACCESS_TOKEN');
-  }
-  setAccessToken(value: any) {
-    localStorage.setItem('ACCESS_TOKEN', String(value));
-  }
-
-  //handle  user profile
-  setUserProfile(value: any) {
-    localStorage.setItem('USER_PROFILE', JSON.stringify(value));
+    return localStorage.getItem(LocalStoreConst.ACCESS_TOKEN);
   }
 
   get getUserProfile() {
-    return localStorage.getItem('USER_PROFILE');
+    return localStorage.getItem(LocalStoreConst.USER_PROFILE);
   }
 
   setUserCart(data: any) {

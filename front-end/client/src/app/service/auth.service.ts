@@ -4,61 +4,48 @@ import { Router } from '@angular/router';
 
 import { BehaviorSubject, Observable, shareReplay, tap } from 'rxjs';
 import { AuthModule } from '../model/auth.model';
-import { BaseService } from './base.service';
+import { BaseService, OptionsRequest } from './base.service';
 import { GlobalVariable } from '../base/global-variable';
 import { ViewModelService } from '../base/viewModel.service';
+import { AuthBaseService } from './auth-base.service';
+import { routerURL } from '../shared/constant/router-const';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
-  authError: boolean = false;
-  private globalVariable: GlobalVariable;
+export class AuthService extends AuthBaseService {
+  private authError: boolean = false;
+
   constructor(
-    private httpClient: HttpClient,
+    http: HttpClient,
     private router: Router,
     private vms: ViewModelService
   ) {
-    this.globalVariable = this.vms.globalVariable;
-    this.updateAuth();
+    super(http);
+    // this.updateAuth();
   }
   public redirectUrl: string | null = null;
-
   public isLogin = new BehaviorSubject<boolean>(this.isAuth());
-  private async setSession(
-    accessToken?: string,
-    refreshToken?: string,
-    userInfo?: string
-  ) {
-    this.globalVariable.setAccessToken(accessToken);
-    this.globalVariable.setRefreshToken(refreshToken);
-    this.globalVariable.setUserProfile(userInfo);
-  }
-  private removeSession() {
-    this.globalVariable.removeSession();
-  }
   public isAuth(): boolean {
-    return this.getRefreshToken() !== null;
+    return this.globalVariable.getRefreshToken !== null;
   }
   public updateAuth() {
-    if (this.getRefreshToken() !== null) return this.isLogin.next(true);
-    if (this.getRefreshToken() === null) {
+    if (this.globalVariable.getRefreshToken !== null)
+      return this.isLogin.next(true);
+    if (this.globalVariable.getRefreshToken === null) {
       return this.isLogin.next(false);
     }
   }
-  public login(login: AuthModule.Login): Observable<HttpResponse<any>> {
-    const me = this;
-    const url = `http://localhost:5000/api/store/user/login`;
-    return me.httpClient.post(url, login, { observe: 'response' }).pipe(
+  public login(
+    login: AuthModule.Login
+  ): Observable<HttpResponse<AuthModule.Login>> {
+    const url = this.authApi + routerURL.auth.login;
+    return this.post(url, login, this.httpOption).pipe(
       shareReplay<any>(),
       tap(async (res: HttpResponse<any>) => {
         if (res.status === 200) {
           this.globalVariable.setLoginStage(String(true));
           const isLogin = this.globalVariable.getLoginStage;
-          await this.setSession(
-            res.headers?.get('x-access-token') || '',
-            res.headers?.get('x-refresh-token') || '',
-            res.body?.userDetail
-          );
+          await this.setSession(res);
           if (isLogin) {
             this.router.navigateByUrl('/home');
           }
@@ -68,32 +55,19 @@ export class AuthService {
       })
     );
   }
-  public getRefreshToken() {
-    return localStorage.getItem('REFRESH_TOKEN');
-  }
-  public getAccessToken() {
-    return localStorage.getItem('ACCESS_TOKEN');
-  }
   public logout(): Observable<HttpResponse<any>> {
-    const me = this;
-    const url = `http://localhost:5000/api/store/user/logout`;
-    return me.httpClient
-      .get(url, {
-        headers: { 'x-refresh-token': String(this.getRefreshToken()) },
-        observe: 'response',
+    const url = this.authApi + routerURL.auth.logout;
+    return this.get(url, this.httpOption).pipe(
+      shareReplay<any>(),
+      tap((res: HttpResponse<any>) => {
+        // alert('Logout successful');
+        this.globalVariable.removeSession();
       })
-      .pipe(
-        shareReplay<any>(),
-        tap((res: HttpResponse<any>) => {
-          alert('Logout successful');
-          me.removeSession();
-        })
-      );
+    );
   }
   public register(user: AuthModule.Register): Observable<HttpResponse<any>> {
-    const me = this;
-    const url = `http://localhost:5000/api/store/user/signup`;
-    return me.httpClient.post(url, user, { observe: 'response' }).pipe(
+    const url = this.authApi + routerURL.auth.login;
+    return this.post(url, user, this.httpOption).pipe(
       shareReplay<any>(),
       tap((res: HttpResponse<any>) => {
         if (res.status === 200) {
@@ -107,23 +81,17 @@ export class AuthService {
     );
   }
   public userActive(token: string): Observable<HttpResponse<any>> {
-    const me = this;
-    const url = `http://localhost:5000/api/store/user/useractice/${token}`;
-    return me.httpClient
-      .get(url, {
-        headers: {},
-        observe: 'response',
+    const url = this.authApi + routerURL.auth.accActive(token);
+    return this.get(url, this.httpOption).pipe(
+      shareReplay<any>(),
+      tap((res: HttpResponse<any>) => {
+        alert('account active successful');
       })
-      .pipe(
-        tap((res: HttpResponse<any>) => {
-          alert('account active successful');
-        })
-      );
+    );
   }
-  public forgotPassword(formInput: any): Observable<HttpResponse<any>> {
-    const me = this;
-    const url = `http://localhost:5000/api/store/user/forgotpassword`;
-    return me.httpClient.post(url, formInput, { observe: 'response' }).pipe(
+  public resetPassword(formInput: any): Observable<HttpResponse<any>> {
+    const url = this.authApi + routerURL.auth.resetps;
+    return this.post(url, formInput, this.httpOption).pipe(
       shareReplay<any>(),
       tap((res: HttpResponse<any>) => {})
     );
@@ -132,26 +100,19 @@ export class AuthService {
     token: string,
     password: any
   ): Observable<HttpResponse<any>> {
-    const url = `http://localhost:5000/api/store/user/changepassword/${token}`;
-    return this.httpClient.post(url, password, { observe: 'response' }).pipe(
+    const url = this.authApi + routerURL.auth.changePasswork(token);
+    return this.post(url, password, this.httpOption).pipe(
       shareReplay<any>(),
       tap((res: HttpResponse<any>) => {})
     );
   }
-  public setAccessToken(accessToken: string) {
-    localStorage.setItem('x-access-token', accessToken);
-  }
-  getNewAccessToken() {
-    const url = `http://localhost:5000/api/store/user/refresh`;
-    return this.httpClient
-      .get(url, {
-        headers: { 'x-refresh-token': String(this.getRefreshToken()) },
-        observe: 'response',
+  public getNewAccessToken() {
+    const url = this.authApi + routerURL.auth.refreshTk;
+    return this.get(url, this.httpOption).pipe(
+      shareReplay<any>(),
+      tap((res: HttpResponse<any>) => {
+        this.globalVariable.setAccessToken(res);
       })
-      .pipe(
-        tap((res: HttpResponse<any>) => {
-          this.globalVariable.setAccessToken(res.headers.get('x-access-token'));
-        })
-      );
+    );
   }
 }

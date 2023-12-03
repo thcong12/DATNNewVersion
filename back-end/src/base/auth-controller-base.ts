@@ -9,6 +9,7 @@ import {
   generateRefreshToken,
 } from "../ultils/genareate_token";
 import jwt from "jsonwebtoken";
+import { IUser } from "../model/user/UserModel";
 
 export abstract class AuthBaseController<T, M> {
   protected model: Model<T, {}, M>;
@@ -59,6 +60,7 @@ export abstract class AuthBaseController<T, M> {
         .header(CONSTANT.header.accessToken, accessTk)
         .json({ userName: userName });
       res.status(200);
+      console.log(user);
     } else {
       res.status(401);
       throw new Error("Some thing wrong please check user name or password");
@@ -66,26 +68,20 @@ export abstract class AuthBaseController<T, M> {
   }
 
   public async logout(req: Request, res: Response, next: NextFunction) {
-    // const authHeader = req.header(CONSTANT.header.refreshToken);
-    // let value: any;
-    const authHeader: any = req.header(CONSTANT.header.refreshToken);
-    if (!authHeader) {
-      return res.sendStatus(401);
+    const userId: any = checkUser(res, req, next);
+    const refreshToken = this.getRefreshToken(req);
+    const user = await this.getUserById(userId.id);
+    if (Array.isArray(user.section)) {
+      user.section = user.section.filter((item: any) => {
+        return item != refreshToken;
+      });
     } else {
-      const userId = checkUser(res, authHeader, next);
-
-      const user = await this.getUserById(userId.id);
-      // if (Array.isArray(user.section)) {
-      //   //
-      // } else {
-      //   user.section = "";
-      // }
-      // await user.save();
-      console.log(user);
-      res.send("Goodbye");
+      user.refreshToken = "";
     }
+    await user.save();
+    // console.log(user);
+    res.send("Goodbye");
   }
-
   public async refreshToken(req: Request, res: Response, next: NextFunction) {
     // const userId = checkUser(req, res, next);
     // const user = await this.getUserById(userId);

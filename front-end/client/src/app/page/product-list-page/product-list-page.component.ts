@@ -43,7 +43,7 @@ export class ProductListPageComponent implements OnInit, AfterViewInit {
     listDeveloper: [] as Product.Developer[],
   };
   public numberProduct: number = 16;
-  public isLogin$: BehaviorSubject<boolean> = this.authsv.isLogin;
+  // public isLogin$: BehaviorSubject<boolean> = this.authsv.isLogin;
   public rangeValues: number[] = [20, 80];
   public sortOptions!: SelectItem[];
   public sortSelect: SelectItem = { label: 'All ', value: '-1' };

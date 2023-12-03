@@ -14,6 +14,7 @@ export class ProductRouter extends BaseRouter {
   importRouter() {
     this.getProductHomeSlide();
     this.getProductBestSeller();
+    this.getProductNewRelease();
     this.getProductDetail();
   }
   getAll() {
@@ -21,7 +22,7 @@ export class ProductRouter extends BaseRouter {
       "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.Product.getAllproduct();
+          const data = await this.Product.getAllproduct(200);
           res.json(data);
         }
       )
@@ -54,6 +55,17 @@ export class ProductRouter extends BaseRouter {
         async (req: Request, res: Response, next: NextFunction) => {
           const bestseller = await this.HomePage.getBestSeller();
           res.json(bestseller);
+        }
+      )
+    );
+  }
+  getProductNewRelease() {
+    this.router.get(
+      "/newrelease",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const newrelease = await this.HomePage.getProductNewRelease();
+          res.json(newrelease);
         }
       )
     );

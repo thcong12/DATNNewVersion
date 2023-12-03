@@ -26,7 +26,7 @@ import { UserService } from 'src/app/service/user.service';
 export class ProductDetailPageComponent extends BaseComponent {
   public commentForm!: FormGroup;
   counter: number = 0;
-  public isLogin$: BehaviorSubject<boolean> = this.authSv.isLogin;
+  // public isLogin$: BehaviorSubject<boolean> = this.authSv.isLogin;
   public isInLybrary: boolean = false;
 
   constructor(
@@ -181,14 +181,14 @@ export class ProductDetailPageComponent extends BaseComponent {
     me.getProduct();
 
     me.formInit();
-    me.isLogin$.subscribe((result) => {
-      if (result) {
-        me.getLibraries();
-        setTimeout(() => {
-          me.userSv.setDataRecomend(me.productId).subscribe();
-        }, 2000);
-      }
-    });
+    // me.isLogin$.subscribe((result) => {
+    //   if (result) {
+    //     me.getLibraries();
+    //     setTimeout(() => {
+    //       me.userSv.setDataRecomend(me.productId).subscribe();
+    //     }, 2000);
+    //   }
+    // });
   }
   onNext() {
     if (this.counter != this.listProductSimilar.length - 1) {

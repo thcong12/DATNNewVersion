@@ -16,7 +16,7 @@ export interface OptionsRequest {
         [header: string]: string | string[];
       };
   context?: HttpContext;
-  observe?: 'body';
+  observe?: 'body' | any;
   params?:
     | HttpParams
     | {

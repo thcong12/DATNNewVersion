@@ -38,12 +38,12 @@ export class ResponseInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = this.authservice.getAccessToken();
-    if (!!token) {
-      request = request.clone({
-        headers: request.headers.set('x-access-token', String(token)),
-      });
-    }
+    // const token = this.authservice.getAccessToken();
+    // if (!!token) {
+    //   request = request.clone({
+    //     headers: request.headers.set('x-access-token', String(token)),
+    //   });
+    // }
     return next.handle(request);
     //.pipe(
     //     finalize(() =>

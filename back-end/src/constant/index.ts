@@ -78,5 +78,7 @@ export const CONSTANT = {
     cart: "Cart",
     libraly: "Libraries",
     homeSlide: "Sliders",
+    dataRecomendraw: "Datasetforproducts",
+    dataRecomend: "dataRecomend",
   },
 };

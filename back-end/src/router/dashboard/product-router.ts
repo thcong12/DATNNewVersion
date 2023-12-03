@@ -21,7 +21,7 @@ export class ProductRouter extends BaseRouter {
       "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.product.getAllproduct();
+          const data = await this.product.getAllproduct(200);
           res.json(data);
         }
       )

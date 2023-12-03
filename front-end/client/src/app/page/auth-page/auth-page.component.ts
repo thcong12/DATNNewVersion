@@ -14,8 +14,8 @@ export class AuthPageComponent extends BaseComponent {
   swicthPage() {
     this.isLoginPage = !this.isLoginPage;
   }
-  public displayModal:boolean = false
-  public isLogin$: BehaviorSubject<boolean> = this.authSv.isLogin;
+  public displayModal: boolean = false;
+  // public isLogin$: BehaviorSubject<boolean> = this.authSv.isLogin;
   public formChangePassword!: FormGroup;
   public display: boolean = false;
 
@@ -45,7 +45,7 @@ export class AuthPageComponent extends BaseComponent {
   public changePasswordSubmit() {
     const me = this;
     me.authSv
-      .forgotPassword(me.formChangePassword.value)
+      .resetPassword(me.formChangePassword.value)
       .pipe(
         tap((res) => {
           alert('Please check your email');
@@ -57,8 +57,7 @@ export class AuthPageComponent extends BaseComponent {
     const me = this;
     me.formInit();
     me.route.paramMap;
-    console.log(this.layout.isOverlay(),this.layout.config.menuMode)
-    this.layout.onMenuToggle()
+    console.log(this.layout.isOverlay(), this.layout.config.menuMode);
+    this.layout.onMenuToggle();
   }
-
 }

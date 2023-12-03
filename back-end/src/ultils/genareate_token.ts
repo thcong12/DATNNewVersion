@@ -37,7 +37,10 @@ export const checkSection = (req: Request, res: Response) => {
     // admin_value: decoded.value,
   });
 };
-export const checkUser = (res: Response, token: string, next: NextFunction) => {
-  const decode = jwt.verify(token!, CONSTANT.jwt.secret) as MyToken;
-  return decode;
+export const checkUser = (res: Response, req: Request, next: NextFunction) => {
+  const authHeader: any = req.header(CONSTANT.header.refreshToken);
+  if (authHeader) {
+    const decode = jwt.verify(authHeader, CONSTANT.jwt.secret) as MyToken;
+    return decode;
+  }
 };

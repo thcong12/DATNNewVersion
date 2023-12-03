@@ -15,8 +15,8 @@ import { StoreService } from 'src/app/service/store.service';
   styleUrls: ['./home-page-list.component.scss'],
 })
 export class HomePageListComponent extends BaseComponent {
-  public isLogin$: BehaviorSubject<boolean> = this.authsv.isLogin;
-  private GlobalVariable: GlobalVariable = new GlobalVariable;
+  // public isLogin$: BehaviorSubject<boolean> = this.authsv.isLogin;
+  private GlobalVariable: GlobalVariable = new GlobalVariable();
   counter: number = 0;
   public releaseseProducts = [] as any;
   public topSellerProducts = [] as any;
@@ -50,74 +50,53 @@ export class HomePageListComponent extends BaseComponent {
 
   public display(id: any) {
     this.selectedIndex = 0;
-
     this.id = id;
   }
 
-  public getData() {
-    const productRelease = JSON.parse(
-      String(localStorage.getItem('USER_RELEASE'))
-    );
-    this.productSv
-      .getProducts()
+  private getDataRelease() {
+    this.storeSv
+      .getNewRelease()
       .pipe(
         map((releasese) => {
-          let newArray = releasese.slice(0, 10);
-          newArray.map((item: any) => {
-            let idPr = String(item._id);
-            return this.productSv
-              .getProductDetail(idPr)
-              .pipe(
-                tap((res) => {
-                  this.releaseseProducts.push(res);
-                })
-              )
-              .subscribe();
+          releasese.map((item: any) => {
+            this.releaseseProducts.push(item);
           });
         })
       )
       .subscribe({
         complete: () => {
-          this.listLink[0].products = this.releaseseProducts;
+          this.releaseseProducts.map((item: any) => {
+            this.listLink[0].products.push(item);
+          });
         },
       });
   }
 
-  public getData1() {
+  private getDataBestSeller() {
     const me = this;
-    me.storeSv
+    this.storeSv
       .getBestSeller()
       .pipe(
-        tap((bestseller) => {
-          bestseller.slice(0, 10).forEach((item: any) => {
-            if (item._id !== null) {
-              me.productSv
-                .getProductDetail(String(item._id))
-                .pipe(
-                  tap((res) => {
-                    me.listLink[1].products.push(res);
-                    console.log(res);
-                  })
-                )
-                .subscribe();
-            }
+        map((bestSeller) => {
+          bestSeller.map((item: any) => {
+            this.topSellerProducts.push(item);
           });
         })
       )
       .subscribe({
-        complete: () => {},
+        complete: () => {
+          this.topSellerProducts.map((item: any) => {
+            this.listLink[1].products.push(item);
+          });
+        },
       });
   }
 
-  public getData2() {
+  private getDataRecommend() {
     const me = this;
     const productRecommend = JSON.parse(
       String(localStorage.getItem('USER_RECOMMEND'))
     );
-    const productBestseller = JSON.parse(
-      String(localStorage.getItem('USER_RECOMMEND'))
-    );
-
     forkJoin(
       productRecommend.buy.map((item: any) => {
         return me.productSv.getProductDetail(item);
@@ -134,12 +113,11 @@ export class HomePageListComponent extends BaseComponent {
     this.selectedIndex = index;
   }
   override onInit(): void {
-    const me = this;
-    me.getData();
-    me.getData1();
-    if (me.isLogin$) {
-      me.getData2();
-    }
+    this.getDataBestSeller();
+    this.getDataRelease();
+    // if (this.isLogin$) {
+    //   this.getDataRecommend();
+    // }
   }
   onNext(productList: any) {
     if (this.counter != productList - 1) {
