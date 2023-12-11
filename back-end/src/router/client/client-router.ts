@@ -4,21 +4,24 @@ import { BaseRouter } from "../../base/router-base";
 import { DeveloperRouter } from "./developer-router";
 import { ClientAuthRouter } from "./auth-router";
 import { ProductRouter } from "./product-router";
+import { UserRouter } from "./user-router";
 
 export class ClientRouter extends BaseRouter {
   private category: CategoryRouter = new CategoryRouter();
   private developer: DeveloperRouter = new DeveloperRouter();
   private authentication: ClientAuthRouter = new ClientAuthRouter();
   private product: ProductRouter = new ProductRouter();
+  private user: UserRouter = new UserRouter();
   constructor() {
     super();
     this.categoryRouter();
     this.developerRouter();
     this.authRouter();
     this.productRouter();
+    this.userRouter();
   }
   categoryRouter() {
-    this.router.use("/category", this.category.router);
+    this.router.use("/categlory", this.category.router);
   }
   developerRouter() {
     this.router.use("/developer", this.developer.router);
@@ -28,5 +31,8 @@ export class ClientRouter extends BaseRouter {
   }
   authRouter() {
     this.router.use("/auth", this.authentication.router);
+  }
+  userRouter() {
+    this.router.use("/user", this.user.router);
   }
 }

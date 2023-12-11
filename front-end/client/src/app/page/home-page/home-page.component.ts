@@ -109,37 +109,35 @@ export class HomePageComponent extends BaseComponent {
     this.selectedIndex = index;
   }
   public getData1() {
-    const me = this;
-    me.productSv
-      .getProducts()
-      .pipe(
-        tap((res) => {
-          res.map((item: any) => {
-            forkJoin({ detail: me.productSv.getProductDetail(item._id) })
-              .pipe(
-                map(({ detail }) => {
-                  item.detail = detail;
-                })
-              )
-              .subscribe();
-          });
-          me.productList = [...res.slice(0, 4)];
-        })
-      )
-      .subscribe();
+    // const me = this;
+    // me.productSv
+    //   .getProducts()
+    //   .pipe(
+    //     tap((res) => {
+    //       res.map((item: any) => {
+    //         forkJoin({ detail: me.productSv.getProductDetail(item._id) })
+    //           .pipe(
+    //             map(({ detail }) => {
+    //               item.detail = detail;
+    //             })
+    //           )
+    //           .subscribe();
+    //       });
+    //       me.productList = [...res.slice(0, 4)];
+    //     })
+    //   )
+    //   .subscribe();
   }
   override onInit(): void {
     const me = this;
     me.getData();
     me.getData1();
-    console.log(this.layout.isOverlay(), this.layout.config.menuMode);
-
-    setInterval(() => {
-      if (me.selectedIndex == me.productSlider.length - 1) {
-        me.selectedIndex = 0;
-      } else {
-        me.selectedIndex++;
-      }
-    }, 5000);
+    // setInterval(() => {
+    //   if (me.selectedIndex == me.productSlider.length - 1) {
+    //     me.selectedIndex = 0;
+    //   } else {
+    //     me.selectedIndex++;
+    //   }
+    // }, 5000);
   }
 }

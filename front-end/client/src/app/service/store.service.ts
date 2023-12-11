@@ -3,18 +3,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { BaseService } from './base.service';
+import { apiRouter } from '../shared/constant/router-const';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreService extends BaseService {
+  private api: String = apiRouter.product;
   constructor(http: HttpClient) {
     super(http);
   }
   public getProductsSlider(): Observable<any> {
-    const me = this;
-    const url = `/product/slide`;
-    return me.get(url);
+    const url = this.api + apiRouter.store.slide;
+    return this.get(url);
   }
   public search(keyword: string): Observable<any> {
     const me = this;
@@ -27,19 +28,16 @@ export class StoreService extends BaseService {
     return me.get(url);
   }
   public getBestSeller(): Observable<any> {
-    const me = this;
-    const url = `/product/bestseller`;
-    return me.get(url);
+    const url = this.api + apiRouter.store.bestseller;
+    return this.get(url);
   }
   public getNewRelease(): Observable<any> {
-    const me = this;
-    const url = `/product/newrelease`;
-    return me.get(url);
+    const url = this.api + apiRouter.store.release;
+    return this.get(url);
   }
   public getSaleProduct(): Observable<any> {
-    const me = this;
-    const url = `/tool/getProductSale`;
-    return me.get(url);
+    const url = this.api + apiRouter.store.sale;
+    return this.get(url);
   }
   public filterProduct(value: any): Observable<any> {
     const me = this;

@@ -21,7 +21,7 @@ export class ProductController {
     }
   }
   async getProductDetail(id: any) {
-    const dataProduct = await this.product.findOne({ _id: id });
+    const dataProduct = await this.product.findById(id);
     // const dataDetail = await this.detail.findOne({ productId: id }); && dataDetail
     if (dataProduct) {
       return dataProduct;
@@ -96,27 +96,13 @@ export class ProductController {
 
   //   }
   // }
-  // async getProductSale() {
-  //   const today = new Date();
-  //   const produtSale: IProduct[] = await this.getAllproduct();
-  //   const result = produtSale.filter(
-  //     (product: IProduct) => product.sale.salePersent != 0
-  //   );
-  //   if (result) {
-  //     // const checkExprieDay = result.filter(
-  //     //   (product: IProduct) =>
-  //     //     new Date(product.sale.startDay).getTime() < today.getTime() &&
-  //     //     new Date(product.sale.endDay).getTime() >= today.getTime()
-  //     // );
-  //     // return checkExprieDay;
-  //   }
-  // }
-  // async getSearchProduct(value: any) {
-  //   const result = await this.product.find({
-  //     productName: { $regex: value, $options: "$i" },
-  //   });
-  //   if (result) {
-  //     return result;
-  //   }
-  // }
+
+  async getSearchProduct(value: any) {
+    const result = await this.product.find({
+      productName: { $regex: value, $options: "$i" },
+    });
+    if (result) {
+      return result;
+    }
+  }
 }

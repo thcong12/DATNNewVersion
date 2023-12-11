@@ -201,7 +201,19 @@ export class HomePageController {
     ]);
     return slider;
   }
-
+  async getProductSale() {
+    const today = new Date();
+    const saleProduct = await this.product.find({
+      $and: [
+        { "sale.salePersent": { $gt: 0 } },
+        { "sale.startDay": { $gte: Number(today) } },
+        { "sale.endDay": { $gte: Number(today) } },
+      ],
+    });
+    if (saleProduct) {
+      return saleProduct;
+    }
+  }
   //   async filterProduct(req:Request){
   //     const { value, listCateglory, developer } = req.body;
   //     // const productDetail = await ProductDetail.find({

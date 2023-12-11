@@ -1,5 +1,5 @@
 <div class="layout-topbar">
-  <a class="layout-topbar-logo" routerLink="/home">
+  <a class="layout-topbar-logo" (click)="returnHomePage()">
     <span style="color: #ffffffff">Steam</span>
   </a>
   <span class="p-input-icon-left w-full">
@@ -30,7 +30,7 @@
         <div style="height: 300px; overflow-x: hidden; overflow-y: auto">
           <div
             class="grid align-items-center gap-2"
-            *ngFor="let item of userCart[0].cartDetail"
+            *ngFor="let item of userCart.cartDetail"
             routerLink="/home"
           >
             <img

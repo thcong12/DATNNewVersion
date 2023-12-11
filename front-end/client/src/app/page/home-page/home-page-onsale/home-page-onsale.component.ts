@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { tap } from 'rxjs';
 import { StoreService } from 'src/app/service/store.service';
 
@@ -6,35 +6,38 @@ import { StoreService } from 'src/app/service/store.service';
   selector: 'app-home-page-onsale',
   templateUrl: './home-page-onsale.component.html',
   styleUrls: ['./home-page-onsale.component.scss'],
-  host:{class:'flex flex-column justify-content-between'}
+  host: { class: 'flex flex-column justify-content-between' },
 })
-export class HomePageOnsaleComponent implements OnInit,AfterViewInit {
-  public data: any =[];
+export class HomePageOnsaleComponent implements OnInit, AfterViewInit {
+  public data: any = [];
 
-  public idPage:number = 1;
+  public idPage: number = 1;
   constructor(private storeSv: StoreService) {}
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
   private getData() {
-    this.storeSv.getSaleProduct().pipe(
-      tap((res: any) => {
-        this.data = res.slice(0,20);
-      })
-    ).subscribe();
+    this.storeSv
+      .getSaleProduct()
+      .pipe(
+        tap((res: any) => {
+          this.data = res;
+        })
+      )
+      .subscribe();
   }
-  public setIdPage(id:number){
-    this.idPage = id
+  public setIdPage(id: number) {
+    this.idPage = id;
   }
-  public aaaa(){
-    this.idPage++
+  public aaaa() {
+    this.idPage++;
   }
-  public bbbb(){
-    this.idPage--
+  public bbbb() {
+    this.idPage--;
   }
-  
+
   ngOnInit(): void {
-    this.getData()
+    this.getData();
+    setTimeout(() => {
+      console.log(this.data);
+    }, 3000);
   }
 }
-

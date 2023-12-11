@@ -1,53 +1,68 @@
+import { Model } from "mongoose";
 import { AuthBaseController } from "../base/auth-controller-base";
 import { CONSTANT } from "../constant";
 import { AdminModel, IAdmin, IAdminrMethods } from "../model/admin/AdminModel";
-import { IUser, IUserMethods, UserModel } from "../model/user/UserModel";
-import { checkUser } from "../ultils/genareate_token";
+import {
+  IUser,
+  IUserMethods,
+  IUserProfile,
+  UserModel,
+  UserProfileModel,
+} from "../model/user/UserModel";
+import { checkUser, generateRefreshToken } from "../ultils/genareate_token";
 import { NextFunction, Request, Response } from "express";
+import nodemailer from "nodemailer";
+import { activeAccount } from "../template/mailtemplate";
+
 export class ClientAuthController extends AuthBaseController<
   IUser,
   IUserMethods
 > {
+  private UserProfile: Model<IUserProfile> = UserProfileModel;
   constructor() {
     super(UserModel);
   }
 
-  // async login(req: Request, res: Response) {
-  //   const userReq: IAdmin = req.body; //?
-  //   // const admin1 = await this.getDetailByVar('userName',userReq.userName);
-  //   const admin = await this.AdminM.findOne({ userName: userReq.userName }); //?
-  //   if (admin && admin.matchPassword(userReq.password)) {
-  //     this.processAfterLogin(req, res, async (token: any) => {
-  //       admin.refreshToken = token;
-  //       await admin.save();
-  //     });
-  //   } else {
-  //     res.status(401);
-  //     throw new Error("Some thing wrong please check user name or password");
-  //   }
-  // }
-  // async logOut(req: Request, res: Response, next: NextFunction) {
-  //   const authHeader: any = req.header(CONSTANT.header.refreshToken);
-  //   checkUser(res, authHeader, next);
-  //   const { id, value } = res as any;
-  //   // if (authHeader) {
-  //   //   jwt.verify(authHeader, "congdeptrai", (err, decoded: any) => {
-  //   //     if (err) return res.sendStatus(401);
-  //   //     // const { id, value } = decoded as any;
-  //   //     console.log(decoded.id);
-  //   //   });
-  //   //   next();
-  //   // }
-  //   // const user = await this.getUserById(userId);
-  //   // if (Array.isArray(user.section)) {
-  //   //   //
-  //   // } else {
-  //   //   user.section = "";
-  //   // }
-  //   // await user.save();
-  //   console.log(id);
-  //   // res.json({ user: id }).sendStatus(204);
-  // }
+  async signin(req: Request, res: Response) {
+    const userReq: IAdmin = req.body; //?
+    const existUser = this.getUserVar("userName", userReq.userName);
+    if (!existUser) {
+      const newUser = await this.model.create({
+        userReq,
+      });
+      const profile = await this.UserProfile.create({
+        fullName: userReq.fullName,
+        userId: newUser._id,
+      });
+      // const saveuser = await newUser.save();
+      if (newUser) {
+        const token = generateRefreshToken(String(newUser._id));
+        const link = `http://localhost:${CONSTANT.port.clientFE}/auth/userActice/${token}`;
+        this.tranport.sendMail(
+          this.mailOption(activeAccount(newUser.userName, link), newUser),
+          function (err) {
+            if (err) {
+              res.json("Please check your email");
+            } else {
+              res.json({
+                message: "Email has been sent--Please confirm",
+              });
+            }
+          }
+        );
+      }
+    }
+
+    // if (newUser && admin.matchPassword(userReq.password)) {
+    //   this.processAfterLogin(req, res, async (token: any) => {
+    //     admin.refreshToken = token;
+    //     await admin.save();
+    //   });
+    // } else {
+    //   res.status(401);
+    //   throw new Error("Some thing wrong please check user name or password");
+    // }
+  }
 
   // async refreshToken(req: Request, res: Response) {
   //   const token = req.header(CONSTANT.header.refreshToken);

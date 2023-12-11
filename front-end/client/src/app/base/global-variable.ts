@@ -16,7 +16,7 @@ export class GlobalVariable {
   }
   //handle  user profile
   setUserProfile(res: HttpResponse<any>) {
-    const value = res.body?.userDetail;
+    const value = res.body?.user;
     localStorage.setItem(LocalStoreConst.USER_PROFILE, JSON.stringify(value));
   }
   setRefreshToken(res: HttpResponse<any>) {
@@ -43,6 +43,7 @@ export class GlobalVariable {
   }
 
   setUserCart(data: any) {
+    console.log(data);
     localStorage.setItem('USER_CART', String(JSON.stringify(data)));
   }
   get getUserCart() {

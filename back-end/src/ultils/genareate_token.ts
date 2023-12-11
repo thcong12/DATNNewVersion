@@ -28,16 +28,14 @@ export const generateRefreshToken = (id: string) => {
 //   }
 // );
 
-export const checkSection = (req: Request, res: Response) => {
+export const checkSection = (req: Request) => {
   const authHeader = req.header(CONSTANT.header.accessToken);
-  jwt.verify(authHeader!, CONSTANT.jwt.accessAdmin, (err, decoded: any) => {
-    if (err) return res.sendStatus(401); //invalid token
-
-    // req = decoded.id,
-    // admin_value: decoded.value,
-  });
+  if (authHeader) {
+    const decode = jwt.verify(authHeader, CONSTANT.jwt.accessUser) as MyToken;
+    return decode;
+  }
 };
-export const checkUser = (res: Response, req: Request, next: NextFunction) => {
+export const checkUser = (req: Request) => {
   const authHeader: any = req.header(CONSTANT.header.refreshToken);
   if (authHeader) {
     const decode = jwt.verify(authHeader, CONSTANT.jwt.secret) as MyToken;

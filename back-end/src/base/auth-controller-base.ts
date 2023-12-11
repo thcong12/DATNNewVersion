@@ -10,11 +10,15 @@ import {
 } from "../ultils/genareate_token";
 import jwt from "jsonwebtoken";
 import { IUser } from "../model/user/UserModel";
-
+import nodemailer, { Transporter } from "nodemailer";
+import SMTPTransport from "nodemailer/lib/smtp-transport";
+import Mail from "nodemailer/lib/mailer";
 export abstract class AuthBaseController<T, M> {
   protected model: Model<T, {}, M>;
+  protected tranport!: Transporter<SMTPTransport.SentMessageInfo>;
   constructor(model: Model<T, {}, M>) {
     this.model = model;
+    this.createTranport();
   }
   protected getAccessToken(req: Request) {
     const token = req.header(CONSTANT.header.accessToken);
@@ -58,9 +62,7 @@ export abstract class AuthBaseController<T, M> {
       res
         .header(CONSTANT.header.refreshToken, refreshTk)
         .header(CONSTANT.header.accessToken, accessTk)
-        .json({ userName: userName });
-      res.status(200);
-      console.log(user);
+        .json({ user: user });
     } else {
       res.status(401);
       throw new Error("Some thing wrong please check user name or password");
@@ -68,7 +70,7 @@ export abstract class AuthBaseController<T, M> {
   }
 
   public async logout(req: Request, res: Response, next: NextFunction) {
-    const userId: any = checkUser(res, req, next);
+    const userId: any = checkUser(req);
     const refreshToken = this.getRefreshToken(req);
     const user = await this.getUserById(userId.id);
     if (Array.isArray(user.section)) {
@@ -83,14 +85,42 @@ export abstract class AuthBaseController<T, M> {
     res.send("Goodbye");
   }
   public async refreshToken(req: Request, res: Response, next: NextFunction) {
-    // const userId = checkUser(req, res, next);
-    // const user = await this.getUserById(userId);
-    // if (Array.isArray(user.section)) {
-    //   //
-    // } else {
-    //   //
-    // }
-    // await user.save();
-    // res.sendStatus(204);
+    const userId: any = checkUser(req);
+
+    if (userId) {
+      const user = await this.getUserById(userId.id);
+      const accessTk = generateAccessToken(user._id, user.userName);
+      res
+        .header(CONSTANT.header.accessToken, accessTk)
+        .json({ userName: user.userName });
+      res.status(200);
+    } else {
+      res.status(403);
+    }
+  }
+  private createTranport() {
+    this.tranport = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      // true for 465, false for other ports
+      auth: {
+        user: process.env.EMAIL_USERNAME, // generated ethereal user
+        pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+  }
+  protected mailOption(html: string, user: IAuthBase) {
+    const option: Mail.Options = {
+      from: process.env.EMAIL_USERNAME, // sender address
+      to: user.email, // list of receivers
+      subject: "Confirm Your Email", // Subject line
+      text: "Hello world?", // plain text body
+      html: html,
+    };
+    return option;
   }
 }

@@ -8,14 +8,14 @@ export class DeveloperRouter extends BaseRouter {
   private Controller: DeveloperController = new DeveloperController();
   constructor() {
     super();
-    this.getDetail();
     this.getAll();
-    this.modifyDetail();
-    this.createNew();
+    // this.modifyDetail();
+    // this.createNew();
+    // this.getDetail();
   }
   getAll() {
     this.router.get(
-      "/",
+      "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const data = await this.Controller.getAllData();
@@ -51,7 +51,7 @@ export class DeveloperRouter extends BaseRouter {
   }
   createNew() {
     this.router.post(
-      "/",
+      "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const dataReq: IDeveloper = req.body;

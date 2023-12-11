@@ -8,7 +8,8 @@ import { BaseService, OptionsRequest } from './base.service';
 import { GlobalVariable } from '../base/global-variable';
 import { ViewModelService } from '../base/viewModel.service';
 import { AuthBaseService } from './auth-base.service';
-import { routerURL } from '../shared/constant/router-const';
+import { header, routerURL } from '../shared/constant/router-const';
+import { LocalStoreConst } from '../shared/constant/local-const';
 @Injectable({
   providedIn: 'root',
 })
@@ -45,7 +46,7 @@ export class AuthService extends AuthBaseService {
         if (res.status === 200) {
           this.globalVariable.setLoginStage(String(true));
           const isLogin = this.globalVariable.getLoginStage;
-          await this.setSession(res);
+          this.setSession(res);
           if (isLogin) {
             this.router.navigateByUrl('/home');
           }

@@ -21,13 +21,13 @@ export class CheckOutPageComponent extends BaseComponent implements OnInit {
   private getData() {
     const me = this;
 
-    me.userSv
-      .getCart()
-      .pipe(
-        takeUntil(me.destroy$),
-        tap((res: any) => {})
-      )
-      .subscribe();
+    // me.userSv
+    //   .getCart()
+    //   .pipe(
+    //     takeUntil(me.destroy$),
+    //     tap((res: any) => {})
+    //   )
+    //   .subscribe();
   }
   get userStageLogin(): boolean {
     const isLogin = this.vms.globalVariable.getLoginStage;

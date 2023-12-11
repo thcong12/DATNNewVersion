@@ -8,14 +8,15 @@ export class CategoryRouter extends BaseRouter {
   private Category: CategloryController = new CategloryController();
   constructor() {
     super();
-    this.getDetailCategory();
+
     this.getAllCategory();
-    this.modifyDetailCategory();
-    this.createNewCategory();
+    // this.modifyDetailCategory();
+    // this.createNewCategory();
+    // this.getDetailCategory();
   }
   getAllCategory() {
     this.router.get(
-      "/",
+      "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const data = await this.Category.getAllData();

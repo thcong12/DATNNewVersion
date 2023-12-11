@@ -75,4 +75,7 @@ export class TopNavComponent implements OnInit {
   showClick() {
     this.showListBox = !this.showListBox;
   }
+  returnHomePage() {
+    this.router.navigateByUrl('/home');
+  }
 }

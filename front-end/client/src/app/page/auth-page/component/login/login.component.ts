@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Injector, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/user.service';
@@ -12,6 +13,7 @@ import { UserService } from 'src/app/service/user.service';
 })
 export class LoginComponent extends BaseComponent {
   isCorrectUser: boolean = false;
+  private userId: string = '';
   @Output() displayModal = new EventEmitter<boolean>();
   constructor(
     protected injector: Injector,
@@ -40,14 +42,17 @@ export class LoginComponent extends BaseComponent {
     const me = this;
     me.authSv
       .login(me.formLogin.value)
-      .pipe()
+      .pipe(
+        map((data: any) => {
+          this.userId = data.body?.user._id as any;
+        })
+      )
       .subscribe({
         complete: () => {
           this.isCorrectUser = false;
-          this.userSv.getCart().subscribe();
-          this.userSv.getLibraries().subscribe();
-          this.userSv.getWishlist().subscribe();
-          this.userSv.getReCommendProduct().subscribe();
+          this.userSv.getCart(this.userId).subscribe();
+          // this.userSv.getWishlist().subscribe();
+          // this.userSv.getReCommendProduct().subscribe();
         },
         error: () => {
           this.isCorrectUser = true;

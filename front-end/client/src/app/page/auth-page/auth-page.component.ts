@@ -57,7 +57,5 @@ export class AuthPageComponent extends BaseComponent {
     const me = this;
     me.formInit();
     me.route.paramMap;
-    console.log(this.layout.isOverlay(), this.layout.config.menuMode);
-    this.layout.onMenuToggle();
   }
 }

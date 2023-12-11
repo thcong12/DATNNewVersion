@@ -13,7 +13,7 @@ export class ProductsService extends BaseService {
   }
   public getProducts(): Observable<Product.Product[]> {
     const me = this;
-    const url = `/products`;
+    const url = `/product`;
     return me.get(url);
   }
   public getProductDetail(id: String): Observable<any> {
@@ -23,7 +23,7 @@ export class ProductsService extends BaseService {
   }
   public getProduct(id: String): Observable<Product.Product> {
     const me = this;
-    const url = `/products/${id}`;
+    const url = `/product/${id}`;
     return me.get(url);
   }
 
@@ -32,12 +32,12 @@ export class ProductsService extends BaseService {
     prod: Product.Detail
   ): Observable<Product.Detail> {
     const me = this;
-    const url = `/products/${id}`;
+    const url = `/product/${id}`;
     return me.put(url, prod);
   }
   public createProduct(prod: Product.Detail): Observable<Product.Detail> {
     const me = this;
-    const url = `/products`;
+    const url = `/product`;
     return me.post(url, prod);
   }
 }

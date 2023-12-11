@@ -18,7 +18,7 @@ export abstract class AuthBaseService extends BaseService {
     this.globalVariable = new GlobalVariable();
     this.setHttpOption();
   }
-  protected async setSession(res: HttpResponse<any>) {
+  protected setSession(res: HttpResponse<any>) {
     this.globalVariable.setAccessToken(res);
     this.globalVariable.setRefreshToken(res);
     this.globalVariable.setUserProfile(res);
@@ -27,8 +27,8 @@ export abstract class AuthBaseService extends BaseService {
     this.httpOption = {
       observe: 'response',
       headers: {
-        [header.refreshTK]: String(this.globalVariable.getRefreshToken) || '',
-        [header.accessTK]: String(this.globalVariable.getRefreshToken) || '',
+        [header.refreshTK]: String(this.globalVariable.getRefreshToken),
+        [header.accessTK]: String(this.globalVariable.getRefreshToken),
       },
     };
   }

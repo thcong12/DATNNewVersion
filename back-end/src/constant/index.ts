@@ -9,6 +9,7 @@ const MONGO_URL = process.env.MONGO_URL;
 const EMAIL_ACCOUNT = process.env.EMAIL_USERNAME || "";
 const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD || "";
 const PORT = process.env.PORT;
+const PORT_FE_CLIENT = process.env.PORT_FE_CLIENT;
 
 export const CONSTANT = {
   ROLE: {
@@ -47,6 +48,7 @@ export const CONSTANT = {
   },
   port: {
     server: PORT,
+    clientFE: PORT_FE_CLIENT,
   },
   code_status: {
     OK: 200,
@@ -80,5 +82,6 @@ export const CONSTANT = {
     homeSlide: "Sliders",
     dataRecomendraw: "Datasetforproducts",
     dataRecomend: "dataRecomend",
+    profile: "profiles",
   },
 };

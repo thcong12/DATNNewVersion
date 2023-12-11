@@ -30,9 +30,6 @@ export abstract class BaseComponent
       this.vms = this.Injector.get<ViewModelService>(
         ViewModelService as Type<ViewModelService>
       );
-      this.layout = this.Injector.get<LayoutService>(
-        LayoutService as Type<LayoutService>
-      );
       this.route = this.Injector.get(ActivatedRoute);
       this.router = this.Injector.get(Router);
     }

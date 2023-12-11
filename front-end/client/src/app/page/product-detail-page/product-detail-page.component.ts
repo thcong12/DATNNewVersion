@@ -1,13 +1,6 @@
-import {
-  Component,
-  ElementRef,
-  Injector,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, mergeMap, tap } from 'rxjs';
+import { Component, ElementRef, Injector, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { mergeMap, tap } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { User } from 'src/app/model/account.model';
 import { AuthService } from 'src/app/service/auth.service';
@@ -32,9 +25,6 @@ export class ProductDetailPageComponent extends BaseComponent {
   constructor(
     protected injector: Injector,
     private prodSv: ProductsService,
-    private devSv: DevelopersService,
-    private feaSv: FeatureService,
-    private cateSv: CategloryService,
     private userSv: UserService,
     private formBd: FormBuilder,
     private storeSv: StoreService,
@@ -73,29 +63,29 @@ export class ProductDetailPageComponent extends BaseComponent {
     comment: 'comment',
   };
   private getProduct(): void {
-    const me = this;
-    me.route.paramMap
+    this.route.paramMap
       .pipe(
         mergeMap((param) =>
-          me.prodSv.getProductDetail(String(param.get('id'))).pipe(
+          this.prodSv.getProductDetail(String(param.get('id'))).pipe(
             tap((res: any) => {
-              let aaa = '';
-              me.product = res;
-              me.productId = String(param.get('id'));
-              me.developerId = res.productDetail.developer._id;
-              res.productDetail.categlory.slice(0, 3).map((item: any) => {
-                aaa += `${item._id}+`;
-              });
-              me.storeSv
-                .findSameProduct(aaa)
-                .pipe(
-                  tap((res) => {
-                    me.listProductSimilar = [...(res as any)];
-                    console.log(res);
-                  })
-                )
-                .subscribe();
-              console.log(res.productDetail.description);
+              // let aaa = '';
+              this.product = res;
+              console.log(this.product);
+              // me.productId = String(param.get('id'));
+              // me.developerId = res.productDetail.developer._id;
+              // res.productDetail.categlory.slice(0, 3).map((item: any) => {
+              //   aaa += `${item._id}+`;
+              // });
+              // me.storeSv
+              //   .findSameProduct(aaa)
+              //   .pipe(
+              //     tap((res) => {
+              //       me.listProductSimilar = [...(res as any)];
+              //       console.log(res);
+              //     })
+              //   )
+              //   .subscribe();
+              // console.log(res.productDetail.description);
             })
           )
         )
@@ -103,35 +93,35 @@ export class ProductDetailPageComponent extends BaseComponent {
       .subscribe();
   }
   private getSameProduct(id: string) {
-    const me = this;
-    me.storeSv
-      .findSameProduct(id)
-      .pipe(
-        tap((res) => {
-          me.listProductSimilar = [...(res as any)];
-          console.log(res);
-        })
-      )
-      .subscribe();
+    // const me = this;
+    // me.storeSv
+    //   .findSameProduct(id)
+    //   .pipe(
+    //     tap((res) => {
+    //       me.listProductSimilar = [...(res as any)];
+    //       console.log(res);
+    //     })
+    //   )
+    //   .subscribe();
   }
   public postComment() {
     const me = this;
     me.userSv.postComment(me.productId, me.commentForm.value).subscribe();
   }
   public getLibraries() {
-    const me = this;
-    me.userSv
-      .getLibraries()
-      .pipe(
-        tap((res) => {
-          res.map((item: any) => {
-            if (item._id == me.productId) {
-              me.isInLybrary = true;
-            }
-          });
-        })
-      )
-      .subscribe();
+    // const me = this;
+    // me.userSv
+    //   .getLibraries()
+    //   .pipe(
+    //     tap((res) => {
+    //       res.map((item: any) => {
+    //         if (item._id == me.productId) {
+    //           me.isInLybrary = true;
+    //         }
+    //       });
+    //     })
+    //   )
+    //   .subscribe();
   }
   public addToCart(item: any) {
     const me = this;
@@ -214,25 +204,26 @@ export class ProductDetailPageComponent extends BaseComponent {
   get isInCart() {
     const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
     if (isLogin) {
-      const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
-      const combineArray: any[] = userCart[0].cartDetail.map((data: any) => {
-        return data._id;
-      });
-      return combineArray.includes(this.productId);
+      // const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
+      // const combineArray: any[] = userCart[0].cartDetail.map((data: any) => {
+      //   return data._id;
+      // });
+      // return combineArray.includes(this.productId);
+      return true;
     }
     return;
   }
   get isInLibary() {
-    const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
-    if (isLogin) {
-      const userLibary = JSON.parse(
-        String(this.vms.globalVariable.getUserLiblary)
-      );
-      const combineArray: any[] = userLibary.map((data: any) => {
-        return data._id;
-      });
-      return combineArray.includes(this.productId);
-    }
+    // const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
+    // if (isLogin) {
+    //   const userLibary = JSON.parse(
+    //     String(this.vms.globalVariable.getUserLiblary)
+    //   );
+    //   const combineArray: any[] = userLibary.map((data: any) => {
+    //     return data._id;
+    //   });
+    //   return combineArray.includes(this.productId);
+    // }
     return;
   }
   // get isInWishList(){

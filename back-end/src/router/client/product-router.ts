@@ -12,9 +12,11 @@ export class ProductRouter extends BaseRouter {
     this.importRouter();
   }
   importRouter() {
+    this.getAll();
     this.getProductHomeSlide();
     this.getProductBestSeller();
     this.getProductNewRelease();
+    this.getProductSale();
     this.getProductDetail();
   }
   getAll() {
@@ -61,7 +63,7 @@ export class ProductRouter extends BaseRouter {
   }
   getProductNewRelease() {
     this.router.get(
-      "/newrelease",
+      "/release",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const newrelease = await this.HomePage.getProductNewRelease();
@@ -76,6 +78,17 @@ export class ProductRouter extends BaseRouter {
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const data = await this.HomePage.getProductSlide();
+          res.json(data);
+        }
+      )
+    );
+  }
+  getProductSale() {
+    this.router.get(
+      "/sale",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const data = await this.HomePage.getProductSale();
           res.json(data);
         }
       )

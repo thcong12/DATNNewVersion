@@ -9,6 +9,7 @@ import { BaseRouter } from "../../base/router-base";
 // import { DataRecomendController } from "../../controller/dataRecommed";
 import expressAsyncHandler from "express-async-handler";
 import { DataRecomendController } from "../../controller/recommend-controller";
+import { checkUser } from "../../ultils/genareate_token";
 
 export class RecommendRouter extends BaseRouter {
   private DataRaw: DataRecomendController = new DataRecomendController();
@@ -21,12 +22,11 @@ export class RecommendRouter extends BaseRouter {
       "/",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const updateDatabase = await this.DataRaw.pearson_correlation(
+          // const userId = checkUser(res, req, next);
+          const updateDatabase = await this.DataRaw.recommendation_eng(
             "63847b8176c5783ec79ef234",
-            "63847cf776c5783ec79ef473",
             "click"
           );
-          console.log(updateDatabase);
           res.json(updateDatabase);
         }
       )

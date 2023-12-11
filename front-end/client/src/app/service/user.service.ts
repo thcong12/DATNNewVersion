@@ -6,11 +6,13 @@ import { BaseService } from './base.service';
 import { GlobalVariable } from '../base/global-variable';
 import { Router } from '@angular/router';
 import { ViewModelService } from '../base/viewModel.service';
+import { apiRouter, routerURL } from '../shared/constant/router-const';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService extends BaseService {
+  private api: String = apiRouter.user.user;
   private globalVariable: GlobalVariable;
   public cartList = new BehaviorSubject<any[]>([]);
   public userLibrary = new BehaviorSubject<any[]>([]);
@@ -23,27 +25,21 @@ export class UserService extends BaseService {
     super(http);
     this.globalVariable = this.vms.globalVariable;
   }
-  public getCart(): Observable<User.Cart> {
-    const me = this;
-    const url = `/cart`;
-    return me.get(url).pipe(
+  public getCart(id: string): Observable<User.Cart> {
+    const url = this.api + apiRouter.user.cart + id;
+    return this.get(url).pipe(
       tap((res: any) => {
-        console.log(res);
         this.vms.globalVariable.setUserCart(res);
       })
     );
   }
   public addToCart(product: User.CartDetail) {
-    const me = this;
-    const url = `/cart`;
-
-    return me.post(url, product);
+    const url = this.api + apiRouter.user.cart;
+    return this.post(url, product);
   }
   public removeFromCart(id: string) {
-    const me = this;
-    const url = `/cart/removeproduct/${id}`;
-
-    return me.get(url);
+    const url = this.api + apiRouter.user.cart;
+    return this.get(url);
   }
 
   public userDetail(id: string) {
