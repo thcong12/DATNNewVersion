@@ -1,5 +1,9 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { tap } from 'rxjs';
 import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
@@ -7,6 +11,7 @@ import { AuthService } from 'src/app/service/auth.service';
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.scss'],
   host: { class: 'form-container sign-up-container' },
+  providers: [MessageService],
 })
 export class SignInComponent implements OnInit {
   error: boolean = false;
@@ -20,7 +25,12 @@ export class SignInComponent implements OnInit {
     phoneNumber: 'phoneNumber',
   };
 
-  constructor(private formBd: FormBuilder, private authSv: AuthService) {}
+  constructor(
+    private formBd: FormBuilder,
+    private authSv: AuthService,
+    private router: Router,
+    private messageSv: MessageService
+  ) {}
 
   private formInit() {
     const me = this;
@@ -39,10 +49,29 @@ export class SignInComponent implements OnInit {
     const me = this;
     me.authSv
       .register(me.registerForm.value)
-      .pipe()
+      .pipe(
+        tap((res: HttpResponse<any>) => {
+          if (res.status == 201) {
+            this.messageSv.add({
+              severity: 'info',
+              summary: 'Info',
+              detail: 'Please check your email to active account',
+            });
+          } else {
+            this.messageSv.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: res.statusText,
+            });
+          }
+        })
+      )
       .subscribe({
         complete: () => {
-          this.registerForm.reset();
+          // this.registerForm.reset();
+          // setTimeout(() => {
+          //   this.router.navigateByUrl('home');
+          // }, 5000);
         },
         error: () => {
           this.error = true;

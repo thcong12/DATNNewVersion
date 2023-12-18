@@ -2,6 +2,7 @@ import mongoose, { Schema, Model, Types } from "mongoose";
 import bcryptjs from "bcryptjs";
 import { CONSTANT } from "../../constant";
 import { IAuthBase } from "../base/auth";
+import { ICity } from "./CityModel";
 
 export interface IUser extends IAuthBase {
   firstName?: string;
@@ -14,7 +15,7 @@ export interface IUserProfile {
   fullName: String;
   avatar: String;
   decription: String;
-  address: String[];
+  address: ICity;
 }
 
 export interface IUserMethods {
@@ -88,13 +89,11 @@ const UserProfile = new Schema<IUserProfile, IProfileMethods, IProfileModel>(
       require: true,
       default: "",
     },
-    address: [
-      {
-        type: String,
-        require: true,
-        default: "",
-      },
-    ],
+    address: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: true,
+      ref: "City",
+    },
   },
   {
     timestamps: true,

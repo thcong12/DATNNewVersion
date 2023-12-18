@@ -6,7 +6,7 @@ import { ViewModelService } from '../viewModel.service';
 // import { URLPages } from '@shared/constant/url-pages';
 
 @Injectable({ providedIn: 'root' })
-export class CanActivatedGuard implements CanActivate {
+export class UserGuard implements CanActivate {
   private globalVariable: GlobalVariable;
   constructor(private vms: ViewModelService, private router: Router) {
     this.globalVariable = this.vms.globalVariable;

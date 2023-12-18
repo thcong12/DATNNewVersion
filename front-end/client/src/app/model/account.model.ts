@@ -20,23 +20,25 @@ export namespace User {
     _id: string;
     cartDetail: CartDetail[];
   }
-  export interface CartDetail{
-    product: Product.Product ;
-    quantity: number | 1 ;
+  export interface Wishlist {
+    product: Product.Product;
   }
-  export interface Comment{
-    name:string;
-    rating:number;
-    comment:string;
-    user:Detail;
+  export interface CartDetail {
+    product: Product.Product;
+    quantity: number | 1;
   }
-  export interface Detail{
-    userId:string;
-    fullName:string;
-    avatar:string;
-    decription:string;
-    address:any;
-    createdAt:string;
+  export interface Comment {
+    name: string;
+    rating: number;
+    comment: string;
+    user: Detail;
   }
-  
+  export interface Detail {
+    userId: string;
+    fullName: string;
+    avatar: string;
+    decription: string;
+    address: any;
+    createdAt: string;
+  }
 }

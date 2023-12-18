@@ -20,32 +20,68 @@
         layoutService.state.profileSidebarVisible
     }"
   >
-
     <button class="p-link layout-topbar-button" (click)="cart.toggle($event)">
       <i class="pi pi-shopping-cart"></i>
       <span>Profile</span>
     </button>
-    <p-overlayPanel [style]="{ width: '350px' }" #cart>
+    <p-overlayPanel
+      [style]="{
+        width: '400px',
+        'background-color': '#ffffff21',
+        'backdrop-filter': 'blur(10px)'
+      }"
+      #cart
+    >
       <ng-container *ngIf="userStageLogin">
-        <div style="height: 300px; overflow-x: hidden; overflow-y: auto">
-          <div
-            class="grid align-items-center gap-2"
-            *ngFor="let item of userCart.cartDetail"
-            routerLink="/home"
-          >
-            <img
-              class="col-4"
-              [src]="
-                item.imgY.url ||
-                '../../../assets/layout/images/user-default.png'
-              "
-            />
-            <h5 class="col-7">{{ item.productName }}</h5>
+        <ng-container *ngIf="userCart.length > 0">
+          <div class="userCart scrollbar">
+            <div
+              class="grid align-items-center gap-2"
+              *ngFor="let item of userCart"
+            >
+              <img
+                class="col-4"
+                [src]="
+                  item?.imgY.url 
+                "
+              />
+              <h5 class="col-6 text-white">{{ item?.productName }}</h5>
+              <span (click)="removeCartItem(item)" class="col-1 text-white pi pi-times cursor-pointer"></span>
+            </div>
           </div>
-        </div>
-
+        </ng-container>
+        <ng-container *ngIf="userCart.length <= 0">
+          <div
+            class="flex flex-column justify-content-center align-items-center"
+            style="height: 150px;padding: 15px 0;"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="svg css-uwwqev"
+              viewBox="0 0 45 52"
+            >
+              <g fill="none" fill-rule="evenodd">
+                <path
+                  d="M4.058 0C1.094 0 0 1.098 0 4.075v35.922c0 .338.013.65.043.94.068.65-.043 1.934 2.285 2.96 1.553.683 7.62 3.208 18.203 7.573 1.024.428 1.313.529 2.081.529.685.013 1.137-.099 2.072-.53 10.59-4.227 16.66-6.752 18.213-7.573 2.327-1.23 2.097-3.561 2.097-3.899V4.075C44.994 1.098 44.13 0 41.166 0H4.058z"
+                  fill="currentColor"
+                ></path>
+                <path
+                  stroke="#FFF"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14 18l4.91 2.545-2.455 4M25.544 28.705c-1.056-.131-1.806-.14-2.25-.025-.444.115-1.209.514-2.294 1.197M29.09 21.727L25 19.5l2.045-3.5"
+                ></path>
+              </g>
+            </svg>
+            <h5 class="text-white">Cart is empty</h5>
+          </div>
+        </ng-container>
+        <div class="line"></div>
         <div class="flex justify-content-end">
-          <button routerLink="/checkout" class="buttonCustom">Check Out</button>
+          <button (click)="toCheckoutPage(cart)" class="buttonCustom">
+            Check Out
+          </button>
         </div>
       </ng-container>
       <ng-container *ngIf="!userStageLogin">
@@ -53,6 +89,19 @@
           <p-button routerLink="/login" label="Sign In"></p-button>
         </div>
       </ng-container>
+
+      <!-- <ng-template pTemplate="content">
+        <p-table [value]="userCart" selectionMode="single" [(selection)]="cartItem" (onRowSelect)="onRowSelect( cart)" [paginator]="true" [rows]="5" responsiveLayout="scroll">
+            <ng-template pTemplate="body" let-rowData let-product>
+                <tr [pSelectableRow]="rowData">
+                    <td><img src="{{ product.product.imgY.url }}"[alt]="product.product.imgY.alt" class="w-5rem shadow-2"/></td>
+                    <td>{{product.product.productName}}</td>
+                    <td>{{product.product.price}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        
+    </ng-template> -->
     </p-overlayPanel>
     <div
       *ngIf="userStageLogin"
@@ -84,7 +133,11 @@
         >
       </div>
     </div>
-    <button *ngIf="!userStageLogin" routerLink="/login" class="p-link layout-topbar-button">
+    <button
+      *ngIf="!userStageLogin"
+      routerLink="/login"
+      class="p-link layout-topbar-button"
+    >
       <i class="pi pi-user"></i>
       <span>Profile</span>
     </button>

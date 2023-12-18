@@ -1,4 +1,4 @@
-<form [formGroup]="registerForm" (submit)="registerSubmit()">
+<form [formGroup]="registerForm"  (submit)="registerSubmit()">
   <h1 class="mb-2">Create Account</h1>
   <span *ngIf="error" style="color: Red"
     >User name already have please try another</span
@@ -48,5 +48,5 @@ placeholder="Phone Number"
     />
   </div>
 
-  <button type="submit">Sign Up</button>
+  <button  type="submit">Sign in</button>
 </form>

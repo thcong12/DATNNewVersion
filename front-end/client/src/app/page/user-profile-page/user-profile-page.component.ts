@@ -35,21 +35,37 @@ export class UserProfilePageComponent implements OnInit {
   paypalElement!: ElementRef;
   constructor(private userSv: UserService) {}
   public getData() {
-    const me = this;
+    this.userSv.getLibraries().subscribe({
+      next: (res) => {
+        this.userLibraries = res.body;
+      },
+    });
     forkJoin({
-      libraries: me.userSv.getLibraries(),
-      order: me.userSv.getOrderUser(),
-      wishlist: me.userSv.getWishlist(),
+      libraries: this.userSv.getLibraries(),
+      // order: me.userSv.getOrderUser(),
+      wishlist: this.userSv.getWishlist(),
     })
       .pipe(
-        tap(({ libraries, order, wishlist }) => {
-          me.userOrder = [...(order as any)];
-          me.userLibraries = [...(libraries as any)];
-          me.userWishList = [...(wishlist as any)];
-        })
+        tap(
+          ({
+            libraries,
+            //  order,
+            wishlist,
+          }) => {
+            // me.userOrder = [...(order as any)];
+            this.userLibraries = libraries.body;
+            this.userWishList = wishlist;
+            console.log(wishlist);
+          }
+        )
       )
       .subscribe();
+    setTimeout(() => {
+      console.log(this.userWishList);
+    }, 3000);
   }
+
+  // }
 
   public displayOrderDetail(id: string) {
     const me = this;

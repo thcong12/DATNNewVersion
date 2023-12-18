@@ -4,6 +4,7 @@ import { CONSTANT } from "../constant";
 import { IAuthBase, MAuthBase } from "../model/base/auth";
 import {
   MyToken,
+  checkSection,
   checkUser,
   generateAccessToken,
   generateRefreshToken,
@@ -69,33 +70,37 @@ export abstract class AuthBaseController<T, M> {
     }
   }
 
-  public async logout(req: Request, res: Response, next: NextFunction) {
-    const userId: any = checkUser(req);
+  public async logout(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+    value: string
+  ) {
+    const decode: MyToken = checkUser(req, res, next);
     const refreshToken = this.getRefreshToken(req);
-    const user = await this.getUserById(userId.id);
-    if (Array.isArray(user.section)) {
-      user.section = user.section.filter((item: any) => {
+    console.log(refreshToken);
+    const user = await this.getUserById(decode.id);
+    if (Array.isArray(user[value])) {
+      console.log("Array");
+      const newSection = user[value].filter((item: any) => {
         return item != refreshToken;
       });
+      user[value] = newSection;
     } else {
-      user.refreshToken = "";
+      user[value] = "";
     }
-    await user.save();
-    // console.log(user);
-    res.send("Goodbye");
+    console.log("run");
+    const result = await user.save();
+    res.sendStatus(204);
   }
   public async refreshToken(req: Request, res: Response, next: NextFunction) {
-    const userId: any = checkUser(req);
-
-    if (userId) {
-      const user = await this.getUserById(userId.id);
+    const decode: MyToken = checkUser(req, res, next);
+    if (decode.id) {
+      const user = await this.getUserById(decode.id);
       const accessTk = generateAccessToken(user._id, user.userName);
-      res
-        .header(CONSTANT.header.accessToken, accessTk)
-        .json({ userName: user.userName });
-      res.status(200);
+      res.header(CONSTANT.header.accessToken, accessTk).json("ok");
     } else {
-      res.status(403);
+      res.status(401);
     }
   }
   private createTranport() {

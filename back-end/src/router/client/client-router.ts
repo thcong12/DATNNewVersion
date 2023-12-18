@@ -14,11 +14,12 @@ export class ClientRouter extends BaseRouter {
   private user: UserRouter = new UserRouter();
   constructor() {
     super();
+
     this.categoryRouter();
     this.developerRouter();
-    this.authRouter();
     this.productRouter();
     this.userRouter();
+    this.authRouter();
   }
   categoryRouter() {
     this.router.use("/categlory", this.category.router);

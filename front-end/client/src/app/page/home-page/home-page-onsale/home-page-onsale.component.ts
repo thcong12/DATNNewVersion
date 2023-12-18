@@ -34,6 +34,10 @@ export class HomePageOnsaleComponent implements OnInit, AfterViewInit {
     this.idPage--;
   }
 
+  public priceDiscount(data: any) {
+    const finalPrice = data.price - (data.price * data.sale.salePersent) / 100;
+    return finalPrice;
+  }
   ngOnInit(): void {
     this.getData();
     setTimeout(() => {

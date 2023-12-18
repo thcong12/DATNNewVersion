@@ -5,7 +5,13 @@ import { header } from '../shared/constant/router-const';
 export class GlobalVariable {
   constructor() {}
   public removeSession() {
-    localStorage.clear();
+    console.log('run2');
+    localStorage.removeItem(LocalStoreConst.ACCESS_TOKEN);
+    localStorage.removeItem(LocalStoreConst.REFRESH_TOKEN);
+    localStorage.removeItem(LocalStoreConst.USER_PROFILE);
+    localStorage.removeItem(LocalStoreConst.USER_CART);
+    localStorage.removeItem(LocalStoreConst.LOGIN_STAGE);
+    // localStorage.removeItem(LocalStoreConst.REFRESH_TOKEN);
   }
   setLoginStage(value: string) {
     localStorage.setItem(LocalStoreConst.LOGIN_STAGE, value);
@@ -43,30 +49,69 @@ export class GlobalVariable {
   }
 
   setUserCart(data: any) {
-    console.log(data);
-    localStorage.setItem('USER_CART', String(JSON.stringify(data)));
+    if (data) {
+      localStorage.setItem(
+        LocalStoreConst.USER_CART,
+        String(JSON.stringify(data))
+      );
+    } else {
+      localStorage.setItem(
+        LocalStoreConst.USER_CART,
+        String(JSON.stringify('[]'))
+      );
+    }
   }
   get getUserCart() {
-    return localStorage.getItem('USER_CART');
+    return localStorage.getItem(LocalStoreConst.USER_CART);
   }
 
   setUserLiblary(data: any) {
-    localStorage.setItem('USER_LIBRARY', String(JSON.stringify(data)));
+    if (data) {
+      localStorage.setItem(
+        LocalStoreConst.USER_LIBRARY,
+        String(JSON.stringify(data))
+      );
+    } else {
+      localStorage.setItem(
+        LocalStoreConst.USER_LIBRARY,
+        String(JSON.stringify('[]'))
+      );
+    }
   }
   get getUserLiblary() {
-    return localStorage.getItem('USER_LIBRARY');
+    return localStorage.getItem(LocalStoreConst.USER_LIBRARY);
   }
   setRecommendProduct(data: any) {
-    localStorage.setItem('USER_RECOMMEND', String(JSON.stringify(data)));
+    if (data) {
+      localStorage.setItem(
+        LocalStoreConst.USER_RECOMMEND,
+        String(JSON.stringify(data))
+      );
+    } else {
+      localStorage.setItem(
+        LocalStoreConst.USER_RECOMMEND,
+        String(JSON.stringify('[]'))
+      );
+    }
   }
   get getRecommendProduct() {
-    return localStorage.getItem('USER_RECOMMEND');
+    return localStorage.getItem(LocalStoreConst.USER_RECOMMEND);
   }
   setUserWishList(data: any) {
-    localStorage.setItem('USER_WISH_LIST', String(JSON.stringify(data)));
+    if (data) {
+      localStorage.setItem(
+        LocalStoreConst.USER_WISH_LIST,
+        String(JSON.stringify(data))
+      );
+    } else {
+      localStorage.setItem(
+        LocalStoreConst.USER_WISH_LIST,
+        String(JSON.stringify('[]'))
+      );
+    }
   }
   get getUserWishList() {
-    return localStorage.getItem('USER_WISH_LIST');
+    return localStorage.getItem(LocalStoreConst.USER_WISH_LIST);
   }
   screenName: string = '';
 }

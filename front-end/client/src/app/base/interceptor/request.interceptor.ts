@@ -23,6 +23,7 @@ import { LoaderService } from 'src/app/service/loader.service';
 import { UserService } from 'src/app/service/user.service';
 import { GlobalVariable } from '../global-variable';
 import { ViewModelService } from '../viewModel.service';
+import { header } from 'src/app/shared/constant/router-const';
 
 @Injectable({
   providedIn: 'root',
@@ -47,29 +48,30 @@ export class RequestInterceptor implements HttpInterceptor {
     const accessToken = this.globalVariable.getAccessToken;
     if (!!accessToken) {
       request = request.clone({
-        headers: request.headers.set('x-access-token', String(accessToken)),
+        headers: request.headers.set(header.accessTK, String(accessToken)),
       });
     }
-
     // call next() and handle the response
     return next.handle(request).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log(error);
         switch (error.status) {
           case 401: {
+            alert('You need login');
             this.router.navigateByUrl('/auth/login');
             break;
           }
           case 404: {
+            alert('something wrong');
             break;
           }
           case 403: {
+            console.log(403);
             return this.refreshAccessToken().pipe(
               switchMap(() => {
                 if (!!accessToken) {
                   request = request.clone({
                     headers: request.headers.set(
-                      'x-access-token',
+                      header.accessTK,
                       String(accessToken)
                     ),
                   });
@@ -77,6 +79,8 @@ export class RequestInterceptor implements HttpInterceptor {
                 return next.handle(request);
               }),
               catchError((err: any) => {
+                console.log(err);
+                alert('something wrong');
                 return empty();
               })
             );
@@ -90,7 +94,7 @@ export class RequestInterceptor implements HttpInterceptor {
       finalize(() =>
         setTimeout(() => {
           this.loader.hide();
-        }, 2000)
+        }, 1000)
       )
     );
   }
@@ -108,6 +112,7 @@ export class RequestInterceptor implements HttpInterceptor {
       // we want to call a method in the auth service to send a request to refresh the access token
       return this.authSv.getNewAccessToken().pipe(
         tap((val) => {
+          console.log('Access Token Refreshed!');
           this.refreshingAccessToken = false;
           this.accessTokenRefreshed.next(val);
         })

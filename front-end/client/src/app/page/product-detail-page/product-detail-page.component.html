@@ -1,81 +1,114 @@
 <div class="detailProduct" *ngIf="product">
-    <div class="detailProduct__title">
-        <h1 style="color: #eeeeee">{{ product.product.productName }}</h1>
+  <p-toast></p-toast>
+  <div class="detailProduct__title">
+    <h1 style="color: #eeeeee">{{ product.product.productName }}</h1>
+  </div>
+  <div class="grid detailProduct__info">
+    <div class="col-9 py-0 detailProduct__info__left">
+      <p-galleria
+        *ngIf="product.productDetail"
+        [value]="product.productDetail.imgList"
+        [responsiveOptions]="responsiveOptions"
+        [numVisible]="4"
+        [circular]="true"
+        [showItemNavigators]="true"
+        [showItemNavigatorsOnHover]="true"
+      >
+        <ng-template pTemplate="item" let-item>
+          <img [src]="item.url" style="width: 100%" />
+        </ng-template>
+        <ng-template
+          pTemplate="thumbnail"
+          style="background-color: rgb(28, 17, 31)"
+          let-item
+        >
+          <div class="grid grid-nogutter justify-content-center">
+            <img width="70%" [src]="item.url" style="display: block" />
+          </div>
+        </ng-template>
+      </p-galleria>
     </div>
-    <div class="grid detailProduct__info">
-        <div class="col-9 py-0 detailProduct__info__left">
-            <p-galleria *ngIf="product.productDetail" [value]="product.productDetail.imgList" [responsiveOptions]="responsiveOptions" [numVisible]="4" [circular]="true" [showItemNavigators]="true" [showItemNavigatorsOnHover]="true">
-                <ng-template pTemplate="item" let-item>
-                    <img [src]="item.url" style="width: 100%" />
-                </ng-template>
-                <ng-template pTemplate="thumbnail" style="background-color: rgb(28, 17, 31)" let-item>
-                    <div class="grid grid-nogutter justify-content-center">
-                        <img width="70%" [src]="item.url" style="display: block" />
-                    </div>
-                </ng-template>
-            </p-galleria>
+
+    <div
+      class="col-3 relative flex flex-column justify-content-between mb-2 detailProduct__info__right"
+      *ngIf="product.product"
+    >
+      <div
+        class="mb-2 h-full flex flex-column justify-content-between"
+        style="z-index: 2"
+      >
+        <img
+          width="100%"
+          [src]="product.product.imgY.url + '?h=854&resize=1&w=640'"
+        />
+
+        <div class="flex gap-1 flex-wrap mt-1">
+          <a
+            class="py-1 px-2 text-base"
+            style="
+              background-color: #3b4657;
+              color: #eeeeee;
+              text-decoration: none;
+            "
+            *ngFor="let item of product.productDetail?.categlory"
+            >{{ item.cateName }}</a
+          >
+        </div>
+        <p style="height: 100px; overflow: hidden">
+          {{ product.product.shortDescription }}
+        </p>
+        <div class="flex flex-column gap-2">
+          <div class="flex justify-content-between">
+            <b class="text-base" style="color: #eeeeee">Developer</b>
+            <span class="text-base" style="color: #eeeeee">{{
+              product.productDetail.developer.devName
+            }}</span>
+          </div>
+          <div class="flex justify-content-between">
+            <b class="text-base" style="color: #eeeeee">Developer</b>
+            <span class="text-base" style="color: #eeeeee">{{
+              product.productDetail.developer.devName
+            }}</span>
+          </div>
+          <div class="flex justify-content-between">
+            <b class="text-base" style="color: #eeeeee">Rating</b>
+            <p-rating ngModel="5" [cancel]="false" [disabled]="true"></p-rating>
+          </div>
         </div>
 
-        <div class="col-3 relative flex flex-column justify-content-between mb-2 detailProduct__info__right" *ngIf="product.product">
-            <div class="mb-2 h-full flex flex-column justify-content-between" style="z-index: 2">
-                <img width="100%" [src]="product.product.imgY.url + '?h=854&resize=1&w=640'" />
-
-                <div class="flex gap-1 flex-wrap mt-1">
-                    <a class="py-1 px-2 text-base" style="
-            background-color: #3b4657;
-            color: #eeeeee;
-            text-decoration: none;
-          " *ngFor="let item of product.productDetail?.categlory">{{ item.cateName }}</a
+        <div
+          class="flex justify-content-between align-items-center detailProduct__info__right__price"
         >
-      </div>
-      <p  style="height: 100px;overflow: hidden;">
-        {{product.product.shortDescription}}
-      </p>
-                <div class="flex flex-column gap-2">
-                    <div class="flex justify-content-between ">
-                        <b class="text-base" style="color: #eeeeee">Developer</b>
-                        <span class="text-base" style="color: #eeeeee">{{
-              product.productDetail.developer.devName
-            }}</span>
-                    </div>
-                    <div class="flex justify-content-between ">
-                        <b class="text-base" style="color: #eeeeee">Developer</b>
-                        <span class="text-base" style="color: #eeeeee">{{
-              product.productDetail.developer.devName
-            }}</span>
-                    </div>
-                    <div class="flex justify-content-between ">
-                        <b class="text-base" style="color: #eeeeee">Rating</b>
-                        <p-rating ngModel="5" [cancel]="false" [disabled]="true"></p-rating>
-                    </div>
-                </div>
-   
-                <div class=" flex justify-content-between align-items-center detailProduct__info__right__price">
-                  <div>
-                      
-                      <del class="ml-1">{{
-            product.product.price | currency : "USD"
-          }}</del>
-                      <b class="ml-1">{{
-            product.product.price - 
-              (product.product.price * product.product.sale.salePersent) / 100
-              | currency : "USD"
-          }}</b>
-          <i class="px-2 py-1">{{ product.product.sale.salePersent }}%</i>
-                  </div>
-        
-                
-              </div>
-        <div class="flex w-full justify-content-between align-items-center gap-2 detailProduct__info__right__button">
-
-          <button *ngIf="!isInCart" class="w-11 bi bi-cart-plus" (click)="addToCart(product.product)">
+          <div>
+            <del class="ml-1">{{
+              product.product.price | currency : "USD"
+            }}</del>
+            <b class="ml-1">{{ priceAfterSale | currency : "USD" }}</b>
+            <i class="px-2 py-1">{{ product.product.sale.salePersent }}%</i>
+          </div>
+        </div>
+        <div
+          class="flex w-full justify-content-between align-items-center gap-2 detailProduct__info__right__button"
+        >
+          <button
+            *ngIf="!isInCart"
+            class="w-11 bi bi-cart-plus"
+            (click)="addToCart(product.product)"
+          >
             Add to cart
           </button>
-          <button *ngIf="isInCart" class="w-11 bi bi-cart-plus">
-            In cart 
-          </button>
-          <!-- <i class="w-1 text-4xl" [class]="isInWishList ? 'pi pi-heart-fill':'pi pi-heart'"></i> -->
-      </div>
+          <button *ngIf="isInCart" class="w-11 bi bi-cart-plus">In cart</button>
+          <i
+            *ngIf="!isInLibary"
+            (click) = "addToWishList(product.product)"
+            class="w-1 text-4xl pi pi-heart"
+          ></i>
+          <i
+          *ngIf="isInLibary"
+          (click) = "removeFromWishList(product.product)"
+          class="w-1 text-4xl pi pi-heart-fill"
+        ></i>
+        </div>
       </div>
 
       <div

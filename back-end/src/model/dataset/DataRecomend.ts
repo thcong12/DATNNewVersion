@@ -6,9 +6,12 @@ export interface IDataRecomend {
   userId: Types.ObjectId;
   product: IData[];
 }
-interface IData {
+export interface IData {
   productId: Types.ObjectId;
   click: number;
+  isBuy: number;
+  cart: number;
+  wishlist: number;
 }
 const DataRecomendSchema = new Schema<IDataRecomend>(
   {
@@ -19,12 +22,25 @@ const DataRecomendSchema = new Schema<IDataRecomend>(
     },
     product: [
       {
+        _id: false,
         productId: {
           type: Schema.Types.ObjectId,
           ref: "Product",
           required: true,
         },
         click: {
+          type: Number,
+          default: 0,
+        },
+        isBuy: {
+          type: Number,
+          default: 0,
+        },
+        cart: {
+          type: Number,
+          default: 0,
+        },
+        wishlist: {
           type: Number,
           default: 0,
         },

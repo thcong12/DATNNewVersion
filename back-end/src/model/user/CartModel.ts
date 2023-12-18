@@ -3,11 +3,12 @@ import { CONSTANT } from "../../constant";
 
 export interface IUserProduct {
   product: Types.ObjectId;
-  orderId: Types.ObjectId;
+  quantity: number;
 }
 export interface ICart {
+  _id: Types.ObjectId;
   userId: Types.ObjectId;
-  userProduct: IUserProduct[];
+  cartDetail: IUserProduct[];
 }
 
 const cartSchema = new Schema<ICart>(
@@ -17,17 +18,16 @@ const cartSchema = new Schema<ICart>(
       require: true,
       ref: "User",
     },
-    userProduct: [
+    cartDetail: [
       {
         product: {
-          type: Types.ObjectId,
+          type: Schema.Types.ObjectId,
           require: true,
           ref: "Product",
         },
-        orderId: {
-          type: Types.ObjectId,
-          require: true,
-          ref: "Order",
+        quantity: {
+          type: Number,
+          default: 1,
         },
       },
     ],

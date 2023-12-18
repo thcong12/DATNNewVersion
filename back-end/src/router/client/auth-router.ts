@@ -9,8 +9,10 @@ export class ClientAuthRouter extends BaseRouter {
   private UserController = new ClientAuthController();
   constructor() {
     super();
+    this.signIn();
     this.login();
     this.logout();
+    this.refreshToken();
   }
   login() {
     this.router.post(
@@ -23,13 +25,23 @@ export class ClientAuthRouter extends BaseRouter {
       )
     );
   }
+  signIn() {
+    this.router.post(
+      "/signin",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const data = await this.UserController.signin(req, res);
+          res.json(data);
+        }
+      )
+    );
+  }
   logout() {
     this.router.get(
       "/logout",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.UserController.logout(req, res, next);
-          // res.json(data);
+          await this.UserController.logout(req, res, next, "section");
         }
       )
     );
@@ -39,8 +51,8 @@ export class ClientAuthRouter extends BaseRouter {
       "/refresh",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.UserController.refreshToken(req, res, next);
-          res.json(data);
+          await this.UserController.refreshToken(req, res, next);
+          res.status(201);
         }
       )
     );

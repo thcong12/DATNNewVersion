@@ -3,14 +3,10 @@ import {
   Component,
   ElementRef,
   OnInit,
-  Renderer2,
   ViewChild,
 } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import {
-  BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
   filter,
@@ -21,12 +17,10 @@ import {
   switchMap,
 } from 'rxjs';
 import { Product } from 'src/app/model/products.model';
-import { AuthService } from 'src/app/service/auth.service';
 import { CategloryService } from 'src/app/service/categlory.service';
 import { DevelopersService } from 'src/app/service/developers.service';
 import { ProductsService } from 'src/app/service/products.service';
 import { StoreService } from 'src/app/service/store.service';
-import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-product-list-page',
@@ -53,13 +47,7 @@ export class ProductListPageComponent implements OnInit, AfterViewInit {
     private productSv: ProductsService,
     private categlorySv: CategloryService,
     private developerSv: DevelopersService,
-    private userSv: UserService,
-    private storeSv: StoreService,
-    private renderer: Renderer2,
-    private authsv: AuthService,
-    private router: Router,
-    private formBd: FormBuilder,
-    private route: ActivatedRoute
+    private storeSv: StoreService
   ) {}
   ngAfterViewInit(): void {
     this.regisSearchEvent();
@@ -92,7 +80,6 @@ export class ProductListPageComponent implements OnInit, AfterViewInit {
           return me.storeSv.search(keyword).pipe(
             map((res) => {
               this.dataInput.listProduct = res;
-              console.log(keyword);
             })
           );
         })

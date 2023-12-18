@@ -51,22 +51,22 @@
       <div
         class="w-11  tab-style"
       >
-        <div class="flex flex-column gap-4">
+        <div style="margin: 15px 30px 0 15px" class="flex flex-column gap-4">
           <div
-            class="grid px-3  item-style"
+            class="grid px-1  item-style"
     
             *ngFor="let product of userLibraries; let i = index"
           >
             <img
               class="col-3"
-              [src]="product.product.imgY.url + '?h=140&resize=1&w=80'"
+              [src]="product.imgY.url + '?h=140&resize=1&w=80'"
             />
             <div
               class="col-7 flex flex-column justify-content-between"
               style="width: 60%"
             >
               <h5 style="color: #eeeeee">
-                {{ product.product.productName }}
+                {{ product.productName }}
               </h5>
               <button class="w-4 buttonCustom">Detail</button>
             </div>
@@ -170,22 +170,22 @@
         class="w-11 tab-style"
       
       >
-        <div class="flex flex-column gap-4">
+        <div style="margin: 15px 30px 0 15px"  class="flex  flex-column gap-4">
           <div
             class="grid px-3 item-style"
             
-            *ngFor="let product of userLibraries; let i = index"
+            *ngFor="let product of userWishList; let i = index"
           >
             <img
               class="col-3"
-              [src]="product.product.imgY.url + '?h=140&resize=1&w=80'"
+              [src]="product.imgY.url + '?h=140&resize=1&w=80'"
             />
             <div
               class="col-7 flex flex-column justify-content-between"
               style="width: 60%"
             >
               <h3 style="color: #eeeeee">
-                {{ product.product.productName }}
+                {{ product.productName }}
               </h3>
             </div>
           </div>

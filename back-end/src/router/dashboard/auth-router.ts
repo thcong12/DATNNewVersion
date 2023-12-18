@@ -28,7 +28,12 @@ export class DashboardAuthRouter extends BaseRouter {
       "/logout",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.AuthControler.logout(req, res, next);
+          const data = await this.AuthControler.logout(
+            req,
+            res,
+            next,
+            "refreshToken "
+          );
           // res.json(data);
         }
       )

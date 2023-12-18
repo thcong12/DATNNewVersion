@@ -4,16 +4,20 @@ import {
   DataRecomendModel,
   IDataRecomend,
 } from "../model/dataset/DataRecomend";
-import { Types } from "mongoose";
-import { skip } from "node:test";
-
+import { ILibraly, LibralyModel } from "../model/user/LibraryModel";
+import { Model } from "mongoose";
 export class DataRecomendController extends ControllerBase<IDataRecomend> {
-  //   private DataRecomRaw: Model<IDataRecomendRaw> = DataRecomendModelRaw;
+  private LibraryModel: Model<ILibraly> = LibralyModel;
   constructor() {
     super(DataRecomendModel);
   }
   async getUser(id: string) {
+    //Cart: 2x + 2(x: number of )
+    //WishList:
     const userData = await this.model.findOne({
+      userId: id,
+    });
+    const userLibraries = await this.LibraryModel.findOne({
       userId: id,
     });
     if (userData) {
@@ -106,7 +110,6 @@ export class DataRecomendController extends ControllerBase<IDataRecomend> {
       if (similar <= 0) {
         return;
       }
-      console.log("run");
       user?.product.map((product2: any) => {
         const isExist = person1?.product.findIndex((product1) => {
           return String(product2.productId) == String(product1.productId);
@@ -125,15 +128,6 @@ export class DataRecomendController extends ControllerBase<IDataRecomend> {
       console.log("------");
       // console.log(array2)
     });
-    // var rank_lst = [];
-    // for (var item in totals) {
-    // if (typeof totals[item] != "function") {
-    //   //tính trung bình theo hệ số tương quan
-    //   var val = totals[item] / simsum[item];
-    //   rank_lst.push({ val: val, items: item });
-    // }
-    // console.log(item);
-    // }
     // rank_lst.sort(function (a, b) {
     //   //sắp xếp theo thứ tự giảm dần
     //   return b.val < a.val
@@ -145,8 +139,6 @@ export class DataRecomendController extends ControllerBase<IDataRecomend> {
     //     : NaN;
     // });
     for (let i = 0; i < array1.length; i++) {
-      // console.log(array1[i]);
-      // array2[i];
       let val = array1[i].value / array2[i].value;
       rank_lst.push({ val: val, item: array1[i].productId });
     }

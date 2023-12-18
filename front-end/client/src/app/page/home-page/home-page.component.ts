@@ -80,27 +80,8 @@ export class HomePageComponent extends BaseComponent {
       .getProductsSlider()
       .pipe(
         map((res) => {
-          // res.map((item: any) => {
-          //   let idPr = String(item.productId);
-          //   forkJoin({
-          //     info: me.productSv.getProduct(idPr),
-          //     detail: me.productSv.getProductDetail(idPr),
-          //   })
-          //     .pipe(
-          //       map(({ info, detail }) => {
-          //         (item.productId = { ...info }),
-          //           (item.productDetail = { ...detail }),
-          //           (item.priceAfterSale =
-          //             info.price -
-          //             info.price * (Number(info.sale.salePersent) / 100));
-          //       })
-          //     )
-          //     .subscribe();
-          // });
-          // setTimeout(() => {
           me.productSlider = [...res];
-          console.log(me.productSlider);
-          // }, 2000);
+          // this.selectedIndex = 1;
         })
       )
       .subscribe();

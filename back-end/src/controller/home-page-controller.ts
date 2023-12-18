@@ -20,6 +20,26 @@ export class HomePageController {
   private developer: Model<IDeveloper> = DeveloperModel;
   private homeSlide: Model<IHomeSlide> = HomeSlideModel;
   constructor() {}
+  getDetailInformation(localField: string, saveAs: string) {
+    const query = [
+      {
+        $lookup: {
+          from: "categlories",
+          localField: "detail.categlory",
+          foreignField: "_id",
+          as: "detail.categlory",
+        },
+      },
+      {
+        $lookup: {
+          from: "developers",
+          localField: "detail.developer",
+          foreignField: "_id",
+          as: "detail.developer",
+        },
+      },
+    ];
+  }
   async getBestSeller() {
     const userLibrary = await this.libraly
       .aggregate([
@@ -190,28 +210,85 @@ export class HomePageController {
       {
         $lookup: {
           from: "productdetails",
-          localField: "productId",
+          localField: "productId._id",
           foreignField: "productId",
           as: "productDetail",
         },
       },
+
+      {
+        $lookup: {
+          from: "developers",
+          localField: "productDetail.developer",
+          foreignField: "_id",
+          as: "developer",
+        },
+      },
+      {
+        $lookup: {
+          from: "categlories",
+          localField: "productDetail.categlory",
+          foreignField: "_id",
+          as: "categlory",
+        },
+      },
+      { $unwind: "$developer" },
       {
         $unwind: "$productId",
+      },
+      {
+        $unwind: "$productDetail",
       },
     ]);
     return slider;
   }
   async getProductSale() {
     const today = new Date();
-    const saleProduct = await this.product.find({
-      $and: [
-        { "sale.salePersent": { $gt: 0 } },
-        { "sale.startDay": { $gte: Number(today) } },
-        { "sale.endDay": { $gte: Number(today) } },
-      ],
-    });
+    const saleProduct = await this.product
+      .find({
+        $and: [
+          { "sale.salePersent": { $gt: 0 } },
+          { "sale.startDay": { $gte: Number(today) } },
+          { "sale.endDay": { $gte: Number(today) } },
+        ],
+      })
+      .limit(30);
     if (saleProduct) {
-      return saleProduct;
+      const getProduct = saleProduct.map((item: IProduct) => {
+        return item._id;
+      });
+      const detail = await this.productDetail.aggregate([
+        {
+          $match: { productId: { $in: getProduct } },
+        },
+        {
+          $lookup: {
+            from: "developers",
+            localField: "developer",
+            foreignField: "_id",
+            as: "developer",
+          },
+        },
+        { $unwind: "$developer" },
+        {
+          $lookup: {
+            from: "categlories",
+            localField: "categlory",
+            foreignField: "_id",
+            as: "categlory",
+          },
+        },
+      ]);
+      const result = saleProduct.map((item: IProduct) => {
+        const findDetail = detail.find((item1: IProductDetail) => {
+          return String(item._id) == String(item1.productId);
+        });
+        return {
+          product: item,
+          detail: findDetail,
+        };
+      });
+      return result;
     }
   }
   //   async filterProduct(req:Request){

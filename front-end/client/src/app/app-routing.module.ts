@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginGuard } from './base/guard/login.guard';
+import { UserGuard } from './base/guard/user.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -24,7 +25,7 @@ const routes: Routes = [
   },
   {
     path: 'profile',
-
+    canActivate: [UserGuard],
     loadChildren: () =>
       import('./page/user-profile-page/user-profile-page.module').then(
         (m) => m.UserProfilePageModule

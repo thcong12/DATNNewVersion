@@ -1,4 +1,10 @@
-import express, { Router, Application } from "express";
+import express, {
+  Router,
+  Application,
+  Response,
+  Request,
+  NextFunction,
+} from "express";
 import { DashboardRouter } from "./dashboard/dashboard-router";
 import { BaseRouter } from "../base/router-base";
 import { ClientRouter } from "./client/client-router";

@@ -2,26 +2,54 @@
   <div class="col-12 mx-2 p-2">
     <h1 style="color: #eeeeee">YOUR SHOPPING CART</h1>
   </div>
-  <div class="w-full grid pr-3   page-background">
-    <div style="color: #eeeeee" class="col-9 ">
+  <div class="w-full grid pr-3 page-background">
+    <div style="color: #eeeeee" class="col-9">
       <div class="w-full tab-style">
         <div class="flex flex-column gap-4">
           <div
-            class="grid px-3 item-style"
-            *ngFor="let product of userCart[0].cartDetail; let i = index"
+            class="grid px-3 pt-3 align-items-center item-style"
+            *ngFor="let product of userCart; let i = index"
           >
-            <img
+            <!-- <img
               class="col-3"
-              [src]="product.imgY.url + '?h=140&resize=1&w=80'"
+              [src]="product.product.imgY.url + '?h=140&resize=1&w=80'"
             />
             <div
               class="col-7 flex flex-column justify-content-between"
               style="width: 60%"
             >
               <h5 style="color: #eeeeee">
-                {{ product.productName }}
+                {{ product.product.productName }}
               </h5>
               <button class="w-4 buttonCustom">Detail</button>
+            </div> -->
+            <div class="col-3">
+              <img
+                width="100%"
+                [src]="product.imgY.url + '?h=140&resize=1&w=80'"
+              />
+            </div>
+            <div class="col-7 flex flex-column justify-content-between">
+              <h4 style="color: #eeeeee">
+                {{ product.productName }}
+              </h4>
+              <div class="priceItem">
+                <i class="px-2 py-1" *ngIf="salePersent(product)"
+                  >{{ product.sale.salePersent }}%</i
+                >
+                <del class="ml-1" *ngIf="salePersent(product)">{{
+                  product.price | currency : "USD"
+                }}</del>
+                <b class="ml-1">{{
+                  product.price -
+                    (product.price * product.sale.salePersent) /
+                      100 | currency : "USD"
+                }}</b>
+              </div>
+              <button (click)="toProductDetail(product._id)" class="w-4 p-2 buttonCustom">Detail</button>
+            </div>
+            <div class="col-2 flex justify-content-center">
+              <span (click)="removeCartItem(product)" class="text-3xl pi pi-times cursor-pointer"></span>
             </div>
           </div>
         </div>
@@ -30,8 +58,8 @@
         <button class="buttonCustom" type="button">Continue Shopping</button>
       </div>
     </div>
-    <div class="col-3  item-style" style="height: 590px;margin-top: 1rem;">
-      <app-check-out-form-payment [userCart]="[]"> </app-check-out-form-payment>
+    <div class="col-3 item-style" style="height: 590px; margin-top: 1rem">
+      <app-check-out-form-payment [userCart]="userCart"> </app-check-out-form-payment>
     </div>
   </div>
 </div>

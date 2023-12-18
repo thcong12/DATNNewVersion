@@ -14,6 +14,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { DropdownModule } from 'primeng/dropdown';
 import { ListboxModule } from 'primeng/listbox';
 import { LoaderComponent } from './loader/loader.component';
+import { TableModule } from 'primeng/table';
 const declarations: any[] = [
   LayoutComponent,
   TopNavComponent,
@@ -32,6 +33,7 @@ const imports: any[] = [
   OverlayPanelModule,
   DropdownModule,
   ListboxModule,
+  TableModule,
 ];
 @NgModule({
   declarations: [...declarations],

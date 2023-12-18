@@ -1,102 +1,157 @@
-<div class="py-3 home-galleria ">
-    <div class="grid align-items-stretch m-0" *ngFor="let item1 of productSlider; let i = index">
-        <div class="col-8 relative home-galleria-left-part animate__animated animate__fadeIn " *ngIf="selectedIndex == i">
-            <div class="left-part-bg" [style.background]="'url(' + item1.productId.imgY.url +')'"></div>
-            <img width="100%" [src]="item1.productId.imgY.url" />
-            <div class="absolute w-full flex gap-1 top-0 mt-5 ml-4">
-                <span class="" style="color: #eeeeee; padding: 1% 2%; border-radius: 2rem; border: 1px solid #eeeeee; font-size: 0.85rem;">
-                    category
-                </span>
-                <span class="" style="color: #eeeeee; padding: 1% 2%; border-radius: 2rem; border: 1px solid #eeeeee; font-size: 0.85rem;">
-                    category
-                </span>
-                <span class="" style="color: #eeeeee; padding: 1% 2%; border-radius: 2rem; border: 1px solid #eeeeee; font-size: 0.85rem;">
-                    category
-                </span>
-
-            </div>
-        </div>
-        <div class="col-4 px-5   flex flex-column justify-content-between relative  home-galleria-right-part" style="overflow: hidden;margin-top: 1rem;margin-bottom: calc(1rem + 4px);" *ngIf="selectedIndex == i">
-            <!-- <div class="px-5 pt-5 flex flex-column justify-content-between" style="position: relative;overflow: hidden;border-radius: 15px; height: 100%;"> -->
-                <div class="right-part-bg" [style.background]="'url(' + item1.productId.imgX.url +'?h=70&resize=1&w=140' +')'"></div>
-                <div class="flex flex-column justify-content-between align-items-center right-part-info">
-                    <div>
-                        <h5><b>{{ item1.productId.productName }}</b></h5>
-                        <p style="
-                width: auto;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                line-height: 25px;
-                -webkit-line-clamp: 3;
-                height: 75px;
-                font-size: 1rem;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-              ">
-                            {{ item1.productId.shortDescription }}
-                        </p>
-                    </div>
-                    <div style="width: 100%">
-                        <h5>{{ item1.productId.price | currency : "USD" }}</h5>
-                        <button pButton pRipple label="See more detail" style="background-color: rgba(41, 41, 41, 0.459); border: none"></button>
-                    </div>
-                </div>
-        
-                <div class="grid" >
-                    <img style="border-radius: 15px;" class="col-6 p-2 " width="100%" [src]="item1.productId.imgY.url" />
-                    <img style="border-radius: 15px;" class="col-6 p-2" width="100%" [src]="item1.productId.imgY.url" />
-                </div>
-            <!-- </div> -->
-
-        </div>
+<div class="py-3 home-galleria">
+  <div
+    class="grid align-items-stretch m-0"
+    *ngFor="let item1 of productSlider; let i = index"
+  >
+    <div
+      class="col-8 relative home-galleria-left-part animate__animated animate__fadeIn"
+      *ngIf="selectedIndex == i"
+    >
+      <div
+        class="left-part-bg"
+        [style.background]="'url(' + item1.productId.imgY.url + ')'"
+      ></div>
+      <img width="100%" [src]="item1.productId.imgY.url" />
+      <div class="absolute w-full flex gap-1 top-0 mt-5 ml-4">
+        <span
+          *ngFor="let cateItem of item1.categlory; let i = index"
+          style="
+            color: #eeeeee;
+            padding: 1% 2%;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: bold;
+            background-color: #00000043;
+            backdrop-filter: blur(10px);
+          "
+        >
+          {{ cateItem.cateName }}
+        </span>
+      </div>
     </div>
-    <div class="w-full flex gap-2 justify-content-center home-galleria-list-btn" style="min-height: 10px">
-        <div (click)="slideShow(i)" class="toggle" *ngFor="let item of productSlider;let i=index">
-            <input type="radio" name="toggle" [id]="'toggle-'+i" />
-            <label [for]="'toggle-' + i" [class]="'label-' + i"></label>
+    <div
+      class="col-4 px-5 flex flex-column justify-content-between relative home-galleria-right-part"
+      style="
+        overflow: hidden;
+        margin-top: 1rem;
+        margin-bottom: calc(1rem + 4px);
+      "
+      *ngIf="selectedIndex == i"
+    >
+      <!-- <div class="px-5 pt-5 flex flex-column justify-content-between" style="position: relative;overflow: hidden;border-radius: 15px; height: 100%;"> -->
+      <div
+        class="right-part-bg"
+        [style.background]="
+          'url(' + item1.productId.imgX.url + '?h=70&resize=1&w=140' + ')'
+        "
+      ></div>
+      <div
+        class="flex flex-column justify-content-between align-items-center right-part-info"
+      >
+        <div>
+          <h5>
+            <b>{{ item1.productId.productName }}</b>
+          </h5>
+          <p
+            style="
+              width: auto;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              line-height: 25px;
+              -webkit-line-clamp: 3;
+              height: 75px;
+              font-size: 1rem;
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+            "
+          >
+            {{ item1.productId.shortDescription }}
+          </p>
         </div>
+
+      </div>
+      <div style="width: 100%">
+        <h5>{{ item1.productId.price | currency : "USD" }}</h5>
+        <button
+          pButton
+          pRipple
+          label="See more detail"
+          style="background-color: rgba(41, 41, 41, 0.459); border: none"
+        ></button>
+      </div>
+      <div class="grid">    
+        <img
+          *ngFor="
+            let imgDetail of item1.productDetail.imgList.slice(0, 2);
+            let i = index
+          "
+          style="border-radius: 15px"
+          class="col-6 p-2"
+          width="100%"
+          [src]="imgDetail.url"
+        />
+      </div>
+      <!-- </div> -->
     </div>
+  </div>
+  <div
+    class="w-full flex gap-2 justify-content-center home-galleria-list-btn"
+    style="min-height: 10px"
+  >
+    <div
+      (click)="slideShow(i)"
+      class="toggle"
+      *ngFor="let item of productSlider; let i = index"
+    >
+      <input type="radio" name="toggle" [id]="'toggle-' + i" />
+      <label [for]="'toggle-' + i" [class]="'label-' + i"></label>
+    </div>
+  </div>
 </div>
 <div class="py-3 home-sale ml-0">
-    <div class="home-sale-title flex justify-content-between align-items-center">
-        <h4>On sale</h4>
-        <h5>See more</h5>
-    </div>
-    <app-home-page-onsale></app-home-page-onsale>
+  <div class="home-sale-title flex justify-content-between align-items-center">
+    <h4>On sale</h4>
+    <h5>See more</h5>
+  </div>
+  <app-home-page-onsale></app-home-page-onsale>
 </div>
 <div class="py-3 home-category">
-    <div class="home-category-title">
-        <h2>Categlory</h2>
-    </div>
-    <div class="grid">
-        <div class="col-3 relative" *ngFor="let item of categorylist.slice(0, 4)">
-            <img width="100%" style="border-radius: 15px" [src]="item.image" />
-            <div class="absolute left-auto bottom-0 p-6" style="width: calc(100% - 1rem); border-radius: 15px" [style.background]="
+  <div class="home-category-title">
+    <h2>Categlory</h2>
+  </div>
+  <div class="grid">
+    <div class="col-3 relative" *ngFor="let item of categorylist.slice(0, 4)">
+      <img width="100%" style="border-radius: 15px" [src]="item.image" />
+      <div
+        class="absolute left-auto bottom-0 p-6"
+        style="width: calc(100% - 1rem); border-radius: 15px"
+        [style.background]="
           'linear-gradient(rgba(0,0,0,0),' + item.color + ') 100%'
-        ">
-                <span class="text-lg font-bold">
+        "
+      >
+        <span class="text-lg font-bold">
           {{ item.title }}
         </span>
-            </div>
-        </div>
+      </div>
     </div>
+  </div>
 </div>
 <div class="py-3 home-product">
-    <div class="home-sale-title flex justify-content-between align-items-center">
-        <h4>On sale</h4>
-        <h5>See more</h5>
+  <div class="home-sale-title flex justify-content-between align-items-center">
+    <h4>On sale</h4>
+    <h5>See more</h5>
+  </div>
+  <div class="grid home-product-content">
+    <div *ngFor="let item of productList" class="col-3">
+      <img width="100%" [src]="item.imgX.url + '?h=480&resize=1&w=360'" />
     </div>
-    <div class="grid home-product-content">
-        <div *ngFor="let item of productList" class="col-3">
-            <img width="100%" [src]="item.imgX.url + '?h=480&resize=1&w=360'" />
-        </div>
-    </div>
+  </div>
 </div>
 
 <div class="py-3 home-list">
-    <div class="home-sale-title flex justify-content-between align-items-center">
-        <h4>On sale</h4>
-        <h5>See more</h5>
-    </div>
-    <app-home-page-list></app-home-page-list>
+  <div class="home-sale-title flex justify-content-between align-items-center">
+    <h4>On sale</h4>
+    <h5>See more</h5>
+  </div>
+  <app-home-page-list></app-home-page-list>
 </div>

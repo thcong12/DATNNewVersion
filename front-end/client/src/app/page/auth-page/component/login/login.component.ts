@@ -1,7 +1,16 @@
-import { Component, EventEmitter, Injector, Output } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import {
+  Component,
+  EventEmitter,
+  Injector,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
+import { GlobalVariable } from 'src/app/base/global-variable';
+import { ViewModelService } from 'src/app/base/viewModel.service';
 import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/user.service';
 
@@ -12,16 +21,17 @@ import { UserService } from 'src/app/service/user.service';
   host: { class: 'form-container sign-in-container' },
 })
 export class LoginComponent extends BaseComponent {
+  private globalVariable: GlobalVariable = new GlobalVariable();
   isCorrectUser: boolean = false;
   private userId: string = '';
   @Output() displayModal = new EventEmitter<boolean>();
   constructor(
-    protected injector: Injector,
     private formBd: FormBuilder,
     private authSv: AuthService,
-    private userSv: UserService
+    private userSv: UserService,
+    Injector: Injector
   ) {
-    super(injector);
+    super(Injector);
   }
   public formLogin!: FormGroup;
   public controlLogin = {
@@ -43,21 +53,16 @@ export class LoginComponent extends BaseComponent {
     me.authSv
       .login(me.formLogin.value)
       .pipe(
-        map((data: any) => {
-          this.userId = data.body?.user._id as any;
+        shareReplay<any>(),
+        tap((res: HttpResponse<any>) => {
+          if (res.status == 200) {
+            this.userId = res.body?.user._id as any;
+            this.userSv.getCart().subscribe();
+            this.userSv.getWishlist().subscribe();
+          }
         })
       )
-      .subscribe({
-        complete: () => {
-          this.isCorrectUser = false;
-          this.userSv.getCart(this.userId).subscribe();
-          // this.userSv.getWishlist().subscribe();
-          // this.userSv.getReCommendProduct().subscribe();
-        },
-        error: () => {
-          this.isCorrectUser = true;
-        },
-      });
+      .subscribe();
   }
   public openDialog(isDisplay: boolean) {
     this.displayModal.emit(isDisplay);

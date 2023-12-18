@@ -1,20 +1,20 @@
+import { HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, Injector, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { mergeMap, tap } from 'rxjs';
+import { MessagesModule } from 'primeng/messages';
+import { shareReplay, tap } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { User } from 'src/app/model/account.model';
 import { AuthService } from 'src/app/service/auth.service';
-import { CategloryService } from 'src/app/service/categlory.service';
-import { DevelopersService } from 'src/app/service/developers.service';
-import { FeatureService } from 'src/app/service/feature.service';
 import { ProductsService } from 'src/app/service/products.service';
 import { StoreService } from 'src/app/service/store.service';
 import { UserService } from 'src/app/service/user.service';
-
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
   styleUrls: ['./product-detail-page.component.scss'],
+  providers: [MessageService],
 })
 export class ProductDetailPageComponent extends BaseComponent {
   public commentForm!: FormGroup;
@@ -28,7 +28,8 @@ export class ProductDetailPageComponent extends BaseComponent {
     private userSv: UserService,
     private formBd: FormBuilder,
     private storeSv: StoreService,
-    private authSv: AuthService
+    private authSv: AuthService,
+    private messageSv: MessageService
   ) {
     super(injector);
   }
@@ -65,32 +66,27 @@ export class ProductDetailPageComponent extends BaseComponent {
   private getProduct(): void {
     this.route.paramMap
       .pipe(
-        mergeMap((param) =>
-          this.prodSv.getProductDetail(String(param.get('id'))).pipe(
-            tap((res: any) => {
-              // let aaa = '';
-              this.product = res;
-              console.log(this.product);
-              // me.productId = String(param.get('id'));
-              // me.developerId = res.productDetail.developer._id;
-              // res.productDetail.categlory.slice(0, 3).map((item: any) => {
-              //   aaa += `${item._id}+`;
-              // });
-              // me.storeSv
-              //   .findSameProduct(aaa)
-              //   .pipe(
-              //     tap((res) => {
-              //       me.listProductSimilar = [...(res as any)];
-              //       console.log(res);
-              //     })
-              //   )
-              //   .subscribe();
-              // console.log(res.productDetail.description);
-            })
-          )
-        )
+        tap((param) => {
+          this.productId = param.get('id') as string;
+        })
+        // tap((param) => {
+        //   this.productId = param.get('id') as string;
+        // })
       )
-      .subscribe();
+      .subscribe({
+        next: () => {
+          console.log(this.productId);
+          this.prodSv
+            .getProductDetail(this.productId)
+            .pipe(
+              tap((res: any) => {
+                console.log(res);
+                this.product = res;
+              })
+            )
+            .subscribe();
+        },
+      });
   }
   private getSameProduct(id: string) {
     // const me = this;
@@ -108,55 +104,99 @@ export class ProductDetailPageComponent extends BaseComponent {
     const me = this;
     me.userSv.postComment(me.productId, me.commentForm.value).subscribe();
   }
-  public getLibraries() {
-    // const me = this;
-    // me.userSv
-    //   .getLibraries()
-    //   .pipe(
-    //     tap((res) => {
-    //       res.map((item: any) => {
-    //         if (item._id == me.productId) {
-    //           me.isInLybrary = true;
-    //         }
-    //       });
-    //     })
-    //   )
-    //   .subscribe();
-  }
   public addToCart(item: any) {
-    const me = this;
     const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
-    let dataFormat: User.CartDetail = {
-      product: item._id,
-      quantity: 1,
-    };
-    const combineArray: any[] = userCart[0].cartDetail.map((data: any) => {
-      return data._id;
+    const isExist = userCart.findIndex((item: any) => {
+      return String(item._id) == String(item._id);
     });
-    if (!combineArray.includes(item._id)) {
-      console.log(userCart);
-      me.userSv.addToCart(item).subscribe();
-      userCart[0].cartDetail.push(item);
-      this.vms.globalVariable.setUserCart(userCart);
-    } else {
-      alert('product asdasd');
+    if (isExist != -1) {
+      this.messageSv.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Product is exist ',
+      });
+      return;
     }
-    //  userCart[0].cartDetail.map((data:any) =>{
-    //   console.log(data._id == item._id)
 
-    //     if( item._id != data._id ){
-    //       me.userSv.addToCart(item).subscribe();
-    //       userCart[0].cartDetail.push(item);
-    //       this.vms.globalVariable.setUserCart(userCart)
-    //     }else{
-    //       alert('product asdasd')
-
-    //     }
-    //  })
+    this.userSv
+      .addToCart(item)
+      .pipe(
+        shareReplay<any>(),
+        tap((res: HttpResponse<any>) => {
+          if (res.status == 201) {
+            this.messageSv.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Product has added',
+            });
+            userCart.push(item);
+            this.vms.globalVariable.setUserCart(userCart);
+          }
+        })
+      )
+      .subscribe();
   }
-  public addToWishList(item: string) {
-    const me = this;
-    me.userSv.addToWishList(item).pipe().subscribe();
+
+  public addToWishList(item: any) {
+    const userWishList = JSON.parse(
+      String(this.vms.globalVariable.getUserWishList)
+    );
+    let dataFormat: User.Wishlist = {
+      product: item,
+    };
+    const isExist = userWishList.findIndex((item: any) => {
+      return String(dataFormat.product._id) == String(item._id);
+    });
+    if (isExist != -1) {
+      this.messageSv.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Product is exist ',
+      });
+      return;
+    }
+
+    this.userSv
+      .addToWishList(item)
+      .pipe(
+        shareReplay<any>(),
+        tap((res: HttpResponse<any>) => {
+          if (res.status == 201) {
+            this.messageSv.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Product has added',
+            });
+            userWishList.push(dataFormat);
+            this.vms.globalVariable.setUserWishList(userWishList);
+          }
+        })
+      )
+      .subscribe();
+  }
+  public removeFromWishList(item: any) {
+    const userWishList = JSON.parse(
+      String(this.vms.globalVariable.getUserWishList)
+    );
+    this.userSv
+      .removeFromWishList(item)
+      .pipe(
+        shareReplay<any>(),
+        tap((res: HttpResponse<any>) => {
+          if (res.status == 201) {
+            this.messageSv.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: 'Product has remove',
+            });
+            const wishList = userWishList.filter((product: any) => {
+              return String(product.product._id) != String(item._id);
+            });
+            this.vms.globalVariable.setUserWishList(wishList);
+          }
+        })
+      )
+      .subscribe();
   }
   private formInit() {
     const me = this;
@@ -192,9 +232,6 @@ export class ProductDetailPageComponent extends BaseComponent {
     }
   }
   @ViewChild('ádasd') aa!: ElementRef;
-  aaaaa(image: any) {
-    image.style.transform = 'translate(100%)';
-  }
   private setDataRecommend() {
     if (this.productId) {
       this.userSv.setDataRecomend(this.productId).subscribe();
@@ -204,28 +241,46 @@ export class ProductDetailPageComponent extends BaseComponent {
   get isInCart() {
     const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
     if (isLogin) {
-      // const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
-      // const combineArray: any[] = userCart[0].cartDetail.map((data: any) => {
-      //   return data._id;
-      // });
-      // return combineArray.includes(this.productId);
-      return true;
+      const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
+      if (userCart.length > 0) {
+        const combineArray: any[] = userCart?.map((data: any) => {
+          return data._id;
+        });
+        return combineArray.includes(this.productId);
+      }
+      return false;
     }
     return;
   }
+
   get isInLibary() {
-    // const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
-    // if (isLogin) {
-    //   const userLibary = JSON.parse(
-    //     String(this.vms.globalVariable.getUserLiblary)
-    //   );
-    //   const combineArray: any[] = userLibary.map((data: any) => {
-    //     return data._id;
-    //   });
-    //   return combineArray.includes(this.productId);
-    // }
+    const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
+    if (isLogin) {
+      const Wishlist = JSON.parse(
+        String(this.vms.globalVariable.getUserWishList)
+      );
+      if (Wishlist.length > 0) {
+        const combineArray: any[] = Wishlist?.map((data: any) => {
+          return data.product._id;
+        });
+        return combineArray.includes(this.productId);
+      }
+      return false;
+    }
     return;
   }
+
+  get priceAfterSale() {
+    const finalPrice =
+      this.product.product.price -
+      (this.product.product.price * this.product.product.sale.salePersent) /
+        100;
+    return finalPrice;
+  }
+  // get categoryItem() {
+  //   return this.product.detail?.categlory;
+  // }
+
   // get isInWishList(){
   //   const userWishList= JSON.parse(String(this.vms.globalVariable.getUserWishList))
   //   const combineArray:any[] = userWishList.productId.map((data:any)=>{

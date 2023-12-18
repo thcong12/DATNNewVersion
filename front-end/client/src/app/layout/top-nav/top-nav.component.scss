@@ -6,3 +6,42 @@
     bottom: calc( -8rem + 1rem);
 
 }
+
+:host ::ng-deep  .p-overlaypanel{
+    .p-component{
+        .p-overlaypanel-content{
+            background-color: rgba(255, 255, 255, 0.033) !important;
+            backdrop-filter: blur(10px) !important;
+        }
+    }
+} 
+.userCart{
+    height: 340px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}    
+@mixin scrollbar {
+    margin-right: -10px;
+    scrollbar-width: thin;
+  
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+  
+    &::-webkit-scrollbar-track {
+      background-color: #eaf5f42e;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+        width: 2px;
+      background: #444444;
+    }
+  }
+  
+  .scrollbar {
+    @include scrollbar;
+  }
+  .line{
+    height: 2px;
+    width: 100%;
+  }

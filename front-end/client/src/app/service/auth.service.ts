@@ -58,27 +58,13 @@ export class AuthService extends AuthBaseService {
   }
   public logout(): Observable<HttpResponse<any>> {
     const url = this.authApi + routerURL.auth.logout;
-    return this.get(url, this.httpOption).pipe(
-      shareReplay<any>(),
-      tap((res: HttpResponse<any>) => {
-        // alert('Logout successful');
-        this.globalVariable.removeSession();
-      })
-    );
+    return this.get(url, this.httpOption);
   }
   public register(user: AuthModule.Register): Observable<HttpResponse<any>> {
-    const url = this.authApi + routerURL.auth.login;
+    const url = this.authApi + routerURL.auth.signin;
     return this.post(url, user, this.httpOption).pipe(
       shareReplay<any>(),
-      tap((res: HttpResponse<any>) => {
-        if (res.status === 200) {
-          alert(
-            'Account have been create please check your email to active the account'
-          );
-        } else {
-          alert('some thing wrong');
-        }
-      })
+      tap((res: HttpResponse<any>) => {})
     );
   }
   public userActive(token: string): Observable<HttpResponse<any>> {
@@ -112,6 +98,7 @@ export class AuthService extends AuthBaseService {
     return this.get(url, this.httpOption).pipe(
       shareReplay<any>(),
       tap((res: HttpResponse<any>) => {
+        console.log(res);
         this.globalVariable.setAccessToken(res);
       })
     );

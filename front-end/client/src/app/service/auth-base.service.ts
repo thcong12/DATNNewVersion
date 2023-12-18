@@ -11,25 +11,19 @@ import { BaseService, OptionsRequest } from './base.service';
 })
 export abstract class AuthBaseService extends BaseService {
   protected authApi: string = '/auth';
-  protected httpOption!: OptionsRequest;
-  protected globalVariable: GlobalVariable;
   constructor(http: HttpClient) {
     super(http);
-    this.globalVariable = new GlobalVariable();
-    this.setHttpOption();
   }
   protected setSession(res: HttpResponse<any>) {
     this.globalVariable.setAccessToken(res);
     this.globalVariable.setRefreshToken(res);
     this.globalVariable.setUserProfile(res);
+    // this.globalVariable.setUserCart(res);
+    // this.globalVariable.setUserLiblary(res);
+    // this.globalVariable.setRecommendProduct(res);
+    // this.globalVariable.setUserWishList(res);
   }
-  private setHttpOption() {
-    this.httpOption = {
-      observe: 'response',
-      headers: {
-        [header.refreshTK]: String(this.globalVariable.getRefreshToken),
-        [header.accessTK]: String(this.globalVariable.getRefreshToken),
-      },
-    };
+  protected removeSession() {
+    this.globalVariable.removeSession();
   }
 }

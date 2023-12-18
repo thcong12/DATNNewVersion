@@ -17,17 +17,10 @@ export class CheckOutPageComponent extends BaseComponent implements OnInit {
     private injector: Injector
   ) {
     super(injector);
+    this.getData();
   }
   private getData() {
-    const me = this;
-
-    // me.userSv
-    //   .getCart()
-    //   .pipe(
-    //     takeUntil(me.destroy$),
-    //     tap((res: any) => {})
-    //   )
-    //   .subscribe();
+    this.userSv.getCart().subscribe();
   }
   get userStageLogin(): boolean {
     const isLogin = this.vms.globalVariable.getLoginStage;
@@ -48,19 +41,24 @@ export class CheckOutPageComponent extends BaseComponent implements OnInit {
     }
     return;
   }
-  public removeCartDetail(id: string) {
-    // const me = this;
-    // me.userSv.removeFromCart(id).subscribe({
-    //   complete: () => {
-    //     me.getData();
-    //   },
-    // });
+  public salePersent(product: any) {
+    if (product.sale.salePersent <= 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
-  override onInit(): void {}
-  override onDestroy(): void {
-    const me = this;
-    me.destroy$.next();
-    me.destroy$.complete();
-    me.destroy$.unsubscribe();
+  public removeCartItem(item: any) {
+    const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
+
+    const cart = userCart.filter((product: any) => {
+      return String(product._id) != String(item._id);
+    });
+
+    this.vms.globalVariable.setUserCart(cart);
+    this.userSv.removeFromCart(item).subscribe();
+  }
+  public toProductDetail(id: string) {
+    this.router.navigate(['/product', id]);
   }
 }

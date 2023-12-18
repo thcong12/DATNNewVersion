@@ -83,5 +83,12 @@ export const CONSTANT = {
     dataRecomendraw: "Datasetforproducts",
     dataRecomend: "dataRecomend",
     profile: "profiles",
+    city: "city",
   },
+};
+export const recomendValue = {
+  click: 1,
+  cart: 1,
+  wishlist: 1,
+  buy: 1,
 };

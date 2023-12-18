@@ -8,6 +8,8 @@ import {
 
 import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { GlobalVariable } from '../base/global-variable';
+import { header } from '../shared/constant/router-const';
 
 export interface OptionsRequest {
   headers?:
@@ -32,7 +34,12 @@ export interface OptionsRequest {
 }
 
 export abstract class BaseService {
-  constructor(public httpClient: HttpClient) {}
+  protected httpOption!: OptionsRequest;
+  protected globalVariable: GlobalVariable;
+  constructor(public httpClient: HttpClient) {
+    this.globalVariable = new GlobalVariable();
+    this.setHttpOption();
+  }
 
   /**
    * Request server with method get
@@ -45,7 +52,7 @@ export abstract class BaseService {
   ): Observable<TResult> {
     const me = this;
     const url = me.getUrl(uri);
-    return me.httpClient.get<TResult>(url);
+    return me.httpClient.get<TResult>(url, options);
   }
 
   /**
@@ -133,6 +140,15 @@ export abstract class BaseService {
 
       // Let the app keep running by returning an empty result.
       return of(result as T);
+    };
+  }
+  protected setHttpOption() {
+    this.httpOption = {
+      headers: {
+        [header.refreshTK]: String(this.globalVariable.getRefreshToken),
+        [header.accessTK]: String(this.globalVariable.getAccessToken),
+      },
+      observe: 'response',
     };
   }
 }

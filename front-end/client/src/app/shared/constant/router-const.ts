@@ -3,7 +3,7 @@ export const routerURL = {
   auth: {
     login: '/login',
     logout: '/logout',
-    refreshTk: '/reshfresh',
+    refreshTk: '/refresh',
     accActive: (token: string) => {
       return `/actice/${token}`;
     },
@@ -11,6 +11,7 @@ export const routerURL = {
     changePasswork: (token: string) => {
       return `/changepasswork/${token}`;
     },
+    signin: '/signin',
   },
   table: {
     product: '/product',
@@ -30,8 +31,11 @@ export const header = {
 export const apiRouter = {
   user: {
     user: '/user',
-    cart: '/cart/',
-    library: '/library/',
+    cart: '/cart',
+    add: '/add',
+    remove: '/remove',
+    library: '/library',
+    wishlist: '/wishlist',
     // library: '/library',
   },
   product: '/product',
