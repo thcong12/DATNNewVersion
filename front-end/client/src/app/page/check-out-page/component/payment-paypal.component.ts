@@ -29,7 +29,7 @@ export class PaymentPaypalComponent implements OnInit, AfterViewInit {
   constructor(
     private formBd: FormBuilder,
     private orderSv: OrderService,
-    private cartSv: UserService,
+    private userSv: UserService,
     private router: Router
   ) {}
   ngAfterViewInit(): void {
@@ -37,25 +37,23 @@ export class PaymentPaypalComponent implements OnInit, AfterViewInit {
   }
   public formData() {}
   private paypalPayment() {
-    const me = this;
-
     paypal
       .Buttons({
         createOrder: (data: any, actions: any) => {
-          me.orderSv
+          this.orderSv
             .createOrder({
-              ...me.order.value,
-              orderItem: me.userCart,
+              ...this.order.value,
+              orderItem: this.userCart,
             })
             .subscribe((x: any) => {
-              me.orderId = x._id;
+              this.orderId = x._id;
             });
           return actions.order.create({
             purchase_units: [
               {
                 amount: {
                   currency_code: 'USD',
-                  value: me.order.value.totalPrice as String,
+                  value: this.order.value.totalPrice as String,
                 },
               },
             ],
@@ -63,11 +61,11 @@ export class PaymentPaypalComponent implements OnInit, AfterViewInit {
         },
 
         onApprove: async (data: any, actions: any) => {
-          const payment = await actions.order.capture();
-          me.orderSv.paid(me.userCart, me.orderId, me.order.value).subscribe({
+          await actions.order.capture();
+          this.orderSv.paid(this.orderId, this.order.value).subscribe({
             complete: () => {
-              alert('payment success');
-              me.router.navigateByUrl('/home');
+              this.userSv.getAllUserOwner();
+              this.router.navigateByUrl('/home');
             },
           });
         },
@@ -76,7 +74,7 @@ export class PaymentPaypalComponent implements OnInit, AfterViewInit {
           console.log(err);
         },
       })
-      .render(me.paypalElement.nativeElement);
+      .render(this.paypalElement.nativeElement);
   }
 
   ngOnInit(): void {

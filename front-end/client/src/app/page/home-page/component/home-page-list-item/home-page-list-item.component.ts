@@ -7,17 +7,18 @@ import { Product } from 'src/app/model/products.model';
   styleUrls: ['./home-page-list-item.component.scss'],
 })
 export class HomePageListItemComponent {
-  @Input() productItem!: Product.Product;
+  @Input() productItem!: Product.ProductDisplay;
   @Input() selectedIndex!: number;
-  @Input() products!: Product.Product[];
   constructor() {}
   get priceAfterSale() {
     const finalPrice =
-      this.productItem.price -
-      (this.productItem.price * this.productItem.sale.salePersent) / 100;
+      this.productItem.product.price -
+      (this.productItem.product.price *
+        this.productItem.product.sale.salePersent) /
+        100;
     return finalPrice;
   }
   get categoryItem() {
-    return this.productItem.detail?.categlory;
+    return this.productItem.detail.categlory;
   }
 }

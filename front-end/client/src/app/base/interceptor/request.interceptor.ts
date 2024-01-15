@@ -61,11 +61,9 @@ export class RequestInterceptor implements HttpInterceptor {
             break;
           }
           case 404: {
-            alert('something wrong');
             break;
           }
           case 403: {
-            console.log(403);
             return this.refreshAccessToken().pipe(
               switchMap(() => {
                 if (!!accessToken) {
@@ -80,7 +78,6 @@ export class RequestInterceptor implements HttpInterceptor {
               }),
               catchError((err: any) => {
                 console.log(err);
-                alert('something wrong');
                 return empty();
               })
             );

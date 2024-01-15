@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BaseRouter } from "../../base/router-base";
-import { DashboardAuthController } from "../../controller/auth-admin-controller";
-import { AdminController } from "../../controller/admin-controller";
 import { ClientAuthController } from "../../controller/auth-user-controller";
 
 export class ClientAuthRouter extends BaseRouter {

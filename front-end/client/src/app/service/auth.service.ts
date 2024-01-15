@@ -56,7 +56,9 @@ export class AuthService extends AuthBaseService {
       })
     );
   }
+
   public logout(): Observable<HttpResponse<any>> {
+    console.log(this.globalVariable.getRefreshToken);
     const url = this.authApi + routerURL.auth.logout;
     return this.get(url, this.httpOption);
   }

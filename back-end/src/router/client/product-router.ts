@@ -1,12 +1,17 @@
 import expressAsyncHandler from "express-async-handler";
-import { BaseRouter } from "../../base/router-base";
+import { BaseRouter, MyToken } from "../../base/router-base";
 import { ProductController } from "../../controller/product-controller";
 import { NextFunction, Request, Response } from "express";
 import { HomePageController } from "../../controller/home-page-controller";
+import { CategloryController } from "../../controller/category-controller";
+import { CONSTANT } from "../../constant";
+import { checkSection } from "../../ultils/genareate_token";
 
 export class ProductRouter extends BaseRouter {
   private Product: ProductController = new ProductController();
   private HomePage: HomePageController = new HomePageController();
+  private Category: CategloryController = new CategloryController();
+
   constructor() {
     super();
     this.importRouter();
@@ -17,7 +22,11 @@ export class ProductRouter extends BaseRouter {
     this.getProductBestSeller();
     this.getProductNewRelease();
     this.getProductSale();
+    this.getDataFilter();
+    this.searchProduct();
+    this.categoryList();
     this.getProductDetail();
+    this.getProductDetailIslogin();
   }
   getAll() {
     this.router.get(
@@ -36,16 +45,38 @@ export class ProductRouter extends BaseRouter {
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const productId = req.params.id;
-          const productInfo = await this.Product.getProductDetail(productId);
-          const productDetail = await this.HomePage.getProductDetail(productId);
-          if (productInfo && productDetail) {
-            res.json({
-              product: productInfo,
-              productDetail: productDetail,
-            });
-          } else {
-            res.sendStatus(404);
+          const authHeader: any = req.header(CONSTANT.header.accessToken);
+          if (authHeader) {
+            const user: MyToken = checkSection(req, res, next);
+            await this.RecomendController.updateData(
+              user.id!,
+              "click",
+              productId
+            );
           }
+          const product = await this.HomePage.getProductDetail(productId);
+          res.json(product[0]);
+        }
+      )
+    );
+  }
+  getProductDetailIslogin() {
+    this.router.get(
+      "/recomend/:id",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const productId = req.params.id;
+          const authHeader: any = req.header(CONSTANT.header.accessToken);
+          if (authHeader) {
+            const user: MyToken = checkSection(req, res, next);
+            await this.RecomendController.updateData(
+              user.id!,
+              "click",
+              productId
+            );
+          }
+          const product = await this.HomePage.getProductDetail(productId);
+          res.json(product[0]);
         }
       )
     );
@@ -89,6 +120,44 @@ export class ProductRouter extends BaseRouter {
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const data = await this.HomePage.getProductSale();
+          res.json(data);
+        }
+      )
+    );
+  }
+  getDataFilter() {
+    this.router.post(
+      "/filter",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const data = await this.HomePage.filterProduct(req);
+          res.json(data);
+        }
+      )
+    );
+  }
+  searchProduct() {
+    this.router.post(
+      "/search",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const { keyword } = req.body;
+
+          const data = await this.HomePage.searchProduct(keyword);
+          res.json(data);
+        }
+      )
+    );
+  }
+  categoryList() {
+    this.router.get(
+      "/cate",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          let data = await this.Category.getAllData();
+          data = data.filter((item: any) => {
+            return item.image != "";
+          });
           res.json(data);
         }
       )

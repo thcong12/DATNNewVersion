@@ -18,9 +18,8 @@ export class StoreService extends BaseService {
     return this.get(url);
   }
   public search(keyword: string): Observable<any> {
-    const me = this;
-    const url = `/tool/search/${keyword.replace(/\s/g, '').toLowerCase()}`;
-    return me.get(url);
+    const url = this.api + apiRouter.store.search;
+    return this.post(url, { keyword: keyword });
   }
   public findSameProduct(cate: string) {
     const me = this;
@@ -40,8 +39,7 @@ export class StoreService extends BaseService {
     return this.get(url);
   }
   public filterProduct(value: any): Observable<any> {
-    const me = this;
-    const url = `/tool/filter`;
-    return me.post(url, value);
+    const url = this.api + apiRouter.store.filter;
+    return this.post(url, value);
   }
 }

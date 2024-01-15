@@ -1,0 +1,49 @@
+<p-toast></p-toast>
+<div>
+  <h1 class="">Table developer</h1>
+</div>
+<div class="w-full">
+  <app-table-component
+    [data]="developers"
+    [headerTable]="headerTable"
+    [displayField]="displayField"
+    (isCreate)="isCreate = $event"
+    (displayModal)="displayModal = $event"
+    [displayRetrun]="displayModal"
+    (itemId)="getDeveloper($event)"
+  >
+  </app-table-component>
+</div>
+
+<app-dialog-component
+  [dialogHeader]="'Developer'"
+  (displayRetrun)="displayModal = $event"
+  [displayModal]="displayModal"
+  (confirm)="confirm($event)"
+  [createNew]="isCreate"
+  [formData]="developerForm"
+>
+  <ng-template>
+    <form [formGroup]="developerForm">
+      <div class="flex-auto">
+        <span class="font-bold block mb-2">Category name</span>
+        <input
+          pInputText
+          pKeyFilter="int"
+          placeholder="Integers"
+    
+        />
+        <!-- [formControlName]="controlName.cateName"  -->
+      </div>
+      <div class="flex-auto mt-2">
+        <span class="font-bold block mb-2">Description</span>
+        <input
+          pInputText
+          pKeyFilter="int"
+          placeholder="Integers"
+          [formControlName]="controlName.description"
+        />
+      </div>
+    </form>
+  </ng-template>
+</app-dialog-component>

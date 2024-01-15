@@ -5,6 +5,8 @@ import { DeveloperRouter } from "./developer-router";
 import { ClientAuthRouter } from "./auth-router";
 import { ProductRouter } from "./product-router";
 import { UserRouter } from "./user-router";
+import { CheckoutRouter } from "./checkout-router";
+import { RecommendRouter } from "../dataRecomend/recomend-router";
 
 export class ClientRouter extends BaseRouter {
   private category: CategoryRouter = new CategoryRouter();
@@ -12,6 +14,8 @@ export class ClientRouter extends BaseRouter {
   private authentication: ClientAuthRouter = new ClientAuthRouter();
   private product: ProductRouter = new ProductRouter();
   private user: UserRouter = new UserRouter();
+  private checkOut: CheckoutRouter = new CheckoutRouter();
+  private recomendRouter: RecommendRouter = new RecommendRouter();
   constructor() {
     super();
 
@@ -20,6 +24,7 @@ export class ClientRouter extends BaseRouter {
     this.productRouter();
     this.userRouter();
     this.authRouter();
+    this.checkOutRouter();
   }
   categoryRouter() {
     this.router.use("/categlory", this.category.router);
@@ -35,5 +40,8 @@ export class ClientRouter extends BaseRouter {
   }
   userRouter() {
     this.router.use("/user", this.user.router);
+  }
+  checkOutRouter() {
+    this.router.use("/checkout", this.checkOut.router);
   }
 }

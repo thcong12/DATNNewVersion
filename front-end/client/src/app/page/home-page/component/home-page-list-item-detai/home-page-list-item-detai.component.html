@@ -1,5 +1,5 @@
 <div *ngIf="productItem" class="m-0 p-4">
-    <h2>{{ productItem.productName }}</h2>
+    <h2 style="color:white">{{ productItem.product.productName }}</h2>
     <div class="relative">
       <div
         class=""
@@ -33,7 +33,7 @@
     </div>
     <br />
     <div class="flex gap-1 flex-wrap">
-      <a *ngFor="let item of productCateGlory; let i = index"
+      <a class="categoryItem" *ngFor="let item of productCateGlory; let i = index"
         >{{ item.cateName }}
       </a>
     </div>
@@ -42,9 +42,9 @@
       <span class="mb-2 fs-6"><b> Developer : </b></span>
 
       <span class="mb-2 fs-6">{{
-        productItem.detail?.developer?.devName
+        productItem.detail.developer.devName
       }}</span>
     </div>
 
-    <p>{{ productItem.shortDescription }}</p>
+    <p>{{ productItem.product.shortDescription }}</p>
   </div>

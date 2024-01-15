@@ -191,7 +191,7 @@ const productDetailSchema = new Schema<IProductDetail>(
       },
     ],
   },
-  { _id: false, timestamps: true }
+  { timestamps: true }
 );
 export const ProductDetailModel: Model<IProductDetail> = mongoose.model(
   CONSTANT.MODEL_NAME.productDetail,

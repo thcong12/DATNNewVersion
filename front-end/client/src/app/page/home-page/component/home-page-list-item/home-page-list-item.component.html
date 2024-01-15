@@ -1,9 +1,9 @@
 <div class="grid mt-0">
   <div class="col-3">
-    <img [src]="productItem.imgY.url + '?h=70&resize=1&w=140'" />
+    <img [src]="productItem.product.imgY.url + '?h=70&resize=1&w=140'" />
   </div>
   <div class="col-5 flex flex-column justify-content-between">
-    <h5>{{ productItem.productName }}</h5>
+    <h5 style="color: white;" >{{ productItem.product.productName }}</h5>
     <div class="flex gap-1 flex-wrap">
       <a class="categoryItem" *ngFor="let item of categoryItem">
         {{ item.cateName }}
@@ -11,11 +11,11 @@
     </div>
   </div>
   <div class="col-1 flex align-items-center">
-    <span class="saleItem">-{{ productItem.sale.salePersent }}%</span>
+    <span class="saleItem">-{{ productItem.product.sale.salePersent }}%</span>
   </div>
   <div class="col-3 flex flex-column justify-content-center">
-    <del *ngIf="productItem.price">{{ productItem.price | currency : "USD" }}</del>
-    <h2 class="mb-2">
+    <del *ngIf="productItem.product.price">{{ productItem.product.price | currency : "USD" }}</del>
+    <h2 style="color: white;" class="mb-2">
       {{ priceAfterSale | currency : "USD" }}
     </h2>
   </div>

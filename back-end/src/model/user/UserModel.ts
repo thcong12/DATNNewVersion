@@ -6,7 +6,7 @@ import { ICity } from "./CityModel";
 
 export interface IUser extends IAuthBase {
   firstName?: string;
-  lastName: string;
+  lastName?: string;
   phoneNumber?: string;
 }
 

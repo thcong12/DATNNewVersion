@@ -10,8 +10,8 @@ import {
   UserModel,
   UserProfileModel,
 } from "../model/user/UserModel";
-import { activeAccount } from "../template/mailtemplate";
 import { generateRefreshToken } from "../ultils/genareate_token";
+import { activeAccount } from "../template/mailtemplate";
 
 export class ClientAuthController extends AuthBaseController<
   IUser,
@@ -23,7 +23,7 @@ export class ClientAuthController extends AuthBaseController<
   }
 
   async signin(req: Request, res: Response) {
-    const userReq: IAdmin = req.body; //?
+    const userReq: IAdmin = req.body;
     const existUser = await this.getUserVar("userName", userReq.userName);
     console.log(existUser);
     if (!existUser) {
@@ -34,12 +34,19 @@ export class ClientAuthController extends AuthBaseController<
         fullName: userReq.fullName,
         userId: newUser._id,
       });
+      const mailSubject: string = "Confirm Your Email";
+      const mailText: string = "Hello world?";
       // const saveuser = await newUser.save();
       if (newUser) {
         const token = generateRefreshToken(String(newUser._id));
-        const link = `http://localhost:${CONSTANT.port.clientFE}/auth/userActice/${token}`;
+        const link = `http://localhost:${CONSTANT.port.clientFE}/auth/actice/${token}`;
         this.tranport.sendMail(
-          this.mailOption(activeAccount(newUser.userName, link), newUser),
+          this.mailOption(
+            activeAccount(link, newUser.userName),
+            newUser,
+            mailSubject,
+            mailText
+          ),
           function (err) {
             if (err) {
               res.json("Please check your email");

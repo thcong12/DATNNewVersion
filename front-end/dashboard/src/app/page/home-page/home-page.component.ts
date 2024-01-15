@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { forkJoin, tap } from 'rxjs';
+import { Product } from 'src/app/model/products.model';
+import { ProductsService } from 'src/app/service/products.service';
 // import { ProductsService } from 'src/app/shared/service/products.service';
 // import { ReportService } from 'src/app/shared/service/report.service';
 @Component({
@@ -14,24 +16,26 @@ export class HomePageComponent implements OnInit {
   public element!: any;
   public bestSeller!: any;
   public listProduct!: any;
-  constructor() // private productSv: ProductsService // private reportSv: ReportService,
-  {}
-  public getAmount() {
-    // const me = this;
-    // forkJoin({
-    //   besseller: me.reportSv.reportBestSeller(),
-    //   amount: me.reportSv.getAmount(),
-    //   productList: me.productSv.getProducts(),
-    // })
-    //   .pipe(
-    //     tap(({ besseller, amount, productList }) => {
-    //       me.element = amount;
-    //       me.bestSeller = [...(besseller as any)];
-    //       me.listProduct = [...productList];
-    //       console.log(besseller);
-    //     })
-    //   )
-    //   .subscribe();
+  public productBestSale!: Product.Display[];
+  public productOnSale!: Product.Display[];
+  constructor(private productSv: ProductsService) {} // private productSv: ProductsService // private reportSv: ReportService,
+  public getAmount() {}
+
+  private getProductOnSale() {
+    this.productSv.getOnSale().subscribe({
+      next: (data) => {
+        this.productOnSale = [...data];
+        console.log(this.productOnSale);
+      },
+    });
+  }
+  private getProductBestSale() {
+    this.productSv.getBestSale().subscribe({
+      next: (data) => {
+        this.productBestSale = [...data];
+        console.log(this.productBestSale);
+      },
+    });
   }
   public generateCard() {
     this.listCard = [
@@ -42,8 +46,8 @@ export class HomePageComponent implements OnInit {
     ];
   }
   ngOnInit(): void {
-    const me = this;
     this.generateCard();
-    me.getAmount();
+    this.getProductBestSale();
+    this.getProductOnSale();
   }
 }

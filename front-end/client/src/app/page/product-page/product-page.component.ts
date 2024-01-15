@@ -27,7 +27,7 @@ export class ProductPageComponent implements OnInit, AfterViewInit {
   public filterForm!: FormGroup;
   public selectedCountry: string = '';
   public aaa: any[] = [];
-  public listProduct!: Product.Product[];
+  public listProduct!: Product.ProductDisplay[];
   public listCateglory!: Product.Categlory[];
   public listDeveloper!: Product.Developer[];
   public numberProduct: number = 16;
@@ -92,26 +92,6 @@ export class ProductPageComponent implements OnInit, AfterViewInit {
     const me = this;
     me.categloryList.removeAt(id);
   }
-  private regisSearchEvent(): void {
-    // const me = this;
-    // fromEvent(me.inputElement.nativeElement, 'keyup')
-    //   .pipe(
-    //     pluck('target', 'value'),
-    //     debounceTime(400),
-    //     distinctUntilChanged<any>(),
-    //     filter((value: string) => value.length > 3),
-    //     switchMap((keyword) => {
-    //       return me.storeSv.search(keyword).pipe(
-    //         map((res) => {
-    //           me.listProduct = res;
-    //           me.setPage(res.length);
-    //         })
-    //       );
-    //     })
-    //   )
-    //   .subscribe({ complete: () => {} });
-  }
-
   public changePage(value: number) {
     const me = this;
     me.page = value;

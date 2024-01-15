@@ -16,55 +16,29 @@ import { UserService } from 'src/app/service/user.service';
 export class HomePageComponent extends BaseComponent {
   public productSlider: any = [];
   public selectedIndex = 3;
+  public index: number = 0;
   public productList: any = [];
-  public categorylist: any = [
+  public categorylist: any = [];
+  public imgColor: any = [
+    'rgba(0,0,0,0), rgb(139,0,0) 100%',
+    'rgba(0,0,0,0), rgb(0,0,139) 100%',
+    'rgba(0,0,0,0), rgb(184,134,11) 100%',
+    'rgba(0,0,0,0), rgb(0,100,0) 100%',
+    'rgba(0,0,0,0), rgb(0,139,139) 100%',
+    'rgba(0,0,0,0), rgb(139,0,139) 100%',
+  ];
+  public responsiveOptions: any[] = [
     {
-      title: 'Open world',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/exploration_open_world?cc=us&l=english',
-      color: 'red',
+      breakpoint: '1024px',
+      numVisible: 5,
     },
     {
-      title: 'Survival',
-      color: 'blue',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/survival?cc=us&l=english',
+      breakpoint: '768px',
+      numVisible: 3,
     },
     {
-      title: 'Role-playing',
-      color: 'yellow',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/rpg?cc=us&l=english',
-    },
-    {
-      title: 'Action',
-      color: 'green',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/action?cc=us&l=english',
-    },
-    {
-      title: 'Anime',
-      color: 'red',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/anime?cc=us&l=english',
-    },
-    {
-      title: 'Advanture',
-      color: 'blue',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/adventure?cc=us&l=english',
-    },
-    {
-      title: 'Fighting',
-      color: 'yellow',
-      image:
-        'https://store.steampowered.com/categories/homepage…ge/category/fighting_martial_arts?cc=us&l=english',
-    },
-    {
-      title: 'Horror',
-      color: 'green',
-      image:
-        'https://store.steampowered.com/categories/homepageimage/category/horror?cc=us&l=english',
+      breakpoint: '560px',
+      numVisible: 1,
     },
   ];
   constructor(
@@ -81,44 +55,57 @@ export class HomePageComponent extends BaseComponent {
       .pipe(
         map((res) => {
           me.productSlider = [...res];
-          // this.selectedIndex = 1;
         })
       )
       .subscribe();
   }
+  private getCategory() {
+    this.productSv.getCategory().subscribe({
+      next: (res) => {
+        let count = res.length / 4;
+        Math.floor(count);
+        for (let i = 0; i < count; i++) {
+          const inputData = (res as any[])
+            .slice(4 * i, 4 * (i + 1))
+            .map((item) => {
+              return {
+                ...item,
+                color: this.imgColor[Math.floor(Math.random() * 5)],
+              };
+            });
+          console.log(inputData);
+          this.categorylist.push({
+            index: i,
+            category: inputData,
+            color: '',
+          });
+        }
+      },
+    });
+  }
   public slideShow(index: number) {
     this.selectedIndex = index;
   }
-  public getData1() {
-    // const me = this;
-    // me.productSv
-    //   .getProducts()
-    //   .pipe(
-    //     tap((res) => {
-    //       res.map((item: any) => {
-    //         forkJoin({ detail: me.productSv.getProductDetail(item._id) })
-    //           .pipe(
-    //             map(({ detail }) => {
-    //               item.detail = detail;
-    //             })
-    //           )
-    //           .subscribe();
-    //       });
-    //       me.productList = [...res.slice(0, 4)];
-    //     })
-    //   )
-    //   .subscribe();
+  onNext() {
+    if (this.index != this.categorylist.length - 1) {
+      this.index++;
+    }
+  }
+
+  onPrevious() {
+    if (this.index > 0) {
+      this.index--;
+    }
   }
   override onInit(): void {
-    const me = this;
-    me.getData();
-    me.getData1();
-    // setInterval(() => {
-    //   if (me.selectedIndex == me.productSlider.length - 1) {
-    //     me.selectedIndex = 0;
-    //   } else {
-    //     me.selectedIndex++;
-    //   }
-    // }, 5000);
+    this.getData();
+    this.getCategory();
+    setInterval(() => {
+      if (this.selectedIndex == this.productSlider.length - 1) {
+        this.selectedIndex = 0;
+      } else {
+        this.selectedIndex++;
+      }
+    }, 5000);
   }
 }

@@ -69,7 +69,7 @@ export const CONSTANT = {
   },
   MODEL_NAME: {
     admin: "Admin",
-    category: "Category",
+    category: "Categlory",
     developer: "Developer",
     product: "Product",
     productDetail: "ProductDetail",
@@ -81,9 +81,11 @@ export const CONSTANT = {
     libraly: "Libraries",
     homeSlide: "Sliders",
     dataRecomendraw: "Datasetforproducts",
+    dataRecomendNew: "dataRecomendNew",
     dataRecomend: "dataRecomend",
     profile: "profiles",
     city: "city",
+    productsRecomend: "productsRecomend",
   },
 };
 export const recomendValue = {

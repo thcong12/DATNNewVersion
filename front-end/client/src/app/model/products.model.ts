@@ -1,17 +1,17 @@
-import { User } from "./account.model";
+import { User } from './account.model';
 
 export namespace Store {
   export interface Slider {
     _id: string;
     productId: Product.Product;
     description: string;
-    priceAfterSale:Number;
+    priceAfterSale: Number;
     productDetail: Product.Detail;
     isActive: boolean;
   }
-  export interface BestSeller{
-    _id:Product.Product,
-    count:number,
+  export interface BestSeller {
+    _id: Product.Product;
+    count: number;
   }
 }
 export namespace Product {
@@ -68,7 +68,7 @@ export namespace Product {
     gpu: string;
     directX: string;
     soundCard: string;
-    storage:string;
+    storage: string;
   }
   export interface Sale {
     salePersent: number;
@@ -79,5 +79,9 @@ export namespace Product {
     _id: string;
     featureName: string | 'name';
     description: string;
+  }
+  export interface ProductDisplay {
+    product: Product.Product;
+    detail: Product.Detail;
   }
 }

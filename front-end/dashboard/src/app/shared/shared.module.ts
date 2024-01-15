@@ -19,7 +19,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ToastModule } from 'primeng/toast';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PasswordModule } from 'primeng/password';
-
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { EditorModule } from 'primeng/editor';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { CalendarModule } from 'primeng/calendar';
+import { ChipModule } from 'primeng/chip';
+import { ChartModule } from 'primeng/chart';
 const declarations: any[] = [
   // BaseComponent,
   // InputMsgDirective,
@@ -45,6 +53,15 @@ const primengModule: any[] = [
   ToastModule,
   CheckboxModule,
   PasswordModule,
+  DropdownModule,
+  TableModule,
+  TagModule,
+  MultiSelectModule,
+  EditorModule,
+  InputSwitchModule,
+  CalendarModule,
+  ChipModule,
+  ChartModule,
 ];
 const imports = [
   CommonModule,

@@ -11,35 +11,21 @@ import { ILibraly, LibralyModel } from "../model/user/LibraryModel";
 import { CategloryModel, ICateglory } from "../model/product/CategloryModel";
 import { DeveloperModel, IDeveloper } from "../model/product/DeveloperModel";
 import { HomeSlideModel, IHomeSlide } from "../model/feature/HomeFeature";
+import { ProductControllerBase } from "../base/product-base-controller";
+import {
+  DataRecomendNewModel,
+  IDataRecomendNew,
+} from "../model/dataset/DataRecomendModel";
+import { IValue } from "./recommend-controller";
 
-export class HomePageController {
+export class HomePageController extends ProductControllerBase {
   private libraly: Model<ILibraly> = LibralyModel;
-  private product: Model<IProduct> = ProductModel;
-  private productDetail: Model<IProductDetail> = ProductDetailModel;
-  private category: Model<ICateglory> = CategloryModel;
-  private developer: Model<IDeveloper> = DeveloperModel;
   private homeSlide: Model<IHomeSlide> = HomeSlideModel;
-  constructor() {}
-  getDetailInformation(localField: string, saveAs: string) {
-    const query = [
-      {
-        $lookup: {
-          from: "categlories",
-          localField: "detail.categlory",
-          foreignField: "_id",
-          as: "detail.categlory",
-        },
-      },
-      {
-        $lookup: {
-          from: "developers",
-          localField: "detail.developer",
-          foreignField: "_id",
-          as: "detail.developer",
-        },
-      },
-    ];
+  private recomend: Model<IDataRecomendNew> = DataRecomendNewModel;
+  constructor() {
+    super();
   }
+
   async getBestSeller() {
     const userLibrary = await this.libraly
       .aggregate([
@@ -58,310 +44,112 @@ export class HomePageController {
     const ids = userLibrary.map((item: any) => {
       return item._id;
     });
-    const product = await this.product.aggregate([
-      {
-        $match: { _id: { $in: ids } },
-      },
-      {
-        $lookup: {
-          from: "productdetails",
-          localField: "_id",
-          foreignField: "productId",
-          as: "detail",
-        },
-      },
-      {
-        $unwind: "$detail",
-      },
-      {
-        $lookup: {
-          from: "categlories",
-          localField: "detail.categlory",
-          foreignField: "_id",
-          as: "detail.categlory",
-        },
-      },
-      {
-        $lookup: {
-          from: "developers",
-          localField: "detail.developer",
-          foreignField: "_id",
-          as: "detail.developer",
-        },
-      },
-      {
-        $unwind: "$detail.developer",
-      },
-    ]);
-    // product.forEach(async (item: any) => {
-    //   const itemID = await userLibrary.find((id: any) => {
-    //     id._id = item._id;
-    //   });
-    //   item.count = itemID.count;
-    // });
-    return product;
+    const products = await this.ProductModel.find({ _id: { $in: ids } });
+    const productDetails = await this.getDetailInformation(products, "_id");
+    const dataFinal = this.dataReturn(products, productDetails);
+    return dataFinal;
   }
   async getProductNewRelease() {
-    const products = await this.product
-      .aggregate([
-        {
-          $lookup: {
-            from: "productdetails",
-            localField: "_id",
-            foreignField: "productId",
-            as: "detail",
-          },
-        },
-        {
-          $unwind: "$detail",
-        },
-        {
-          $lookup: {
-            from: "categlories",
-            localField: "detail.categlory",
-            foreignField: "_id",
-            as: "detail.categlory",
-          },
-        },
-        {
-          $lookup: {
-            from: "developers",
-            localField: "detail.developer",
-            foreignField: "_id",
-            as: "detail.developer",
-          },
-        },
-        {
-          $unwind: "$detail.developer",
-        },
-      ])
+    const products = await this.ProductModel.find({})
+      .sort({ _id: -1 })
       .limit(10);
-    return products;
+    const productDetails = await this.getDetailInformation(products, "_id");
+    const dataFinal = this.dataReturn(products, productDetails);
+    return dataFinal;
   }
   async getProductDetail(id: string) {
-    const productDetail = await this.productDetail.aggregate([
-      {
-        $match: { productId: new Types.ObjectId(id) },
-      },
-      {
-        $lookup: {
-          from: "developers",
-          localField: "developer",
-          foreignField: "_id",
-          as: "developer",
-        },
-      },
-      { $unwind: "$developer" },
-      {
-        $lookup: {
-          from: "categlories",
-          localField: "categlory",
-          foreignField: "_id",
-          as: "categlory",
-        },
-      },
-    ]);
-    if (productDetail) {
-      return productDetail[0];
-    } else {
-      throw new Error("product not found");
-    }
-  }
-  async getProductsSameDeveloper(id: string) {
-    const product = await this.product.aggregate([
-      {
-        $match: {
-          developer: id,
-        },
-      },
-      {
-        $lookup: {
-          from: "products",
-          localField: "productId",
-          foreignField: "_id",
-          as: "product",
-        },
-      },
-      {
-        $unwind: "$product",
-      },
-      {
-        $group: {
-          _id: "$product._id",
-        },
-      },
-    ]);
-    if (product) {
-      return product[0];
+    const products = await this.ProductModel.find({
+      _id: id,
+    }).limit(1);
+    const productDetail = await this.getDetailInformation(products, "_id");
+    const dataFinal = this.dataReturn(products, productDetail);
+    if (dataFinal) {
+      return dataFinal;
     } else {
       throw new Error("product not found");
     }
   }
   async getProductSlide() {
-    const slider = await this.homeSlide.aggregate([
-      {
-        $lookup: {
-          from: "products",
-          localField: "productId",
-          foreignField: "_id",
-          as: "productId",
-        },
-      },
-      {
-        $lookup: {
-          from: "productdetails",
-          localField: "productId._id",
-          foreignField: "productId",
-          as: "productDetail",
-        },
-      },
-
-      {
-        $lookup: {
-          from: "developers",
-          localField: "productDetail.developer",
-          foreignField: "_id",
-          as: "developer",
-        },
-      },
-      {
-        $lookup: {
-          from: "categlories",
-          localField: "productDetail.categlory",
-          foreignField: "_id",
-          as: "categlory",
-        },
-      },
-      { $unwind: "$developer" },
-      {
-        $unwind: "$productId",
-      },
-      {
-        $unwind: "$productDetail",
-      },
-    ]);
-    return slider;
+    const homeSlide = (await this.homeSlide.find({})).map((item) => {
+      return item.productId;
+    });
+    const products = await this.ProductModel.find({
+      _id: { $in: homeSlide },
+    });
+    const productDetail = await this.getDetailInformation(products, "_id");
+    const dataFinal = this.dataReturn(products, productDetail);
+    return dataFinal;
   }
   async getProductSale() {
     const today = new Date();
-    const saleProduct = await this.product
-      .find({
-        $and: [
-          { "sale.salePersent": { $gt: 0 } },
-          { "sale.startDay": { $gte: Number(today) } },
-          { "sale.endDay": { $gte: Number(today) } },
-        ],
-      })
-      .limit(30);
-    if (saleProduct) {
-      const getProduct = saleProduct.map((item: IProduct) => {
-        return item._id;
-      });
-      const detail = await this.productDetail.aggregate([
-        {
-          $match: { productId: { $in: getProduct } },
-        },
-        {
-          $lookup: {
-            from: "developers",
-            localField: "developer",
-            foreignField: "_id",
-            as: "developer",
-          },
-        },
-        { $unwind: "$developer" },
-        {
-          $lookup: {
-            from: "categlories",
-            localField: "categlory",
-            foreignField: "_id",
-            as: "categlory",
-          },
-        },
-      ]);
-      const result = saleProduct.map((item: IProduct) => {
-        const findDetail = detail.find((item1: IProductDetail) => {
-          return String(item._id) == String(item1.productId);
-        });
-        return {
-          product: item,
-          detail: findDetail,
-        };
-      });
-      return result;
+    const products = await this.ProductModel.find({
+      "sale.salePersent": { $gt: 0 },
+    }).limit(30);
+    if (products) {
+      const productDetail = await this.getDetailInformation(products, "_id");
+      const dataFinal = this.dataReturn(products, productDetail);
+      return dataFinal;
     }
   }
-  //   async filterProduct(req:Request){
-  //     const { value, listCateglory, developer } = req.body;
-  //     // const productDetail = await ProductDetail.find({
-  //     //   categlory: { $all: listCateglory },
-  //     // });
-  //     const query = [
-  //       {
-  //         $match: {
-  //           $or: [
-  //             {
-  //               price: { $gt: value[0], $lt: value[1] },
-  //             },
-  //           ],
-  //         },
-  //       },
-  //       {
-  //         $lookup: {
-  //           from: "productdetails",
-  //           localField: "_id",
-  //           foreignField: "productId",
-  //           as: "productDetail",
-  //         },
-  //       },
-  //       { $unwind: "$productDetail" },
-  //     ];
+  async filterProduct(req: Request) {
+    const { price, category, developer } = req.body;
+    let dataResult;
+    let query = [];
+    if (category.length > 0) {
+      query.push({
+        categlory: { $all: category },
+      });
+    }
+    if (developer) {
+      query.push({
+        developer: developer,
+      });
+    }
+    if (query.length > 0) {
+      const dataFilter = (
+        await this.ProductDetailModel.find({
+          $and: query,
+        })
+      ).map((item) => {
+        return String(item.productId);
+      });
 
-  //     if (developer && listCateglory == 0) {
-  //       const devId = new Types.ObjectId(developer._id);
-  //       query.push({
-  //         $match: {
-  //           "productDetail.developer": devId,
-  //         },
-  //       });
+      dataResult = await this.ProductModel.find({
+        $and: [
+          {
+            price: { $gte: price[0], $lte: price[1] },
+          },
+          {
+            _id: { $in: dataFilter },
+          },
+        ],
+      });
+    } else {
+      dataResult = await this.ProductModel.find({
+        $and: [
+          {
+            price: { $gte: price[0], $lte: price[1] },
+          },
+        ],
+      });
+    }
+    const productDetail = await this.getDetailInformation(dataResult, "_id");
+    const dataFinal = this.dataReturn(dataResult, productDetail);
+    return dataFinal;
+  }
 
-  //       const commonProduct1 = await this.model.aggregate([...query]);
-  //       console.log("case1");
-  //       res.json(commonProduct1);
-  //     } else if (listCateglory && developer === "") {
-  //       let aaa = listCateglory.map((item) => {
-  //         return new Types.ObjectId(item._id);
-  //       });
-  //       query.push({
-  //         $match: {
-  //           "productDetail.categlory": { $all: aaa },
-  //         },
-  //       });
-  //       const commonProduct2 = await Product.aggregate([...query]);
-  //       console.log("case2");
-  //       res.json(commonProduct2);
-  //     } else if (developer !== "" && listCateglory.length != 0) {
-  //       let aaa = listCateglory.map((item) => {
-  //         return mongoose.Types.ObjectId(item._id);
-  //       });
-  //       const devId = mongoose.Types.ObjectId(developer._id);
-  //       query.push({
-  //         $match: {
-  //           "productDetail.categlory": { $all: aaa },
-  //         },
-  //       });
-  //       query.push({
-  //         $match: {
-  //           "productDetail.developer": devId,
-  //         },
-  //       });
-  //       const commonProduct3 = await Product.aggregate([...query]);
-  //       console.log("case3");
-  //       res.json(commonProduct3);
-  //     } else if (developer === "" && listCateglory.length == 0) {
-  //       const commonProduct4 = await Product.aggregate([...query]);
-  //       res.json(commonProduct4);
-  //       console.log("case4");
-  //     }
-  //   })
+  async searchProduct(keyword: string) {
+    let products = [];
+    console.log(keyword);
+    if (keyword) {
+      products = await this.ProductModel.find({
+        productName: { $regex: keyword, $options: "i" },
+      });
+    } else {
+      products = await this.ProductModel.find({});
+    }
+    const productDetail = await this.getDetailInformation(products, "_id");
+    const dataFinal = this.dataReturn(products, productDetail);
+    return dataFinal;
+  }
 }

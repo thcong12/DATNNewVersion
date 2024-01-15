@@ -1,4 +1,4 @@
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import express, { Request, Response } from "express";
 export abstract class ControllerBase<T> {
   protected model: Model<T>;
@@ -6,14 +6,15 @@ export abstract class ControllerBase<T> {
     this.model = model;
   }
   async getAllData(): Promise<T | any> {
-    const data: T[] = await this.model.find();
+    const data: T[] = await this.model.find({});
     if (data) {
       return data;
     }
     return;
   }
   async getDetailById(id: string): Promise<T | any> {
-    const data = await this.model.findById(id);
+    const itemId = new Types.ObjectId(id);
+    const data = await this.model.findById(itemId);
     if (data) {
       return data;
     }
@@ -21,7 +22,6 @@ export abstract class ControllerBase<T> {
   }
   async getDetailByVar(key: any, value: any): Promise<T | any> {
     const data = await this.model.findOne({ [key]: value });
-    console.log({ [key]: value });
     if (data) {
       return data;
     }
@@ -54,9 +54,5 @@ export abstract class ControllerBase<T> {
       return data;
     }
     return;
-  }
-
-  async importData(data: T[]) {
-    // await CategloryModel;
   }
 }

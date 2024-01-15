@@ -11,7 +11,7 @@ export class ProductsService extends BaseService {
   constructor(http: HttpClient) {
     super(http);
   }
-  public getProducts(): Observable<Product.Product[]> {
+  public getProducts(): Observable<Product.ProductDisplay[]> {
     const me = this;
     const url = `/product`;
     return me.get(url);
@@ -21,9 +21,19 @@ export class ProductsService extends BaseService {
     const url = `/product/${id}`;
     return me.get(url);
   }
+  public getProductDetailIsLogin(id: String): Observable<any> {
+    const me = this;
+    const url = `/product/recomend/${id}`;
+    return me.get(url, this.httpOption);
+  }
   public getProduct(id: String): Observable<Product.Product> {
     const me = this;
     const url = `/product/${id}`;
+    return me.get(url);
+  }
+  public getCategory(): Observable<any> {
+    const me = this;
+    const url = `/product/cate`;
     return me.get(url);
   }
 

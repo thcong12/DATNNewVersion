@@ -50,16 +50,13 @@ export class LoginComponent extends BaseComponent {
   }
   public loginSubmit() {
     const me = this;
+    console.log(me.formLogin.value);
     me.authSv
       .login(me.formLogin.value)
       .pipe(
         shareReplay<any>(),
         tap((res: HttpResponse<any>) => {
-          if (res.status == 200) {
-            this.userId = res.body?.user._id as any;
-            this.userSv.getCart().subscribe();
-            this.userSv.getWishlist().subscribe();
-          }
+          this.userSv.getAllUserOwner();
         })
       )
       .subscribe();

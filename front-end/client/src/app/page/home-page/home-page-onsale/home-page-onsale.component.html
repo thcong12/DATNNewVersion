@@ -1,114 +1,255 @@
 <div class="grid pb-3" *ngIf="idPage === 1">
-    <div class="col-4 relative" *ngFor="let item of data.slice(0, 3); let i = index">
-        <img width="100%" style="border-radius: 15px;" [src]="item.product.imgX.url" />
-        <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-            <h5>{{ item.product.productName }}</h5>
-            <div class="flex justify-content-between">
-                <span class="text-lg">{{ item.detail.developer.devName }}</span>
-                <div class="flex align-items-stretch ">
-                    <span class="p-2 bg-yellow-900 text-2xl">{{item.product.sale.salePersent}}%</span>
-                    <span class="p-2 bg-primary flex flex-column text-xs"><del>{{item.product.price | currency:'USD' }}</del><b>{{priceDiscount(item.product) | currency:'USD'}}</b></span>
-                </div>
-            </div>
+  <div
+    class="col-4 relative"
+    *ngFor="let item of data.slice(0, 3); let i = index"
+  >
+    <img
+      width="100%"
+      style="border-radius: 15px"
+      [src]="item.product.imgX.url"
+    />
+    <div
+      class="absolute p-3 left-auto"
+      style="
+        width: calc(100% - 1rem);
+        bottom: 11px;
+        background-color: #141415ce;
+        border-radius: 15px;
+      "
+    >
+      <h5>{{ item.product.productName }}</h5>
+      <div class="flex justify-content-between">
+        <span class="text-lg">{{ item.detail.developer.devName }}</span>
+        <div class="flex align-items-stretch">
+          <span class="p-2 bg-yellow-900 text-2xl"
+            >{{ item.product.sale.salePersent }}%</span
+          >
+          <span class="p-2 bg-primary flex flex-column text-xs"
+            ><del>{{ item.product.price | currency : "USD" }}</del
+            ><b>{{ priceDiscount(item.product) | currency : "USD" }}</b></span
+          >
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="grid pb-3" *ngIf="idPage === 2">
-    <div class="col-4 relative" *ngFor="let item of data.slice(0, 2); let i = index">
-        <img width="100% " style="border-radius: 15px;" [src]="item.product.imgX.url" />
-        <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-            <h5>{{ item.product.productName }}</h5>
-            <div class="flex justify-content-between">
-                <span class="text-lg">{{ item.detail.developer.devName }}</span>
-                <div class="flex align-items-stretch ">
-                    <span class="p-2 bg-yellow-900 text-2xl">{{item.product.sale.salePersent}}%</span>
-                    <span class="p-2 bg-primary flex flex-column text-xs"><del>{{item.product.price  | currency:'USD'}}</del><b>{{priceDiscount(item.product) | currency:'USD'}}</b></span>
-                </div>
-            </div>
+  <div
+    class="col-4 relative"
+    *ngFor="let item of data.slice(4, 6); let i = index"
+  >
+    <img
+      width="100% "
+      style="border-radius: 15px"
+      [src]="item.product.imgX.url"
+    />
+    <div
+      class="absolute p-3 left-auto"
+      style="
+        width: calc(100% - 1rem);
+        bottom: 11px;
+        background-color: #141415ce;
+        border-radius: 15px;
+      "
+    >
+      <h5>{{ item.product.productName }}</h5>
+      <div class="flex justify-content-between">
+        <span class="text-lg">{{ item.detail.developer.devName }}</span>
+        <div class="flex align-items-stretch">
+          <span class="p-2 bg-yellow-900 text-2xl"
+            >{{ item.product.sale.salePersent }}%</span
+          >
+          <span class="p-2 bg-primary flex flex-column text-xs"
+            ><del>{{ item.product.price | currency : "USD" }}</del
+            ><b>{{ priceDiscount(item.product) | currency : "USD" }}</b></span
+          >
         </div>
+      </div>
     </div>
-    <div class="col-4 grid align-items-stretch">
-        <div class="col-12 relative" *ngFor="let item of data.slice(0, 2); let i = index">
-            <img width="100% " style="border-radius: 15px;" [src]="item.product.imgY.url" />
-            <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-                <h5>{{ item.product.productName }}</h5>
-            <div class="flex justify-content-between">
-                <span class="text-lg">{{ item.detail.developer.devName }}</span>
-                <div class="flex align-items-stretch ">
-                    <span class="p-2 bg-yellow-900 text-2xl">{{item.product.sale.salePersent}}%</span>
-                    <span class="p-2 bg-primary flex flex-column text-xs"><del>{{item.product.price  | currency:'USD'}}</del><b>{{priceDiscount(item.product) | currency:'USD'}}</b></span>
-                </div>
-            </div>
-
-            </div>
+  </div>
+  <div class="col-4 grid align-items-stretch">
+    <div
+      class="col-12 relative"
+      *ngFor="let item of data.slice(7, 9); let i = index"
+    >
+      <img
+        width="100% "
+        style="border-radius: 15px"
+        [src]="item.product.imgY.url"
+      />
+      <div
+        class="absolute p-3 left-auto"
+        style="
+          width: calc(100% - 1rem);
+          bottom: 11px;
+          background-color: #141415ce;
+          border-radius: 15px;
+        "
+      >
+        <h5>{{ item.product.productName }}</h5>
+        <div class="flex justify-content-between">
+          <span class="text-lg">{{ item.detail.developer.devName }}</span>
+          <div class="flex align-items-stretch">
+            <span class="p-2 bg-yellow-900 text-2xl"
+              >{{ item.product.sale.salePersent }}%</span
+            >
+            <span class="p-2 bg-primary flex flex-column text-xs"
+              ><del>{{ item.product.price | currency : "USD" }}</del
+              ><b>{{ priceDiscount(item.product) | currency : "USD" }}</b></span
+            >
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="grid pb-3" *ngIf="idPage === 3">
-    <div class="col-4 relative">
-        <img width="100% " style="border-radius: 15px;" [src]="data[0].product.imgX.url" />
-        <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-            <h5>{{ data[0].product.productName }}</h5>
-            <div class="flex justify-content-between">
-                <span class="text-lg">{{ data[0].detail.developer.devName }}</span>
-                <div class="flex align-items-stretch ">
-                    <span class="p-2 bg-yellow-900 text-2xl">{{data[0].product.sale.salePersent}}%</span>
-                    <span class="p-2 bg-primary flex flex-column text-xs"><del>{{data[0].product.price  | currency:'USD'}}</del><b>{{priceDiscount(data[0].product) | currency:'USD'}}</b></span>
-                </div>
-            </div>
-
+  <div class="col-4 relative">
+    <img
+      width="100% "
+      style="border-radius: 15px"
+      [src]="data[10].product.imgX.url"
+    />
+    <div
+      class="absolute p-3 left-auto"
+      style="
+        width: calc(100% - 1rem);
+        bottom: 11px;
+        background-color: #141415ce;
+        border-radius: 15px;
+      "
+    >
+      <h5>{{ data[10].product.productName }}</h5>
+      <div class="flex justify-content-between">
+        <span class="text-lg">{{ data[10].detail.developer.devName }}</span>
+        <div class="flex align-items-stretch">
+          <span class="p-2 bg-yellow-900 text-2xl"
+            >{{ data[10].product.sale.salePersent }}%</span
+          >
+          <span class="p-2 bg-primary flex flex-column text-xs"
+            ><del>{{ data[10].product.price | currency : "USD" }}</del
+            ><b>{{
+              priceDiscount(data[10].product) | currency : "USD"
+            }}</b></span
+          >
         </div>
+      </div>
     </div>
-    <div class="col-8 grid">
-        <div class="col-6 relative" *ngFor="let item of data.slice(0, 4); let i = index">
-            <img width="100% " style="border-radius: 15px;" [src]="item.product.imgY.url" />
-            <div class="absolute p-3 left-auto " style="width: calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-                <h5>{{ item.product.productName }}</h5>
-                <div class="flex justify-content-between">
-                    <span class="text-lg">{{ item.detail.developer.devName }}</span>
-                    <div class="flex align-items-stretch ">
-                        <span class="p-2 bg-yellow-900 text-2xl">{{item.product.sale.salePersent}}%</span>
-                        <span class="p-2 bg-primary flex flex-column text-xs"><del>{{data[0].product.price  | currency:'USD'}}</del><b>{{priceDiscount(item.product) | currency:'USD'}}</b></span>
-                    </div>
-                </div>
-            </div>
+  </div>
+  <div class="col-8 grid">
+    <div
+      class="col-6 relative"
+      *ngFor="let item of data.slice(11, 15); let i = index"
+    >
+      <img
+        width="100% "
+        style="border-radius: 15px"
+        [src]="item.product.imgY.url"
+      />
+      <div
+        class="absolute p-3 left-auto"
+        style="
+          width: calc(100% - 1rem);
+          bottom: 11px;
+          background-color: #141415ce;
+          border-radius: 15px;
+        "
+      >
+        <h5>{{ item.product.productName }}</h5>
+        <div class="flex justify-content-between">
+          <span class="text-lg">{{ item.detail.developer.devName }}</span>
+          <div class="flex align-items-stretch">
+            <span class="p-2 bg-yellow-900 text-2xl"
+              >{{ item.product.sale.salePersent }}%</span
+            >
+            <span class="p-2 bg-primary flex flex-column text-xs"
+              ><del>{{ data[16].product.price | currency : "USD" }}</del
+              ><b>{{ priceDiscount(item.product) | currency : "USD" }}</b></span
+            >
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="grid pb-3" *ngIf="idPage === 4">
-    <div class="col-8 grid">
-        <div class="col-6 relative" *ngFor="let item of data.slice(0, 4); let i = index">
-            <img width="100% " style="border-radius: 15px;" [src]="item.product.imgY.url" />
-            <div class="absolute p-3 left-auto " style="width:calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-                <h5>{{ item.product.productName }}</h5>
-                <div class="flex justify-content-between">
-                    <span class="text-lg">{{ item.detail.developer.devName }}</span>
-                    <div class="flex align-items-stretch ">
-                        <span class="p-2 bg-yellow-900 text-2xl">{{item.product.sale.salePersent}}%</span>
-                        <span class="p-2 bg-primary flex flex-column text-xs"><del>{{item.product.price  | currency:'USD'}}</del><b>{{priceDiscount(item.product) | currency:'USD'}}</b></span>
-                    </div>
-                </div>
-            </div>
+  <div class="col-8 grid">
+    <div
+      class="col-6 relative"
+      *ngFor="let item of data.slice(17, 21); let i = index"
+    >
+      <img
+        width="100% "
+        style="border-radius: 15px"
+        [src]="item.product.imgY.url"
+      />
+      <div
+        class="absolute p-3 left-auto"
+        style="
+          width: calc(100% - 1rem);
+          bottom: 11px;
+          background-color: #141415ce;
+          border-radius: 15px;
+        "
+      >
+        <h5>{{ item.product.productName }}</h5>
+        <div class="flex justify-content-between">
+          <span class="text-lg">{{ item.detail.developer.devName }}</span>
+          <div class="flex align-items-stretch">
+            <span class="p-2 bg-yellow-900 text-2xl"
+              >{{ item.product.sale.salePersent }}%</span
+            >
+            <span class="p-2 bg-primary flex flex-column text-xs"
+              ><del>{{ item.product.price | currency : "USD" }}</del
+              ><b>{{ priceDiscount(item.product) | currency : "USD" }}</b></span
+            >
+          </div>
         </div>
+      </div>
     </div>
-    <div class="col-4 relative">
-        <img width="100% " style="border-radius: 15px;" [src]="data[0].product.imgX.url" />
-        <div class="absolute p-3 left-auto " style="width:calc(100% - 1rem); bottom: 11px;background-color: #141415ce;border-radius: 15px;">
-            <h5>{{ data[0].product.productName }}</h5>
-            <div class="flex justify-content-between">
-                <span class="text-lg">{{ data[0].detail.developer.devName }}</span>
-                <div class="flex align-items-stretch ">
-                    <span class="p-2 bg-yellow-900 text-2xl">{{data[0].product.sale.salePersent}}%</span>
-                    <span class="p-2 bg-primary flex flex-column text-xs"><del>{{data[0].product.price  | currency:'USD'}}</del><b>{{priceDiscount(data[0].product) | currency:'USD'}}</b></span>
-                </div>
-            </div>
+  </div>
+  <div class="col-4 relative">
+    <img
+      width="100% "
+      style="border-radius: 15px"
+      [src]="data[22].product.imgX.url"
+    />
+    <div
+      class="absolute p-3 left-auto"
+      style="
+        width: calc(100% - 1rem);
+        bottom: 11px;
+        background-color: #141415ce;
+        border-radius: 15px;
+      "
+    >
+      <h5>{{ data[22].product.productName }}</h5>
+      <div class="flex justify-content-between">
+        <span class="text-lg">{{ data[22].detail.developer.devName }}</span>
+        <div class="flex align-items-stretch">
+          <span class="p-2 bg-yellow-900 text-2xl"
+            >{{ data[22].product.sale.salePersent }}%</span
+          >
+          <span class="p-2 bg-primary flex flex-column text-xs"
+            ><del>{{ data[22].product.price | currency : "USD" }}</del
+            ><b>{{
+              priceDiscount(data[22].product) | currency : "USD"
+            }}</b></span
+          >
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="pt-3 flex justify-content-center gap-2">
-    <button class="bg-light" *ngFor="let item of [1, 2, 3, 4]; let i = index" style="height: 8px; width: 25px; border: none; border-radius: 10px" (click)="setIdPage(item)"></button>
+  <button
+    class="bg-light"
+    *ngFor="let item of [1, 2, 3, 4]; let i = index"
+    style="height: 8px; width: 25px; border: none; border-radius: 10px"
+    (click)="setIdPage(item)"
+  ></button>
 </div>

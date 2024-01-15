@@ -1,0 +1,19 @@
+<p-toast></p-toast>
+<div>
+  <h1 class="">Table categlory</h1>
+</div>
+<div class="w-full">
+  <app-table-component
+    [data]="products"
+    [headerTable]="headerTable"
+    [displayField]="displayField"
+    (isCreate)="(isCreate=$event)"
+    [gotoDetail]="'table/products'"
+    (itemId)="(getCateglory($event))"
+    [isProduct]="true"
+  >
+  </app-table-component>
+</div>
+
+
+

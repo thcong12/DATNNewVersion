@@ -6,33 +6,36 @@ import { Observable } from 'rxjs';
 import { Product } from '../model/products.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class DevelopersService extends BaseService{
-
+export class DevelopersService extends BaseService {
   constructor(http: HttpClient) {
     super(http);
   }
-  public getDevelopers():Observable<Product.Developer[]>{
+  public getDevelopers(): Observable<Product.Developer[]> {
     const me = this;
-    const url = `developers`;
+    const url = `developer`;
     return me.get(url);
   }
-  public getDeveloper(id:string):Observable<Product.Developer>{
+  public getDeveloper(id: string): Observable<Product.Developer> {
     const me = this;
-    const url = `developers/${id}`;
+    const url = `developer/${id}`;
     return me.get<Product.Developer>(url);
   }
-  public createDeveloper(dev:Product.Developer):Observable<Product.Developer>{
+  public createDeveloper(
+    dev: Product.Developer
+  ): Observable<Product.Developer> {
     const me = this;
     const url = `developers`;
-    return me.post(url,dev);
+    return me.post(url, dev);
   }
 
-  public updateDeveloper(id:string,dev:Product.Developer):Observable<Product.Developer>{
+  public updateDeveloper(
+    id: string,
+    dev: Product.Developer
+  ): Observable<Product.Developer> {
     const me = this;
     const url = `developers/${id}`;
-    return me.put(url,dev);
+    return me.put(url, dev);
   }
-
 }

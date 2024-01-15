@@ -1,0 +1,22 @@
+<p-dialog
+  header="Header"
+  [(visible)]="displayModal"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+>
+  <ng-template pTemplate="header">
+    <h2>{{dialogHeader}}</h2>
+  </ng-template>
+  <ng-template pTemplate="body">
+    <ng-content *ngTemplateOutlet="customTemplateRef"></ng-content>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <p-button
+      icon="pi pi-check"
+      (click)="confirmEvent()"
+      label="Confirm"
+      styleClass="p-button-text"
+    ></p-button>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,8 @@
+<div class="grid">
+  <div class="col-12">
+    <app-general-component (dataSubmit)="submitProductData($event)" [product]="product.product"></app-general-component> 
+  </div>
+  <div class="col-12">
+    <app-detail-component (productData)="submitProductDetailData($event)" [productDetail]="product.detail"></app-detail-component>
+  </div>
+</div>

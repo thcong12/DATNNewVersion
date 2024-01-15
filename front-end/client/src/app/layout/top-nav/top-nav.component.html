@@ -86,7 +86,7 @@
       </ng-container>
       <ng-container *ngIf="!userStageLogin">
         <div class="flex justify-content-center">
-          <p-button routerLink="/login" label="Sign In"></p-button>
+          <p-button routerLink="/auth/login" label="Sign In"></p-button>
         </div>
       </ng-container>
 
@@ -135,7 +135,7 @@
     </div>
     <button
       *ngIf="!userStageLogin"
-      routerLink="/login"
+      routerLink="/auth/login" 
       class="p-link layout-topbar-button"
     >
       <i class="pi pi-user"></i>

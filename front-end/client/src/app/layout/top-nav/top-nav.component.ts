@@ -66,9 +66,7 @@ export class TopNavComponent extends BaseComponent {
       .pipe()
       .subscribe({
         next: (res: HttpResponse<any>) => {
-          if (res.status == 204) {
-            this.vms.globalVariable.removeSession();
-          }
+          this.vms.globalVariable.removeSession();
         },
       });
   }
@@ -84,7 +82,7 @@ export class TopNavComponent extends BaseComponent {
   }
   get userStageLogin(): boolean {
     const isLogin = this.vms.globalVariable.getLoginStage;
-    if (isLogin) {
+    if (isLogin == 'true') {
       return true;
     }
     return false;
@@ -113,6 +111,9 @@ export class TopNavComponent extends BaseComponent {
   toCheckoutPage(op: OverlayPanel) {
     op.hide();
     this.router.navigateByUrl('/checkout');
+  }
+  toLoginPage() {
+    this.router.navigate(['auth', 'login']);
   }
   onRowSelect(op: OverlayPanel) {
     // op.

@@ -3,7 +3,7 @@
     <h1 style="color: #eeeeee">YOUR SHOPPING CART</h1>
   </div>
   <div class="w-full grid pr-3 page-background">
-    <div style="color: #eeeeee" class="col-9">
+    <div style="color: #eeeeee" class="col-8">
       <div class="w-full tab-style">
         <div class="flex flex-column gap-4">
           <div
@@ -58,8 +58,8 @@
         <button class="buttonCustom" type="button">Continue Shopping</button>
       </div>
     </div>
-    <div class="col-3 item-style" style="height: 590px; margin-top: 1rem">
-      <app-check-out-form-payment [userCart]="userCart"> </app-check-out-form-payment>
+    <div class="col-4 item-style" style="height: 590px; margin-top: 1rem">
+      <app-check-out-form-payment [userCart]="userCart" [totalPrice]="totalPrice"> </app-check-out-form-payment>
     </div>
   </div>
 </div>

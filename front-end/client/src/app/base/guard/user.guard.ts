@@ -13,7 +13,7 @@ export class UserGuard implements CanActivate {
   }
 
   canActivate() {
-    if (!this.globalVariable.getLoginStage) {
+    if (this.globalVariable.getLoginStage == 'false') {
       this.router.navigateByUrl('/login');
       return false;
     }

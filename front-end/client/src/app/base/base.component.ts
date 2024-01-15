@@ -13,6 +13,8 @@ import { Subject } from 'rxjs';
 import { GlobalVariable } from './global-variable';
 import { ViewModelService } from './viewModel.service';
 import { LayoutService } from '../service/app.layout.service';
+import { apiRouter } from '../shared/constant/router-const';
+import { Product } from '../model/products.model';
 
 @Component({
   template: '',
@@ -46,6 +48,10 @@ export abstract class BaseComponent
   ngOnInit(): void {
     this.onInit();
   }
+  protected toDetailProduct(id: string) {
+    this.router.navigate([apiRouter.product, id]);
+  }
+
   protected onInit(): void {}
   protected onDestroy(): void {}
   protected onAfterViewInit(): void {}

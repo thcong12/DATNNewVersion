@@ -12,7 +12,7 @@ export class LoginGuard implements CanActivate {
 
   canActivate() {
     // Set screen name
-    if (this.globalVariable.getLoginStage || undefined) {
+    if (this.globalVariable.getLoginStage == 'true') {
       this.router.navigateByUrl(`/home`);
       return false;
     }

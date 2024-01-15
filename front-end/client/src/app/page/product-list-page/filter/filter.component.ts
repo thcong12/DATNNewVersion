@@ -1,32 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewChild,
-} from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import {
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  forkJoin,
-  fromEvent,
-  map,
-  pluck,
-  switchMap,
-} from 'rxjs';
-import { AuthService } from 'src/app/service/auth.service';
-import { CategloryService } from 'src/app/service/categlory.service';
-import { DevelopersService } from 'src/app/service/developers.service';
-import { ProductsService } from 'src/app/service/products.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { StoreService } from 'src/app/service/store.service';
-import { UserService } from 'src/app/service/user.service';
 
 @Component({
   selector: 'app-filter',
@@ -40,14 +15,14 @@ export class FilterComponent implements OnInit {
 
   public filterForm!: FormGroup;
   public controlName = {
-    value: 'value',
+    price: 'price',
     listCateglory: 'listCateglory',
     developer: 'developer',
   };
   private initForm() {
     const me = this;
     me.filterForm = me.formBd.group({
-      [me.controlName.value]: me.formBd.array([0, 100]),
+      [me.controlName.price]: me.formBd.array([0, 100]),
       [me.controlName.listCateglory]: me.formBd.array([]),
       [me.controlName.developer]: [''],
     });
@@ -58,17 +33,14 @@ export class FilterComponent implements OnInit {
   }
   get valuePrice(): FormArray {
     const me = this;
-    return me.filterForm.get(me.controlName.value) as FormArray;
+    return me.filterForm.get(me.controlName.price) as FormArray;
+  }
+  get developer() {
+    const me = this;
+    return me.filterForm.get(me.controlName.developer);
   }
   constructor(
-    private productSv: ProductsService,
-    private categlorySv: CategloryService,
-    private developerSv: DevelopersService,
-    private userSv: UserService,
     private storeSv: StoreService,
-    private renderer: Renderer2,
-    private authsv: AuthService,
-    private router: Router,
     private formBd: FormBuilder,
     private route: ActivatedRoute
   ) {}
@@ -88,7 +60,19 @@ export class FilterComponent implements OnInit {
     me.categloryList.removeAt(id);
   }
   public submitForm() {
-    this.dataFilter.emit(this.filterForm.value);
+    const cateValue = this.categloryList.value.map((item: any) => {
+      return item._id;
+    });
+    if (this.developer?.value === null) {
+      this.developer?.patchValue({ _id: '' });
+    }
+    this.dataFilter.emit({
+      price: this.valuePrice.value,
+      developer: this.developer?.value._id || undefined,
+      category: cateValue,
+    });
+
+    console.log(this.developer?.value);
   }
 
   ngOnInit(): void {

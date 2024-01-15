@@ -1,0 +1,126 @@
+<div class="card">
+  <form class="p-fluid p-formgrid grid" [formGroup]="productDetailForm" (submit)="submitData()">
+    <div class="col-12 flex gap-4 justify-content-between">
+      <div class="w-full">
+        <label htmlFor="firstname2">Category</label>
+        <!-- <p-multiSelect
+          [options]="categorys"
+          placeholder="Select a Category"
+          optionLabel="cateName"
+          class="multiselect-custom"
+          display="chip"
+        >
+          <ng-template let-cate pTemplate="item">
+            <div class="flex align-items-center">
+              <span class="ml-2">{{ cate.cateName }}</span>
+            </div>
+          </ng-template>
+        </p-multiSelect> -->
+        <p-dropdown
+          [options]="categorys"
+          optionLabel="cateName "
+          [filter]="true"
+          filterBy="cateName"
+          [showClear]="true"
+          placeholder="Select a Categlory "
+        >
+          <ng-template let-cate pTemplate="item ">
+            <div  (click)="addCateglory(cate)" class="">
+              <div >{{ cate.cateName }}</div>
+            </div>
+          </ng-template>
+        </p-dropdown>
+        <div class="pl-3 mt-3 grid gap-1">
+          <p-chip
+            *ngFor="let item of categloryList?.controls; let i = index"
+            [label]="item.value.cateName"
+            [removable]="true"
+            [style]="{ 'border-radius': '10px' }"
+          ></p-chip>
+        </div>
+      </div>
+      <div class="w-full grid">
+        <div class="col-12">
+          <label htmlFor="address">Developer</label>
+          <p-dropdown
+            [options]="developers"
+            [formControlName]="controlDetail.developer"
+            optionLabel="devName"
+            [filter]="true"
+            filterBy="name"
+            [showClear]="true"
+            placeholder="Select a Developer"
+          >
+            <!-- <ng-template pTemplate="selectedItem">
+              <div class="flex align-items-center gap-2" *ngIf="selectedValue">
+                      <div>{{ selectedValue }}</div>
+                  </div>
+            </ng-template>
+            <ng-template let-dev pTemplate="item">
+              <div class="flex align-items-center gap-2">
+                <div>{{ dev.devName }}</div>
+              </div>
+            </ng-template> -->
+          </p-dropdown>
+        </div>
+        <div class="field col-12">
+          <label htmlFor="city ">Systemrequiment</label>
+          <button
+            (click)="testProduct()"
+            type="button"
+            pButton
+            pRipple
+            label="Add Systemrequiment"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="field col-12">
+      <label htmlFor="lastname2">Description</label>
+      <p-editor
+        [formControlName]="controlDetail.description"
+        [style]="{ height: '320px', width: '100%' }"
+      ></p-editor>
+    </div>
+    <ng-container [formArrayName]="controlDetail.imgList">
+      <span class="col-12">Src</span>
+      <div
+        class="col-6 flex gap-2"
+        *ngFor="let img of imgList?.controls; let i = index"
+        [formGroupName]="i"
+      >
+        <input
+          #src
+          pInputText
+          [formControlName]="controlDetail.url"
+          type="text"
+        />
+        <button (click)="removeImage(i)" type="button" pButton pRipple icon="pi pi-plus "></button>
+      </div>
+    </ng-container>
+    <div class="col-2">
+      <button type="button" (click)="addImage()" pButton pRipple icon="pi pi-plus "></button>
+    </div>
+    <div class="field col-12">
+      <div class="flex gap-2">
+        <button
+          pButton
+          pRipple
+          label="Clear"
+          icon="pi pi-times"
+          iconPos="right"
+          type="button"
+        ></button>
+        <button
+          type="submit"
+          pButton
+          pRipple
+          label="Submit"
+          icon="pi pi-check"
+          iconPos="right"
+        ></button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -35,6 +35,11 @@ export class SideNavComponent implements OnInit {
         icon: 'pi pi-comments',
         routerLink: '/profile',
       },
+      {
+        label: 'Checkout',
+        icon: 'pi pi-shopping-cart',
+        routerLink: '/checkout',
+      },
     ];
   }
 }

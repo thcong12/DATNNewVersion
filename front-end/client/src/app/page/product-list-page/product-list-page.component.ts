@@ -32,7 +32,7 @@ export class ProductListPageComponent implements OnInit, AfterViewInit {
   public selectedCountry: string = '';
   public aaa: any[] = [];
   public dataInput: any = {
-    listProduct: [] as Product.Product[],
+    listProduct: [] as Product.ProductDisplay[],
     listCateglory: [] as Product.Categlory[],
     listDeveloper: [] as Product.Developer[],
   };
@@ -52,30 +52,37 @@ export class ProductListPageComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.regisSearchEvent();
   }
-
-  public getData() {
-    forkJoin({
-      products: this.productSv.getProducts(),
-      categlory: this.categlorySv.getCateglorys(),
-      developer: this.developerSv.getDevelopers(),
-    })
-      .pipe(
-        map(({ products, categlory, developer }) => {
-          this.dataInput.listProduct = [...products];
-          this.dataInput.listCateglory = [...categlory];
-          this.dataInput.listDeveloper = [...developer];
-        })
-      )
-      .subscribe({ next: (_res) => {} });
+  private getListOfProduct() {
+    this.productSv.getProducts().subscribe({
+      next: (products) => {
+        this.dataInput.listProduct = [...products];
+        this.dataInput.listProduct.reverse();
+      },
+    });
   }
+  private getListOfCategory() {
+    this.categlorySv.getCateglorys().subscribe({
+      next: (categlorys) => {
+        this.dataInput.listCateglory = [...categlorys];
+      },
+    });
+  }
+  private getListOfDeveloper() {
+    this.developerSv.getDevelopers().subscribe({
+      next: (developers) => {
+        this.dataInput.listDeveloper = [...developers];
+      },
+    });
+  }
+  public getData() {}
   private regisSearchEvent(): void {
     const me = this;
     fromEvent(me.inputElement?.nativeElement, 'keyup')
       .pipe(
         pluck('target', 'value'),
-        debounceTime(400),
+        debounceTime(700),
         distinctUntilChanged<any>(),
-        filter((value: string) => value.length > 3),
+        // filter((value: string) => value.length > 3),
         switchMap((keyword) => {
           return me.storeSv.search(keyword).pipe(
             map((res) => {
@@ -95,13 +102,14 @@ export class ProductListPageComponent implements OnInit, AfterViewInit {
         })
       )
       .subscribe({ complete: () => {} });
-    console.log(data);
+    // console.log(data);
   }
 
   ngOnInit(): void {
-    const me = this;
-    me.getData();
-    me.sortOptions = [
+    this.getListOfProduct();
+    this.getListOfCategory();
+    this.getListOfDeveloper();
+    this.sortOptions = [
       { label: 'Release', value: 'updatedAt' },
       { label: 'Price High to Low', value: 'price' },
       { label: 'Price Low to High', value: '!price' },

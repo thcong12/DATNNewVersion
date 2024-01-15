@@ -49,26 +49,15 @@ export class SignInComponent implements OnInit {
     const me = this;
     me.authSv
       .register(me.registerForm.value)
-      .pipe(
-        tap((res: HttpResponse<any>) => {
-          if (res.status == 201) {
-            this.messageSv.add({
-              severity: 'info',
-              summary: 'Info',
-              detail: 'Please check your email to active account',
-            });
-          } else {
-            this.messageSv.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: res.statusText,
-            });
-          }
-        })
-      )
+      .pipe(tap((res: HttpResponse<any>) => {}))
       .subscribe({
         complete: () => {
-          // this.registerForm.reset();
+          this.messageSv.add({
+            severity: 'info',
+            summary: 'Info',
+            detail: 'Please check your email to active account',
+          });
+          this.registerForm.reset();
           // setTimeout(() => {
           //   this.router.navigateByUrl('home');
           // }, 5000);

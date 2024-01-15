@@ -9,14 +9,14 @@ export class CategoryRouter extends BaseRouter {
   private Category: CategloryController = new CategloryController();
   constructor() {
     super();
-    this.getDetailCategory();
     this.getAllCategory();
     this.modifyDetailCategory();
     this.createNewCategory();
+    this.getDetailCategory();
   }
   getAllCategory() {
     this.router.get(
-      "/",
+      "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const data = await this.Category.getAllData();
@@ -31,6 +31,7 @@ export class CategoryRouter extends BaseRouter {
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const cateId = req.params.id;
+          console.log(cateId);
           const data = await this.Category.getDetailById(cateId);
           res.json(data);
         }
@@ -52,7 +53,7 @@ export class CategoryRouter extends BaseRouter {
   }
   createNewCategory() {
     this.router.post(
-      "/",
+      "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const dataReq: ICateglory = req.body;

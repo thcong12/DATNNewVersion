@@ -10,6 +10,8 @@ import { ProductsService } from 'src/app/service/products.service';
 import { StoreService } from 'src/app/service/store.service';
 import { UserService } from 'src/app/service/user.service';
 import { MessageService } from 'primeng/api';
+import { Product } from 'src/app/model/products.model';
+import { GlobalVariable } from 'src/app/base/global-variable';
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail-page.component.html',
@@ -18,6 +20,7 @@ import { MessageService } from 'primeng/api';
 })
 export class ProductDetailPageComponent extends BaseComponent {
   public commentForm!: FormGroup;
+  public GlobalVariable = new GlobalVariable();
   counter: number = 0;
   // public isLogin$: BehaviorSubject<boolean> = this.authSv.isLogin;
   public isInLybrary: boolean = false;
@@ -48,7 +51,7 @@ export class ProductDetailPageComponent extends BaseComponent {
     },
   ];
   public selectedIndex: number = 0;
-  public product!: any;
+  public product!: Product.ProductDisplay;
   public listProductSimilar!: any[];
   public developerId!: any;
   public productId!: string;
@@ -64,29 +67,51 @@ export class ProductDetailPageComponent extends BaseComponent {
     comment: 'comment',
   };
   private getProduct(): void {
-    this.route.paramMap
-      .pipe(
-        tap((param) => {
-          this.productId = param.get('id') as string;
-        })
-        // tap((param) => {
-        //   this.productId = param.get('id') as string;
-        // })
-      )
-      .subscribe({
-        next: () => {
-          console.log(this.productId);
-          this.prodSv
-            .getProductDetail(this.productId)
-            .pipe(
-              tap((res: any) => {
-                console.log(res);
-                this.product = res;
-              })
-            )
-            .subscribe();
-        },
-      });
+    if (this.GlobalVariable.getLoginStage != null) {
+      console.log(this.GlobalVariable.getLoginStage);
+      this.route.paramMap
+        .pipe(
+          tap((param) => {
+            this.productId = param.get('id') as string;
+          })
+          // tap((param) => {
+          //   this.productId = param.get('id') as string;
+          // })
+        )
+        .subscribe({
+          next: () => {
+            this.prodSv
+              .getProductDetailIsLogin(this.productId)
+              .pipe(
+                tap((res: any) => {
+                  console.log(res);
+                  this.product = res.body;
+                })
+              )
+              .subscribe();
+          },
+        });
+    } else {
+      this.route.paramMap
+        .pipe(
+          tap((param) => {
+            this.productId = param.get('id') as string;
+          })
+        )
+        .subscribe({
+          next: () => {
+            this.prodSv
+              .getProductDetail(this.productId)
+              .pipe(
+                tap((res: Product.ProductDisplay) => {
+                  console.log(res);
+                  this.product = res;
+                })
+              )
+              .subscribe();
+          },
+        });
+    }
   }
   private getSameProduct(id: string) {
     // const me = this;
@@ -106,9 +131,18 @@ export class ProductDetailPageComponent extends BaseComponent {
   }
   public addToCart(item: any) {
     const userCart = JSON.parse(String(this.vms.globalVariable.getUserCart));
-    const isExist = userCart.findIndex((item: any) => {
-      return String(item._id) == String(item._id);
+    if (userCart == null) {
+      this.messageSv.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'You need login to use this feature ',
+      });
+      return;
+    }
+    const isExist = userCart.findIndex((itemCart: User.Cart) => {
+      String(item._id) == String(itemCart._id);
     });
+    console.log(isExist);
     if (isExist != -1) {
       this.messageSv.add({
         severity: 'error',
@@ -141,11 +175,16 @@ export class ProductDetailPageComponent extends BaseComponent {
     const userWishList = JSON.parse(
       String(this.vms.globalVariable.getUserWishList)
     );
-    let dataFormat: User.Wishlist = {
-      product: item,
-    };
-    const isExist = userWishList.findIndex((item: any) => {
-      return String(dataFormat.product._id) == String(item._id);
+    if (userWishList == null) {
+      this.messageSv.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'You need login to use this feature ',
+      });
+      return;
+    }
+    const isExist = userWishList.findIndex((itemWishList: any) => {
+      String(item._id) == String(itemWishList._id);
     });
     if (isExist != -1) {
       this.messageSv.add({
@@ -167,7 +206,7 @@ export class ProductDetailPageComponent extends BaseComponent {
               summary: 'Success',
               detail: 'Product has added',
             });
-            userWishList.push(dataFormat);
+            userWishList.push(item);
             this.vms.globalVariable.setUserWishList(userWishList);
           }
         })
@@ -183,17 +222,15 @@ export class ProductDetailPageComponent extends BaseComponent {
       .pipe(
         shareReplay<any>(),
         tap((res: HttpResponse<any>) => {
-          if (res.status == 201) {
-            this.messageSv.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Product has remove',
-            });
-            const wishList = userWishList.filter((product: any) => {
-              return String(product.product._id) != String(item._id);
-            });
-            this.vms.globalVariable.setUserWishList(wishList);
-          }
+          this.messageSv.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Product has remove',
+          });
+          const wishList = userWishList.filter((product: any) => {
+            return String(product.product._id) != String(item._id);
+          });
+          this.vms.globalVariable.setUserWishList(wishList);
         })
       )
       .subscribe();
@@ -211,14 +248,6 @@ export class ProductDetailPageComponent extends BaseComponent {
     me.getProduct();
 
     me.formInit();
-    // me.isLogin$.subscribe((result) => {
-    //   if (result) {
-    //     me.getLibraries();
-    //     setTimeout(() => {
-    //       me.userSv.setDataRecomend(me.productId).subscribe();
-    //     }, 2000);
-    //   }
-    // });
   }
   onNext() {
     if (this.counter != this.listProductSimilar.length - 1) {
@@ -231,13 +260,6 @@ export class ProductDetailPageComponent extends BaseComponent {
       this.counter--;
     }
   }
-  @ViewChild('ádasd') aa!: ElementRef;
-  private setDataRecommend() {
-    if (this.productId) {
-      this.userSv.setDataRecomend(this.productId).subscribe();
-    }
-  }
-
   get isInCart() {
     const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
     if (isLogin) {
@@ -253,7 +275,7 @@ export class ProductDetailPageComponent extends BaseComponent {
     return;
   }
 
-  get isInLibary() {
+  get isInWishlist() {
     const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
     if (isLogin) {
       const Wishlist = JSON.parse(
@@ -261,7 +283,24 @@ export class ProductDetailPageComponent extends BaseComponent {
       );
       if (Wishlist.length > 0) {
         const combineArray: any[] = Wishlist?.map((data: any) => {
-          return data.product._id;
+          return data._id;
+        });
+        return combineArray.includes(this.productId);
+      }
+      return false;
+    }
+    return;
+  }
+
+  get isInLibary() {
+    const isLogin = JSON.parse(String(this.vms.globalVariable.getLoginStage));
+    if (isLogin) {
+      const library = JSON.parse(
+        String(this.vms.globalVariable.getUserLiblary)
+      );
+      if (library.length > 0) {
+        const combineArray: any[] = library?.map((data: any) => {
+          return data._id;
         });
         return combineArray.includes(this.productId);
       }

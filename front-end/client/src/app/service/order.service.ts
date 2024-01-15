@@ -4,22 +4,23 @@ import { Observable } from 'rxjs';
 import { User } from '../model/account.model';
 import { Order } from '../model/store.model';
 import { BaseService } from './base.service';
+import { apiRouter } from '../shared/constant/router-const';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OrderService extends BaseService {
-
-  constructor(http:HttpClient) {super(http) }
-  public createOrder(order:any):Observable<any>{
-    const me = this;
-    const url = `/order/neworder`
-    return me.post(url,order)
+  private api: String = apiRouter.checkout.checkout;
+  constructor(http: HttpClient) {
+    super(http);
   }
-  public paid(cartId:string,orderId:string,order:Order.Order):Observable<Order.Order>{
-    const me = this;
-    const url = `/order/pay/${orderId}`
-    return me.put(url,order)
+  public createOrder(order: any): Observable<any> {
+    const url = this.api + apiRouter.checkout.order;
+    return this.post(url, order);
   }
-
+  public paid(orderId: string, order: Order.Order): Observable<Order.Order> {
+    const url = this.api + apiRouter.checkout.order + apiRouter.checkout.pay;
+    order._id = orderId;
+    return this.put(url, order);
+  }
 }

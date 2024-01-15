@@ -1,16 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { BaseRouter } from "../../base/router-base";
-import { DashboardAuthController } from "../../controller/auth-admin-controller";
-import { AdminController } from "../../controller/admin-controller";
-import { ClientAuthController } from "../../controller/auth-user-controller";
-import { UserController } from "../../controller/user-controller";
-import { checkSection, checkUser } from "../../ultils/genareate_token";
-import { CONSTANT } from "../../constant";
-import { IWishList, WishListModel } from "../../model/user/WishlistModel";
-import { CartModel, ICart } from "../../model/user/CartModel";
 import { UserControllerBase } from "../../base/user-controller-base";
+import { ProductController } from "../../controller/product-controller";
+import { CartModel, ICart } from "../../model/user/CartModel";
 import { ILibraly, LibralyModel } from "../../model/user/LibraryModel";
+import { IWishList, WishListModel } from "../../model/user/WishlistModel";
+import { MyToken, checkSection } from "../../ultils/genareate_token";
 
 export class UserRouter extends BaseRouter {
   private CartController: UserControllerBase<ICart> =
@@ -19,9 +15,10 @@ export class UserRouter extends BaseRouter {
     new UserControllerBase<IWishList>(WishListModel);
   private LibralyController: UserControllerBase<ILibraly> =
     new UserControllerBase<ILibraly>(LibralyModel);
+  private ProductController: ProductController = new ProductController();
   constructor() {
     super();
-    this.checkSection();
+    // this.checkSection();
     this.addCartItem();
     this.removeCartItem();
     this.getCart();
@@ -29,6 +26,7 @@ export class UserRouter extends BaseRouter {
     this.addWishlistItem();
     this.removeWishlistItem();
     this.getLibrary();
+    this.getDataRecomend();
   }
   getCart() {
     this.router.get(
@@ -60,12 +58,20 @@ export class UserRouter extends BaseRouter {
       "/cart/add",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.CartController.addEvent(
-            req,
-            res,
-            next,
-            "cartDetail"
+          const user: MyToken = checkSection(req, res, next);
+          const dataReq: any = req.body;
+          await this.RecomendController.updateData(
+            user.id!,
+            "cart",
+            dataReq._id
           );
+          const data = await this.CartController.addEvent(
+            user,
+            "cartDetail",
+            dataReq,
+            res
+          );
+
           res.json(data);
         }
       )
@@ -116,11 +122,18 @@ export class UserRouter extends BaseRouter {
       "/wishlist/add",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
+          const user: MyToken = checkSection(req, res, next);
+          const dataReq: any = req.body;
+          await this.RecomendController.updateData(
+            user.id!,
+            "wishlist",
+            dataReq._id
+          );
           const data = await this.WishListController.addEvent(
-            req,
-            res,
-            next,
-            "userWishlist"
+            user,
+            "userWishlist",
+            dataReq,
+            res
           );
           res.json(data);
         }
@@ -162,6 +175,40 @@ export class UserRouter extends BaseRouter {
             } else {
               res.json([]);
             }
+          }
+        }
+      )
+    );
+  }
+  getDataRecomend() {
+    this.router.get(
+      "/recomend",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const userId: MyToken = checkSection(req, res, next);
+          if (userId.id) {
+            const allData = await this.RecomendController.recommendation_eng(
+              userId.id,
+              "productId"
+            );
+            const returnData: any[] = await this.RecomendController.checkIsBuy(
+              allData,
+              userId.id
+            );
+
+            const products = await this.ProductController.getProduct(
+              returnData.splice(0,10)
+            );
+            const productDetail =
+              await this.ProductController.getDetailInformation(
+                products,
+                "_id"
+              );
+            const dataFinal = this.ProductController.dataReturn(
+              products,
+              productDetail
+            );
+            res.json(dataFinal);
           }
         }
       )

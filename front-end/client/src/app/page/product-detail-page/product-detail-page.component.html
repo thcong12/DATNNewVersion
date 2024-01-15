@@ -1,13 +1,13 @@
-<div class="detailProduct" *ngIf="product">
+<div class="detailProduct" *ngIf="product.product">
   <p-toast></p-toast>
-  <div class="detailProduct__title">
+  <!-- <div class="detailProduct__title">
     <h1 style="color: #eeeeee">{{ product.product.productName }}</h1>
-  </div>
+  </div> -->
   <div class="grid detailProduct__info">
     <div class="col-9 py-0 detailProduct__info__left">
       <p-galleria
-        *ngIf="product.productDetail"
-        [value]="product.productDetail.imgList"
+        *ngIf="product.detail"
+        [value]="product.detail.imgList"
         [responsiveOptions]="responsiveOptions"
         [numVisible]="4"
         [circular]="true"
@@ -50,7 +50,7 @@
               color: #eeeeee;
               text-decoration: none;
             "
-            *ngFor="let item of product.productDetail?.categlory"
+            *ngFor="let item of product.detail.categlory"
             >{{ item.cateName }}</a
           >
         </div>
@@ -61,13 +61,13 @@
           <div class="flex justify-content-between">
             <b class="text-base" style="color: #eeeeee">Developer</b>
             <span class="text-base" style="color: #eeeeee">{{
-              product.productDetail.developer.devName
+              product.detail.developer.devName
             }}</span>
           </div>
           <div class="flex justify-content-between">
             <b class="text-base" style="color: #eeeeee">Developer</b>
             <span class="text-base" style="color: #eeeeee">{{
-              product.productDetail.developer.devName
+              product.detail.developer.devName
             }}</span>
           </div>
           <div class="flex justify-content-between">
@@ -87,7 +87,7 @@
             <i class="px-2 py-1">{{ product.product.sale.salePersent }}%</i>
           </div>
         </div>
-        <div
+        <div *ngIf="!isInLibary"
           class="flex w-full justify-content-between align-items-center gap-2 detailProduct__info__right__button"
         >
           <button
@@ -98,16 +98,19 @@
             Add to cart
           </button>
           <button *ngIf="isInCart" class="w-11 bi bi-cart-plus">In cart</button>
-          <i
-            *ngIf="!isInLibary"
-            (click) = "addToWishList(product.product)"
-            class="w-1 text-4xl pi pi-heart"
-          ></i>
-          <i
-          *ngIf="isInLibary"
-          (click) = "removeFromWishList(product.product)"
-          class="w-1 text-4xl pi pi-heart-fill"
-        ></i>
+          <span (click)="addToWishList(product.product)">
+            <i *ngIf="!isInWishlist" class="w-1 text-4xl pi pi-heart"></i>
+          </span>
+          <span (click)="removeFromWishList(product.product)">
+            <i *ngIf="isInWishlist" class="w-1 text-4xl pi pi-heart-fill"></i>
+          </span>
+        </div>
+        <div *ngIf="isInLibary"
+          class="flex w-full justify-content-between align-items-center gap-2 detailProduct__info__right__button"
+        >
+          <button  class="w-11 bi bi-cart-plus">
+            In library
+          </button>
         </div>
       </div>
 
@@ -120,7 +123,7 @@
     </div>
   </div>
 
-  <div class="mt-5 detailProduct__anotherInfo" *ngIf="product.productDetail">
+  <div class="mt-5 detailProduct__anotherInfo" *ngIf="product.detail">
     <div class="detailProduct__anotherInfo__tab">
       <a
         class="px-3 py-2"
@@ -152,13 +155,13 @@
         <h3 style="color: #eeeeee">About of product</h3>
         <div
           style="color: #eeeeee; min-height: 350px"
-          [innerHTML]="product.productDetail.description"
+          [innerHTML]="product.detail.description"
         ></div>
       </div>
       <div class="grid" *ngIf="id === 'requires'">
         <div
           class="col-6 systemrequiment"
-          *ngFor="let item of product.productDetail.systemrequiment"
+          *ngFor="let item of product.detail.systemrequiment"
         >
           <h3>MINIMUM:</h3>
 
@@ -170,7 +173,7 @@
           <br />
           <span
             ><strong>Graphics:</strong
-            >{{ product.productDetail.systemrequiment[1].gpu }}
+            >{{ product.detail.systemrequiment[1].gpu }}
           </span>
           <br />
           <span><strong>DirectX:</strong>{{ item.directX }} </span>
@@ -183,7 +186,7 @@
       <div class="w-full px-2 pageComments" *ngIf="id === 'comments'">
         <div
           class="grid pageComments__user"
-          *ngFor="let item of product.productDetail.reviews"
+          *ngFor="let item of product.detail.reviews"
         >
           <div class="col-4">
             <img

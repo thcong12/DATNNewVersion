@@ -19,9 +19,10 @@ import { UserService } from 'src/app/service/user.service';
 })
 export class ListComponent implements OnInit {
   public selectedCountry: string = '';
+  selectedIndex = -1;
   sortOrder!: number;
-  layout: string = 'list';
-  @Input() listProduct: Product.Product[] = [];
+  layout: string = 'grid';
+  @Input() listProduct: Product.ProductDisplay[] = [];
   sortField!: string;
   public numberProduct: number = 16;
   public page: number = 1;
@@ -57,10 +58,17 @@ export class ListComponent implements OnInit {
       this.sortField = value;
     }
   }
+  public priceDiscount(data: any) {
+    const finalPrice = data.price - (data.price * data.sale.salePersent) / 100;
+    return finalPrice;
+  }
   ngOnInit(): void {
     this.sortOptions = [
       { label: 'Price High to Low', value: '!price' },
       { label: 'Price Low to High', value: 'price' },
     ];
+  }
+  public slideShow(index: number) {
+    this.selectedIndex = index;
   }
 }

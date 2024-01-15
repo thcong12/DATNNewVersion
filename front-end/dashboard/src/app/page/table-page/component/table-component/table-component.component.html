@@ -1,0 +1,101 @@
+<p-table
+  #dt1
+  [value]="data"
+  dataKey="id"
+  [rows]="10"
+  [rowHover]="true"
+  styleClass="p-datatable-gridlines"
+  responsiveLayout="scroll"
+  [tableStyle]="{ 'min-width': '50rem', width: '100%' }"
+  [paginator]="true"
+  [rowsPerPageOptions]="[5, 10, 20]"
+>
+  <!-- (input)="onGlobalFilter(dt1, $event)" -->
+  <ng-template pTemplate="caption">
+    <div class="flex justify-content-between flex-column sm:flex-row">
+      <span class="p-input-icon-left mb-2">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          #filter
+          placeholder="Search Keyword"
+          class="w-full"
+        />
+      </span>
+      <p-button
+        *ngIf="!isProduct"
+        label="Add new"
+        icon="pi pi-plus"
+        (onClick)="openDialog(true)"
+      ></p-button>
+      <p-button 
+      *ngIf="isProduct"
+      label="Add new`1"
+      icon="pi pi-plus"
+      (onClick)="gotoCraeteNewPage()"
+    ></p-button>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th *ngFor="let headerItem of headerTable">
+        <div
+          class="flex justify-content-between align-items-center"
+          pSortableColumn="isActive"
+        >
+          {{ headerItem }}
+          <p-sortIcon field="name"></p-sortIcon>
+        </div>
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-item>
+    <tr >
+      <td *ngFor="let key of displayField">
+        <img width="100" [src]="item[key]" alt="" *ngIf="findImg(key)" />
+        <span
+          style="
+            text-overflow: ellipsis;
+            overflow: hidden;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            display: -webkit-box;
+          "
+          *ngIf="!findImg(key)"
+          class="image-text ml-2"
+          >
+          <ng-container *ngIf="!(key == 'isActive')" >
+             {{ item[key] }}
+          </ng-container>
+          </span
+        >
+        <ng-container *ngIf="(key == 'isActive')" >
+          <p-tag [value]="item[key]?'Active':'Inactive'" [severity]="item[key]?'success':'warning'"></p-tag>
+       </ng-container>
+      </td>
+      <td>
+        <p-button *ngIf="!isProduct"
+          icon="pi pi-pencil"
+          styleClass="p-button-rounded p-button-info"
+          (onClick)="openDialog(false, item._id)"
+        ></p-button>
+        <p-button *ngIf="isProduct"
+          icon="pi pi-pencil"
+          styleClass="p-button-rounded p-button-info"
+          (onClick)="goTopage(item._id)"
+      ></p-button>
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8">No data</td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="loadingbody">
+    <tr>
+      <td colspan="8">Loading data</td>
+    </tr>
+  </ng-template>
+</p-table>

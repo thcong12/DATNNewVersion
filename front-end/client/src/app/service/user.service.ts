@@ -25,6 +25,18 @@ export class UserService extends BaseService {
     super(http);
     this.globalVariable = this.vms.globalVariable;
   }
+
+  public getAllUserOwner() {
+    this.getRecommendProduct().subscribe({
+      next: (res) => {
+        console.log(res);
+      },
+    });
+    this.getCart().subscribe();
+    this.getLibraries().subscribe();
+    this.getWishlist().subscribe();
+  }
+
   public getCart(): Observable<User.Cart> {
     const url = this.api + apiRouter.user.cart;
     return this.get(url, this.httpOption).pipe(
@@ -61,11 +73,6 @@ export class UserService extends BaseService {
     const url = `/order/getorder/${id}`;
     return me.get(url);
   }
-  public setDataRecomend(id: string): Observable<any> {
-    const me = this;
-    const url = `/dataset/click/${id}`;
-    return me.get(url);
-  }
   public getLibraries(): Observable<any> {
     const url = this.api + apiRouter.user.library;
     return this.get(url, this.httpOption).pipe(
@@ -79,14 +86,11 @@ export class UserService extends BaseService {
     const url = `/profile/user`;
     return me.get(url);
   }
-  public getReCommendProduct() {
-    const me = this;
-    const url = `/recommend/data`;
-    return me.get(url).pipe(
+  public getRecommendProduct(): Observable<any> {
+    const url = this.api + apiRouter.user.recomend;
+    return this.get(url, this.httpOption).pipe(
       tap((res) => {
-        if (res) {
-          this.vms.globalVariable.setRecommendProduct(res);
-        }
+        this.vms.globalVariable.setRecommendProduct(res.body);
       })
     );
   }

@@ -6,31 +6,36 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { Product } from '../model/products.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class CategloryService extends BaseService{
+export class CategloryService extends BaseService {
   constructor(http: HttpClient) {
     super(http);
   }
-   public getCateglorys():Observable<Product.Categlory[]>{
+  public getCateglorys(): Observable<Product.Categlory[]> {
     const me = this;
-    const url = `categlorys`;
+    const url = `category`;
     return me.get(url);
   }
-  public getCateglory(id:string):Observable<Product.Categlory>{
+  public getCateglory(id: string): Observable<Product.Categlory> {
     const me = this;
-    const url = `categlorys/${id}`;
+    const url = `categlory/${id}`;
     return me.get(url);
   }
-  public createCateglory(cate:Product.Categlory):Observable<Product.Categlory>{
+  public createCateglory(
+    cate: Product.Categlory
+  ): Observable<Product.Categlory> {
     const me = this;
-    const url = `categlorys`;
-    return me.post(url,cate);
+    const url = `category`;
+    return me.post(url, cate);
   }
 
-  public updateCateglory(id:string,cate:Product.Categlory):Observable<Product.Categlory>{
+  public updateCateglory(
+    id: string,
+    cate: Product.Categlory
+  ): Observable<Product.Categlory> {
     const me = this;
-    const url = `categlorys/${id}`;
-    return me.put(url,cate);
+    const url = `category/${id}`;
+    return me.put(url, cate);
   }
 }

@@ -1,8 +1,14 @@
 import { Model, Types } from "mongoose";
 import express, { NextFunction, Request, Response } from "express";
 import { MyToken, checkSection } from "../ultils/genareate_token";
+import {
+  DataRecomendModel,
+  IDataRecomend,
+} from "../model/dataset/DataRecomend";
+import { recomendValue } from "../constant";
 export class UserControllerBase<T> {
   protected model: Model<T>;
+  private DataRecomend: Model<IDataRecomend> = DataRecomendModel;
   constructor(model: Model<T>) {
     this.model = model;
   }
@@ -37,7 +43,6 @@ export class UserControllerBase<T> {
           },
         },
       ]);
-      console.log(userData);
       return userData[0];
     } else {
       await this.model.create({ userId: userId });
@@ -60,28 +65,19 @@ export class UserControllerBase<T> {
     }
   }
 
-  async addEvent(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-    tableKey: string
-  ) {
-    const dataBody: T | any = req.body;
-    const user: MyToken = checkSection(req, res, next);
+  async addEvent(user: MyToken, tableKey: string, dataReq: any, res: Response) {
     if (user.id) {
       const data: any = await this.model.findOne({ userId: user.id }).exec();
       const existProduct = data[tableKey].findIndex((item: any) => {
-        return String(dataBody._id) == String(item.product);
+        return String(dataReq._id) == String(item.product);
       });
       if (existProduct == -1) {
         data[tableKey].push({
-          ...dataBody,
-          product: dataBody._id,
+          ...dataReq,
+          product: dataReq._id,
         });
         await data.save();
         res.status(201);
-      } else {
-        res.json("Product is already exist ");
       }
     } else {
       res.status(403);

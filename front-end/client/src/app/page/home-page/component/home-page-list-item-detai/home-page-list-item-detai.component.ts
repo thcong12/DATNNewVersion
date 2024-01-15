@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Product } from 'src/app/shared/model/products.model';
+import { Product } from 'src/app/model/products.model';
 
 @Component({
   selector: 'app-home-page-list-item-detai',
@@ -7,7 +7,7 @@ import { Product } from 'src/app/shared/model/products.model';
   styleUrls: ['./home-page-list-item-detai.component.scss'],
 })
 export class HomePageListItemDetaiComponent {
-  @Input() productItem!: Product.Product;
+  @Input() productItem!: Product.ProductDisplay;
   count: number = 0;
   constructor() {}
 
@@ -22,13 +22,14 @@ export class HomePageListItemDetaiComponent {
       this.count--;
     }
   }
+
   get productImg() {
-    return this.productItem.detail?.imgList;
+    return this.productItem.detail.imgList;
   }
   get productImgLength() {
-    return this.productItem.detail?.imgList.length!;
+    return this.productItem.detail.imgList.length!;
   }
   get productCateGlory() {
-    return this.productItem.detail?.categlory;
+    return this.productItem.detail.categlory;
   }
 }

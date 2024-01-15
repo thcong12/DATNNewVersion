@@ -12,6 +12,11 @@ const routes: Routes = [
         loadChildren: () =>
           import('../home-page/home-page.module').then((m) => m.HomePageModule),
       },
+      {
+        path: 'table',
+        loadChildren: () =>
+          import('../table-page/table-page.module').then((m) => m.TableModule),
+      },
     ],
   },
 ];

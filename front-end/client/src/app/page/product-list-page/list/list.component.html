@@ -8,6 +8,7 @@
   <ng-template pTemplate="header">
     <div class="flex justify-content-between">
       <p-dropdown
+       
         [options]="sortOptions"
         placeholder="Sort By Price"
         (onChange)="onSortChange($event)"
@@ -16,31 +17,7 @@
       <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
     </div>
   </ng-template>
-  <ng-template let-item pTemplate="listItem">
-    <div class="w-full grid mt-0 justify-content-between flex-wrap ">
-      <div class="col-3">
-        <img [src]="item.imgY.url + '?h=70&resize=1&w=140'" />
-      </div>
-      <div class="col-5 flex flex-column justify-content-between">
-        <h5 style="color: #ffffffff">{{ item.productName }}</h5>
-        <!-- <div class="flex gap-1 flex-wrap">
-          <a class="categoryItem" *ngFor="let item of categoryItem">
-            {{ item.cateName }}
-          </a>
-        </div> -->
-      </div>
-      <div class="col-1 flex align-items-center">
-        <span class="saleItem">-{{ item.sale.salePersent }}%</span>
-      </div>
-      <div class="col-2 flex flex-column align-items-center justify-content-center ">
-        <del *ngIf="item.price">{{ item.price | currency : "USD" }}</del>
-        <!-- <h2 class="mb-2">
-          {{ priceAfterSale | currency : "USD" }}
-        </h2> -->
-      </div>
-    </div>    
-  </ng-template>
-  <ng-template let-item pTemplate="gridItem">
+  <ng-template let-product pTemplate="gridItem">
     <div
       class="col-3 p-2 flex flex-column justify-content-between"
       style="border: none"
@@ -48,31 +25,76 @@
       <img
         width="100% "
         style="border-radius: 10px"
-        [alt]="item.imgX.title"
-        [src]="item.imgX.url + '?h=200&resize=1&w=150' || ''"
+        [alt]="product.product.imgX.title"
+        [src]="product.product.imgX.url + '?h=200&resize=1&w=150' || ''"
       />
       <div class=" ">
-        <h6 style="color: #ffffffff" (click)="getProductDetail(item._id)">
-          {{ item.productName }}
+        <h6
+          style="color: #ffffffff"
+          (click)="getProductDetail(product.product._id)"
+        >
+          {{ product.product.productName }}
         </h6>
         <div class="flex justify-content-between align-items-center">
           <b
-            *ngIf="item.sale.salePersent > 0"
+            *ngIf="product.product.sale.salePersent > 0"
             style="background-color: #ff8503; padding: 2%"
-            >{{ item.sale.salePersent }}%</b
+            >{{ product.product.sale.salePersent }}%</b
           >
           <div>
-            <del *ngIf="item.sale.salePersent > 0">
-              {{ item.price | currency : "USD" }}
+            <del *ngIf="product.product.sale.salePersent > 0">
+              {{ product.product.price | currency : "USD" }}
             </del>
             <span class="ml-2" style="color: #ffffffff">
               {{
-                item.price - (item.price * item.sale.salePersent) / 100
-                  | currency : "USD"
+                product.product.price -
+                  (product.product.price * product.product.sale.salePersent) /
+                    100 | currency : "USD"
               }}
             </span>
           </div>
         </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template let-product pTemplate="listItem" let-index="rowIndex" >
+    <div  
+    [ngClass]="{
+      active: selectedIndex === index,
+      'background-active': selectedIndex === index
+
+    }" 
+    (mouseenter)="slideShow(index)"
+    (mouseleave)="slideShow(-1)"
+    class="w-full grid mt-0 justify-content-between flex-wrap">
+      <div class="col-4 flex justify-content-center">
+        <img [src]="product.product.imgY.url + '?h=105&resize=1&w=210'" />
+      </div>
+      <div class="col-5 flex flex-column justify-content-between">
+        <h5 style="color: #ffffffff">{{ product.product.productName }}</h5>
+        <div class="flex gap-1 flex-wrap">
+          <span class="cateItem" *ngFor="let item of product.detail.categlory">
+            <!-- class="categoryItem" -->
+            {{ item.cateName }}
+          </span>
+        </div>
+      </div>
+      <div
+        style="color: #ffffffff;margin: 2.6rem 0;"
+        class="col-3 flex align-items-center justify-content-center"
+      >
+        <span
+          *ngIf="product.product.sale.salePersent > 0"
+          style="background-color: #00adb5;"
+          class="p-2 flex align-items-center text-xl"
+          >-{{ product.product.sale.salePersent }}%</span
+        >
+        <span  class="p-2  flex flex-column justify-content-center text-xs"
+          ><del style="color: #ffffffff"  class="text-xs" *ngIf="product.product.sale.salePersent > 0">{{
+            product.product.price | currency : "USD"
+          }}</del
+          ><b style="color: #ffffffff"  class="text-base">{{ priceDiscount(product.product) | currency : "USD" }}</b></span
+        >
       </div>
     </div>
   </ng-template>

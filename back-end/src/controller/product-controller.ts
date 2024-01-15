@@ -7,52 +7,56 @@ import {
   IProductDetail,
   ProductDetailModel,
 } from "../model/product/ProductModel";
+import { ProductControllerBase } from "../base/product-base-controller";
+import { DataRecomendController } from "./recommend-controller";
 
-export class ProductController {
-  public product: Model<IProduct> = ProductModel;
-  public detail: Model<IProductDetail> = ProductDetailModel;
-  constructor() {}
-  async getAllproduct(number: number): Promise<IProduct[]> {
-    const data = await this.product.find({ isActive: true }).limit(number);
-    if (data) {
-      return data;
-    } else {
-      return [];
-    }
+export class ProductController extends ProductControllerBase {
+  constructor() {
+    super();
   }
-  async getProductDetail(id: any) {
-    const dataProduct = await this.product.findById(id);
-    // const dataDetail = await this.detail.findOne({ productId: id }); && dataDetail
-    if (dataProduct) {
-      return dataProduct;
-    }
+  async getAllproduct(number: number) {
+    const products = await this.ProductModel.find({ isActive: true }).limit(
+      number
+    );
+
+    const productDetails = await this.getDetailInformation(products, "_id");
+    const dataFinal = this.dataReturn(products, productDetails);
+    return dataFinal;
   }
-  async getProductByName(value: string) {
-    const product = await this.product.findOne({ productName: value });
-    if (product) {
-      return product;
-    }
+  async getAllproductForDashboard(number: number) {
+    const products = await this.ProductModel.find({ isActive: true }).limit(
+      number
+    );
+
+    const dataFinal = products.map((item) => {
+      return {
+        product: item,
+      };
+    });
+    return dataFinal;
+  }
+  async getProduct(product: any) {
+    return await this.ProductModel.find({
+      _id: { $in: product },
+    });
   }
   async createProudct(req: Request) {
     const reqData: IProduct = req.body;
-    const productExist = await this.getProductByName(reqData.productName);
+    const productExist = await this.ProductModel.findOne({
+      productName: reqData.productName,
+    });
     if (!productExist) {
-      const newProduct = await this.product.create<IProduct>({
+      const newProduct = await this.ProductModel.create<IProduct>({
         ...reqData,
       });
-
-      const productDetail = new ProductDetailModel({
-        productId: newProduct._id,
-      });
-      await productDetail.save();
       return newProduct;
     }
   }
   async modifyProduct(id: string, req: Request) {
-    const existProduct = await this.product.findById(id);
+    const existProduct = await this.ProductModel.findById(id);
     if (existProduct) {
       const reqData: IProduct = req.body;
-      const dataModify = this.product.findByIdAndUpdate<IProduct>(
+      const dataModify = this.ProductModel.findByIdAndUpdate<IProduct>(
         id,
         {
           $set: {
@@ -68,17 +72,21 @@ export class ProductController {
   }
   async modifyDetailProduct(id: string, req: Request) {
     const reqData: IProductDetail = req.body;
-    const existProductDetail = await this.detail.findOne({ productId: id });
-    if (existProductDetail) {
-      const productDetail = new ProductDetailModel({
+    console.log(id);
+    const existProductDetail = await this.ProductDetailModel.findOne({
+      productId: id,
+    });
+    if (existProductDetail == null) {
+      const productDetail = await this.ProductDetailModel.create({
         ...reqData,
         productId: id,
       });
-      await productDetail.save();
       return productDetail;
     }
-    const dataModify = this.product.findByIdAndUpdate<IProductDetail>(
-      id,
+    const dataModify = this.ProductDetailModel.findOneAndUpdate(
+      {
+        productId: id,
+      },
       {
         $set: {
           ...reqData,
@@ -90,19 +98,16 @@ export class ProductController {
     );
     return dataModify;
   }
-  // async getDataProduct(id: string, data: any[]) {
-  //   const existProduct = await this.product.findById(id);
-  //   if (existProduct) {
-
-  //   }
-  // }
-
-  async getSearchProduct(value: any) {
-    const result = await this.product.find({
-      productName: { $regex: value, $options: "$i" },
+  async getDetailProduct(id: string) {
+    const product = await this.ProductModel.findOne({
+      _id: id,
     });
-    if (result) {
-      return result;
-    }
+    const detail = await this.ProductDetailModel.findOne({
+      productId: id,
+    });
+    return {
+      product: product,
+      detail: detail,
+    };
   }
 }

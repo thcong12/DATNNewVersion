@@ -6,22 +6,27 @@ import { IDeveloper } from "../../model/product/DeveloperModel";
 import { DeveloperController } from "../../controller/developer-controller";
 import { ProductController } from "../../controller/product-controller";
 import { IProduct } from "../../model/product/ProductModel";
+import { HomePageController } from "../../controller/home-page-controller";
 
 export class ProductRouter extends BaseRouter {
   private product: ProductController = new ProductController();
+  private homePage: HomePageController = new HomePageController();
   constructor() {
     super();
-    this.getDetail();
     this.getAll();
-    this.modifyDetail();
+    this.bestSale();
+    this.onSale();
+    this.modifyProductDetail();
+    this.modifyProduct();
     this.createNew();
+    this.getDetail();
   }
   getAll() {
     this.router.get(
       "",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
-          const data = await this.product.getAllproduct(200);
+          const data = await this.product.getAllproductForDashboard(200);
           res.json(data);
         }
       )
@@ -33,13 +38,13 @@ export class ProductRouter extends BaseRouter {
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const id = req.params.id;
-          const data = await this.product.getProductDetail(id);
+          const data = await this.product.getDetailProduct(id);
           res.json(data);
         }
       )
     );
   }
-  modifyDetail() {
+  modifyProduct() {
     this.router.put(
       "/:id",
       expressAsyncHandler(
@@ -51,12 +56,46 @@ export class ProductRouter extends BaseRouter {
       )
     );
   }
+  modifyProductDetail() {
+    this.router.put(
+      "/detail/:id",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const cateId = req.params.id;
+          const data = await this.product.modifyDetailProduct(cateId, req);
+          res.json(data);
+        }
+      )
+    );
+  }
   createNew() {
     this.router.post(
       "/",
       expressAsyncHandler(
         async (req: Request, res: Response, next: NextFunction) => {
           const data = await this.product.createProudct(req);
+          res.json(data);
+        }
+      )
+    );
+  }
+  bestSale() {
+    this.router.get(
+      "/bestsale",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const data = await this.homePage.getBestSeller();
+          res.json(data);
+        }
+      )
+    );
+  }
+  onSale() {
+    this.router.get(
+      "/onsale",
+      expressAsyncHandler(
+        async (req: Request, res: Response, next: NextFunction) => {
+          const data = await this.homePage.getProductSale();
           res.json(data);
         }
       )

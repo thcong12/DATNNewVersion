@@ -41,6 +41,13 @@ export class CheckOutPageComponent extends BaseComponent implements OnInit {
     }
     return;
   }
+  get totalPrice() {
+    let total = 0;
+    this.userCart.map((item: any) => {
+      total += item.price - (item.price * item.sale.salePersent) / 100;
+    });
+    return total;
+  }
   public salePersent(product: any) {
     if (product.sale.salePersent <= 0) {
       return false;

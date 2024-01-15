@@ -40,9 +40,9 @@ export abstract class BaseComponent
   }
 
   ngOnDestroy(): void {
+    this.onDestroy();
     this.destroy$.next();
     this.destroy$.unsubscribe();
-    this.onDestroy();
   }
   ngOnInit(): void {
     this.onInit();

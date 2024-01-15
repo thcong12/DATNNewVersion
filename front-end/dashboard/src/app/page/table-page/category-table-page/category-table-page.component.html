@@ -1,0 +1,44 @@
+<p-toast></p-toast>
+<div>
+  <h1 class="">Table categlory</h1>
+</div>
+<div class="w-full">
+  <app-table-component
+    [data]="categlorys"
+    [headerTable]="headerTable"
+    [displayField]="displayField"
+    (isCreate)="(isCreate=$event)"
+    (displayModal)="displayModal=$event"
+    [displayRetrun]="displayModal"
+    (itemId)="(getCateglory($event))"
+  >
+  </app-table-component>
+</div>
+
+
+<app-dialog-component
+  [dialogHeader]="'Category'"
+  (displayRetrun)="displayModal=$event"
+  [displayModal]="displayModal"
+  (confirm)="confirm($event)"
+  [createNew]="isCreate"
+  [formData]="categloryForm"
+>
+<ng-template >
+  <form  [formGroup]="categloryForm">
+    <div class="flex-auto">
+      <span class="font-bold block mb-2">Category name</span>
+      <input pInputText pKeyFilter="int" placeholder="Integers" [formControlName]="controlName.cateName" />
+    </div>
+    <div class="flex-auto mt-2">
+      <span class="font-bold block mb-2">Description</span>
+      <input
+      pInputText pKeyFilter="int" placeholder="Integers"
+        [formControlName]="controlName.description"
+      />
+    </div>
+  </form>
+</ng-template>
+</app-dialog-component>
+
+

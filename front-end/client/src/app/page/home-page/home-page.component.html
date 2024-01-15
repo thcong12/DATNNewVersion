@@ -4,17 +4,17 @@
     *ngFor="let item1 of productSlider; let i = index"
   >
     <div
-      class="col-8 relative home-galleria-left-part animate__animated animate__fadeIn"
+      style="height: 385px;"  class=" col-8 relative home-galleria-left-part animate__animated animate__fadeIn"
       *ngIf="selectedIndex == i"
     >
       <div
         class="left-part-bg"
-        [style.background]="'url(' + item1.productId.imgY.url + ')'"
+        [style.background]="'url(' + item1.product.imgY.url + ')'"
       ></div>
-      <img width="100%" [src]="item1.productId.imgY.url" />
+      <img width="100%" [src]="item1.product.imgY.url" />
       <div class="absolute w-full flex gap-1 top-0 mt-5 ml-4">
         <span
-          *ngFor="let cateItem of item1.categlory; let i = index"
+          *ngFor="let cateItem of item1.detail.categlory; let i = index"
           style="
             color: #eeeeee;
             padding: 1% 2%;
@@ -42,7 +42,7 @@
       <div
         class="right-part-bg"
         [style.background]="
-          'url(' + item1.productId.imgX.url + '?h=70&resize=1&w=140' + ')'
+          'url(' + item1.product.imgX.url + '?h=70&resize=1&w=140' + ')'
         "
       ></div>
       <div
@@ -50,7 +50,7 @@
       >
         <div>
           <h5>
-            <b>{{ item1.productId.productName }}</b>
+            <b>{{ item1.product.productName }}</b>
           </h5>
           <p
             style="
@@ -65,24 +65,24 @@
               -webkit-box-orient: vertical;
             "
           >
-            {{ item1.productId.shortDescription }}
+            {{ item1.product.shortDescription }}
           </p>
         </div>
-
       </div>
       <div style="width: 100%">
-        <h5>{{ item1.productId.price | currency : "USD" }}</h5>
+        <h5>{{ item1.product.price | currency : "USD" }}</h5>
         <button
+          (click)="toDetailProduct(item1.product._id)"
           pButton
           pRipple
           label="See more detail"
           style="background-color: rgba(41, 41, 41, 0.459); border: none"
         ></button>
       </div>
-      <div class="grid">    
+      <div class="grid">
         <img
           *ngFor="
-            let imgDetail of item1.productDetail.imgList.slice(0, 2);
+            let imgDetail of item1.detail.imgList.slice(0, 2);
             let i = index
           "
           style="border-radius: 15px"
@@ -113,30 +113,45 @@
     <h4>On sale</h4>
     <h5>See more</h5>
   </div>
-  <app-home-page-onsale></app-home-page-onsale>
+  <app-home-page-onsale class="animate__animated animate__fadeIn" style="height: 457px;" ></app-home-page-onsale>
 </div>
 <div class="py-3 home-category">
   <div class="home-category-title">
     <h2>Categlory</h2>
   </div>
-  <div class="grid">
-    <div class="col-3 relative" *ngFor="let item of categorylist.slice(0, 4)">
-      <img width="100%" style="border-radius: 15px" [src]="item.image" />
-      <div
-        class="absolute left-auto bottom-0 p-6"
-        style="width: calc(100% - 1rem); border-radius: 15px"
-        [style.background]="
-          'linear-gradient(rgba(0,0,0,0),' + item.color + ') 100%'
-        "
-      >
-        <span class="text-lg font-bold">
-          {{ item.title }}
-        </span>
-      </div>
+  <div class="relative flex align-items-center">
+    <button style="background-color: #c2c2c22c;" (click)="onPrevious()" class="absolute  py-3 z-5 border-round-lg">
+      <span class="text-xl pi pi-chevron-left"></span>
+    </button>
+    <div
+      style="height: 250px"
+      class="flex gap-3"
+      *ngFor="let item of categorylist"
+    >
+      <ng-container *ngIf="item.index === index">
+        <ng-container *ngFor="let i of item.category">
+          <div class="relative animate__animated animate__fadeIn">
+            <img class="border-round-lg" [src]="i.image" width="100%" />
+            <div
+              class="border-round-lg gradient"
+              [style]="'background: linear-gradient(' + i.color + ')'"
+            ></div>
+            <h3
+              style="bottom: 1rem;"
+              class="absolute w-full text-center"
+            >
+              {{ i.cateName }}
+            </h3>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
+    <button style="background-color: #c2c2c22c;" (click)="onNext()" class="absolute right-0 py-3 border-round-lg">
+      <span class="text-xl pi pi-chevron-right"></span>
+    </button>
   </div>
 </div>
-<div class="py-3 home-product">
+<!-- <div class="py-3 home-product">
   <div class="home-sale-title flex justify-content-between align-items-center">
     <h4>On sale</h4>
     <h5>See more</h5>
@@ -146,11 +161,11 @@
       <img width="100%" [src]="item.imgX.url + '?h=480&resize=1&w=360'" />
     </div>
   </div>
-</div>
+</div> -->
 
 <div class="py-3 home-list">
   <div class="home-sale-title flex justify-content-between align-items-center">
-    <h4>On sale</h4>
+    <h4>List of product</h4>
     <h5>See more</h5>
   </div>
   <app-home-page-list></app-home-page-list>

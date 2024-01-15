@@ -10,42 +10,45 @@
 <div class="w-full " >
   <div style="width: 100%" *ngFor="let item of listLink">
     <div class="w-full inline-flex" *ngIf="id === item.id">
-      <ng-component *ngIf="userStageLogin">
-        <div class="w-full text-center" *ngIf="id === '3'">
-          <h2>Sign in to view personalized recommendations</h2>
-          <button
-            pButton
-            pRipple
-            label="Sign In"
-            class="p-button-success"
-          ></button>
+      <div  class="w-full flex">
+        <div class="w-8">
+          <div
+            *ngFor="let product of item.products; let i = index"
+            [ngClass]="{
+              active: selectedIndex === i,
+              'background-active': selectedIndex === i
+            }"
+            (mouseenter)="slideShow(i)"
+          >
+            <app-home-page-list-item
+              [productItem]="product"
+            ></app-home-page-list-item>
+          </div>
         </div>
-      </ng-component>
-      <div class="w-8">
-        <div
-          *ngFor="let product of item.products; let i = index"
-          [ngClass]="{
-            active: selectedIndex === i,
-            'background-active': selectedIndex === i
-          }"
-          (mouseenter)="slideShow(i)"
-        >
-          <app-home-page-list-item
-            [productItem]="product"
-          ></app-home-page-list-item>
-        </div>
-      </div>
-      <div class="w-4 " style=" background-color: #393E46;" >
-        <div
-          class="detail-disable"
-          *ngFor="let product of item.products; let i = index"
-          [ngClass]="{ 'img-active': selectedIndex === i }"
-        >
-          <app-home-page-list-item-detai
-            [productItem]="product"
-          ></app-home-page-list-item-detai>
+        <div class="w-4 " style=" background-color: #393E46;" >
+          <div
+            class="detail-disable"
+            *ngFor="let product of item.products; let i = index"
+            [ngClass]="{ 'img-active': selectedIndex === i }"
+          >
+            <app-home-page-list-item-detai
+              [productItem]="product"
+            ></app-home-page-list-item-detai>
+          </div>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="!userStageLogin && item.id == 3" >
+      <div style="height: 500px;" class="w-full flex flex-column justify-content-center align-items-center" *ngIf="id === '3'">
+        <h2>Sign in to view personalized recommendations</h2>
+        <button
+          routerLink="/login"
+          pButton
+          pRipple
+          label="Sign In"
+          class="p-button-success"
+        ></button>
+      </div>
+    </ng-container>
   </div>
 </div>

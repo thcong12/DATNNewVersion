@@ -2,6 +2,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { BehaviorSubject, map, tap, forkJoin } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { GlobalVariable } from 'src/app/base/global-variable';
+import { Product } from 'src/app/model/products.model';
 import { AuthService } from 'src/app/service/auth.service';
 import { CategloryService } from 'src/app/service/categlory.service';
 import { DevelopersService } from 'src/app/service/developers.service';
@@ -25,17 +26,17 @@ export class HomePageListComponent extends BaseComponent {
     {
       id: '1',
       content: 'New update',
-      products: [] as any,
+      products: [] as Product.ProductDisplay[],
     },
     {
       id: '2',
       content: 'Top seller',
-      products: [] as any,
+      products: [] as Product.ProductDisplay[],
     },
     {
       id: '3',
       content: 'Recommend',
-      products: [] as any,
+      products: [] as Product.ProductDisplay[],
     },
   ];
   public id = '1';
@@ -73,7 +74,6 @@ export class HomePageListComponent extends BaseComponent {
   }
 
   private getDataBestSeller() {
-    const me = this;
     this.storeSv
       .getBestSeller()
       .pipe(
@@ -92,22 +92,15 @@ export class HomePageListComponent extends BaseComponent {
       });
   }
 
-  private getDataRecommend() {
-    const me = this;
-    const productRecommend = JSON.parse(
-      String(localStorage.getItem('USER_RECOMMEND'))
-    );
-    forkJoin(
-      productRecommend.buy.map((item: any) => {
-        return me.productSv.getProductDetail(item);
-      })
-    )
-      .pipe(
-        tap((res: any) => {
-          me.listLink[2].products = [...res];
-        })
-      )
-      .subscribe();
+  get getDataRecommend() {
+    if (this.userStageLogin) {
+      this.listLink[2].products = JSON.parse(
+        String(this.vms.globalVariable.getRecommendProduct)
+      );
+      return this.listLink[2].products;
+    } else {
+      return (this.listLink[2].products = []);
+    }
   }
   public slideShow(index: number) {
     this.selectedIndex = index;
@@ -115,9 +108,7 @@ export class HomePageListComponent extends BaseComponent {
   override onInit(): void {
     this.getDataBestSeller();
     this.getDataRelease();
-    // if (this.isLogin$) {
-    //   this.getDataRecommend();
-    // }
+    this.getDataRecommend();
   }
   onNext(productList: any) {
     if (this.counter != productList - 1) {
@@ -132,7 +123,9 @@ export class HomePageListComponent extends BaseComponent {
   }
   get userStageLogin(): boolean {
     const isLogin = this.vms.globalVariable.getLoginStage;
-    if (isLogin) {
+    if (isLogin === null) {
+      return false;
+    } else if (isLogin) {
       return true;
     }
     return false;

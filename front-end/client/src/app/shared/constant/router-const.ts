@@ -26,6 +26,7 @@ export const routerURL = {
 export const header = {
   accessTK: 'x-access-token',
   refreshTK: 'x-refresh-token',
+  userName: 'userName',
 };
 
 export const apiRouter = {
@@ -36,13 +37,21 @@ export const apiRouter = {
     remove: '/remove',
     library: '/library',
     wishlist: '/wishlist',
-    // library: '/library',
+    recomend: '/recomend',
   },
+  checkout: {
+    checkout: '/checkout',
+    order: '/order',
+    pay: '/pay',
+  },
+
   product: '/product',
   store: {
     sale: '/sale',
     slide: '/slide',
     release: '/release',
     bestseller: '/bestseller',
+    filter: '/filter',
+    search: '/search',
   },
 };

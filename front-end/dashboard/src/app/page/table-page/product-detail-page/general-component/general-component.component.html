@@ -1,0 +1,105 @@
+<div class="card">
+    <form class="p-fluid p-formgrid" [formGroup]="productForm" (submit)="submitDataEvnet()">
+      <div class="col-12 grid">
+        <div class="col-11">
+          <label htmlFor="firstname2">Product Name</label>
+          <input
+            pInputText
+            [formControlName]="controlProduct.productName"
+            type="text"
+          />
+        </div>
+        <div class="col-1">
+          <label class="mb-2" htmlFor="firstname2">Active</label>
+          <br />
+          <p-inputSwitch
+            [formControlName]="controlProduct.isActive"
+          ></p-inputSwitch>
+        </div>
+      </div>
+      <div class="col grid">
+        <div class="col-2">
+          <label htmlFor="lastname2">Price</label>
+          <input
+            [formControlName]="controlProduct.price"
+            pInputText
+            id="lastname2"
+            type="text"
+          />
+        </div>
+        <div class="col-2">
+          <label htmlFor="address">Sale Percent</label>
+          <input
+            [formControlName]="controlProduct.salePersent"
+            pInputText
+            id="lastname2"
+            type="number"
+          />
+        </div>
+        <div class="col-4">
+          <label htmlFor="address">Start Day</label>
+          <p-calendar
+            [formControlName]="controlProduct.saleStartDay"
+            inputId="icon"
+          ></p-calendar>
+        </div>
+        <div class="col-4">
+          <label htmlFor="address">End Day</label>
+          <p-calendar
+            [formControlName]="controlProduct.saleEndDay"
+            inputId="icon"
+          ></p-calendar>
+        </div>
+      </div>
+
+      <div class=" col-12" >
+        <label>Image X</label>
+        <input
+        pInputText
+        [formControlName]="controlProduct.imgX"
+        type="text"
+      />
+      </div>
+      <div class="col-12">
+        <label>Image Y</label>
+        <input
+        pInputText
+        [formControlName]="controlProduct.imgY"
+        type="text"
+      />
+      </div>
+
+      <div class="field col-12">
+        <label>Description</label>
+        <textarea
+          [formControlName]="controlProduct.shortDescription"
+          id="description"
+          style="width: 100%"
+          pInputTextarea
+          required
+          rows="5"
+          cols="20"
+        ></textarea>
+      </div>
+      <div class="field col-12">
+        <div class="flex gap-2">
+          <button
+            type="reset"
+            pButton
+            pRipple
+            label="Clear"
+            icon="pi pi-times"
+            iconPos="right"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="submit"
+            label="Submit"
+            icon="pi pi-check"
+            iconPos="right"
+          ></button>
+        </div>
+      </div>
+    </form>
+  </div>

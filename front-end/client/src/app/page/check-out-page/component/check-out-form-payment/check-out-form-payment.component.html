@@ -14,10 +14,10 @@
         </div>
     </div>
     <div class="w-full" *ngIf="paymentOption == 'paypal'">
-        <checkoutPaypal [userCart]="userCart" [order]="checkOutForm"></checkoutPaypal>
+        <checkoutPaypal [userCart]="userCart" [order]="checkOutForm" ></checkoutPaypal>
     </div>
 
-    <div class="w-full" *ngIf="paymentOption == 'momo'">
-        <!-- <checkOutMomo [userCart]="userCart" [order]="checkOutForm"></checkOutMomo> -->
-    </div>
+    <!-- <div class="w-full" *ngIf="paymentOption == 'momo'">
+        <checkOutMomo [userCart]="userCart" [order]="checkOutForm"></checkOutMomo>
+    </div> -->
 </form>

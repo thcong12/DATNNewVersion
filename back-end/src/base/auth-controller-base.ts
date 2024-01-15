@@ -63,7 +63,7 @@ export abstract class AuthBaseController<T, M> {
       res
         .header(CONSTANT.header.refreshToken, refreshTk)
         .header(CONSTANT.header.accessToken, accessTk)
-        .json({ user: user });
+        .json({ user: user.userName });
     } else {
       res.status(401);
       throw new Error("Some thing wrong please check user name or password");
@@ -78,10 +78,8 @@ export abstract class AuthBaseController<T, M> {
   ) {
     const decode: MyToken = checkUser(req, res, next);
     const refreshToken = this.getRefreshToken(req);
-    console.log(refreshToken);
     const user = await this.getUserById(decode.id);
     if (Array.isArray(user[value])) {
-      console.log("Array");
       const newSection = user[value].filter((item: any) => {
         return item != refreshToken;
       });
@@ -89,7 +87,6 @@ export abstract class AuthBaseController<T, M> {
     } else {
       user[value] = "";
     }
-    console.log("run");
     const result = await user.save();
     res.sendStatus(204);
   }
@@ -118,12 +115,17 @@ export abstract class AuthBaseController<T, M> {
       },
     });
   }
-  protected mailOption(html: string, user: IAuthBase) {
+  protected mailOption(
+    html: string,
+    user: IAuthBase,
+    mailSubject: string,
+    mailText: string
+  ) {
     const option: Mail.Options = {
       from: process.env.EMAIL_USERNAME, // sender address
       to: user.email, // list of receivers
-      subject: "Confirm Your Email", // Subject line
-      text: "Hello world?", // plain text body
+      subject: mailSubject, //"Confirm Your Email", // Subject line
+      text: mailText, // "Hello world?", // plain text body
       html: html,
     };
     return option;

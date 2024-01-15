@@ -20,6 +20,7 @@ export class HomePageOnsaleComponent implements OnInit, AfterViewInit {
       .pipe(
         tap((res: any) => {
           this.data = res;
+          console.log(this.data);
         })
       )
       .subscribe();
@@ -40,8 +41,5 @@ export class HomePageOnsaleComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     this.getData();
-    setTimeout(() => {
-      console.log(this.data);
-    }, 3000);
   }
 }

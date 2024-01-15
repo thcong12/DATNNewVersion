@@ -6,11 +6,16 @@ import { ActiveAccountComponent } from './component/active-account/active-accoun
 const routes: Routes = [
   {
     path: '',
-    component: AuthPageComponent,
-  },
-  {
-    path: 'active/:token',
-    component: ActiveAccountComponent,
+    children: [
+      {
+        path: 'active/:token',
+        component: ActiveAccountComponent,
+      },
+      {
+        path: 'login',
+        component: AuthPageComponent,
+      },
+    ],
   },
 ];
 
