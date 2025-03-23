@@ -1,5 +1,3 @@
-# README
-
 ## Summary of Algorithm Theory and Experimental Results
 
 ### 1. Algorithm Theory
